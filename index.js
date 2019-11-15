@@ -78,6 +78,14 @@ io.on('connection', function (socket) {
             joueurs[invit.partie]=[];
         }
         joueurs[invit.partie].push(invit.joiner);
+        let liste ={
+            joueurs:joueurs[invit.partie],
+            id_partie:invit.partie
+        };
+        for(let i in joueurs[invit.partie]){
+            clients[joueurs[invit.partie][i]].emit("listeGame",liste);
+        }
+
         console.log(joueurs);
     });
 
@@ -86,39 +94,75 @@ io.on('connection', function (socket) {
      *  @param  msg     Object  le message à transférer à tous
      */
     socket.on("message", function(msg) {
+        if(msg.id_partie==null || msg.id_partie==undefined){
+            msg.id_partie=0;
+        }
         console.log("Reçu message");
         // si jamais la date n'existe pas, on la rajoute
         msg.date = Date.now();
         // si message privé, envoi seulement au destinataire
-        //if(msg.id_partie===0) {
+        if(msg.id_partie===0) {
             if (msg.to != null && clients[msg.to] !== undefined) {
                 console.log(" --> message privé");
                 clients[msg.to].emit("message", msg);
-                if (msg.from != msg.to) {
+                if (msg.from !== msg.to) {
                     socket.emit("message", msg);
                 }
             } else {
                 console.log(" --> broadcast");
                 io.sockets.emit("message", msg);
             }
-        /*}else{
+        }else{
             if (msg.to != null && joueurs[msg.id_partie][msg.to] !== undefined) {
                 console.log(" --> message privé partie n° "+msg.id_partie);
-                joueur[msg.id_partie][msg.to].emit("message", msg);
+                clients[joueurs[msg.id_partie][msg.to]].emit("message", msg);
                 if (msg.from != msg.to) {
                     socket.emit("message", msg);
                 }
-            } else {
+            } else if(joueurs[msg.id_partie][msg.to] === undefined){
                 console.log(" --> broadcast partie n° "+msg.id_partie);
-                io.sockets.emit("message", msg);
+                for(let i in joueurs[msg.id_partie]){
+                    clients[joueurs[msg.id_partie][i]].emit("message", msg);
+                }
+
             }
-        }*/
+        }
     });
 
 
     /**
      *  Gestion des déconnexions
      */
+
+    socket.on("quitGame",function(game){
+        if(currentID){
+            console.log("Sortie de la partie "+game+" par "+currentID);
+
+
+            joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
+            console.log(joueurs);
+            if(joueurs[game].length ===0){
+                delete joueurs[game];
+                partie--;
+                io.sockets.emit("invitation",{partie:partie,from:null});
+            }else {
+                let liste = {
+                    joueurs: joueurs[game],
+                    id_partie: game
+                };
+                for(let i in joueurs[game]){
+                    clients[joueurs[game][i]].emit("listeGame",liste);
+                    clients[joueurs[game][i]].emit("message",{from:null, to:null, text: currentID + " a quitté la partie", date:Date.now(),id_partie:game});
+                }
+
+            }
+            console.log(joueurs);
+
+
+        }
+
+    });
+
 
     // fermeture
     socket.on("logout", function() {
@@ -134,6 +178,8 @@ io.on('connection', function (socket) {
             socket.broadcast.emit("liste", Object.keys(clients));
         }
     });
+
+
 
     // déconnexion de la socket
     socket.on("disconnect", function(reason) {

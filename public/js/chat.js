@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //liste des joueurs
     var players = [[]];
+    var players_liste=null;
 
     //indice de partie du serveur
     var partieInvite =-1;
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.querySelector("#content main").innerHTML = "";
             document.getElementById("monMessage").value = "";
             document.getElementById("login").innerHTML = id;
-            document.getElementById("radio2").checked = true;
+            document.getElementById("radio0").checked = true;
             currentUser = id;
             fromInvit=currentUser;
         }
@@ -43,7 +44,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     sock.on("liste", function(liste) {
         users =liste;
         if (currentUser) {
-            afficherListe(liste);
+            afficherListe(liste,0);
+        }
+    });
+
+    sock.on("listeGame",function(liste){
+        players_liste = liste;
+        if(currentUser){
+            afficherListe(liste.joueurs,liste.id_partie);
         }
     });
 
@@ -51,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if(currentUser){
             console.log("invitationneur : ",invit.from);
             partieInvite = invit.partie;
+            fromInvit = currentUser;
             if(invit.from !=null) {
                 fromInvit = invit.from;
             }
@@ -66,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         // recupération du pseudo
         var user = document.getElementById("pseudo").value.trim();
         if (! user) return;
-        document.getElementById("radio2").check = true;
+        document.getElementById("radio0").check = true;
         currentUser = user;
         sock.emit("login", user);
     }
@@ -83,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         // affichage des nouveaux messages
         var bcMessages;
+        console.log("id_partie : "+data.id_partie);
         if(data.id_partie===0){
             bcMessages = document.querySelector("#content main");
         }else{
@@ -103,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             data.from += " (à " + data.to + ")";
         }
 
-        var date = new Date(data.date);
+        let date = new Date(data.date);
         date = date.toISOString().substr(11,8);
         if (data.from == null) {
             data.from = "[admin]";
@@ -142,8 +152,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         return txt;
     }
 
-    function afficherListe(newList) {
-        document.querySelector("#content aside").innerHTML = newList.join("<br>");
+    function afficherListe(newList,game) {
+        console.log("game : ",game);
+        if(game==0){
+            document.querySelector("#content aside").innerHTML = newList.join("<br>");
+        }else{
+            document.querySelector("#contentGame"+game+" aside").innerHTML = newList.join("<br>");
+        }
+
     }
 
     /**
@@ -151,13 +167,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function envoyer() {
 
-        var msg = document.getElementById("monMessage").value.trim();
+        let msg = document.getElementById("monMessage").value.trim();
         if (!msg) return;
 
         // message privé
-        var to = null;
+        let to = null;
         if (msg.startsWith("@")) {
-            var i = msg.indexOf(" ");
+            let i = msg.indexOf(" ");
             to = msg.substring(1, i);
             msg = msg.substring(i);
         }
@@ -180,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         // message privé
         let to = null;
         if (msg.startsWith("@")) {
-            var i = msg.indexOf(" ");
+            let i = msg.indexOf(" ");
             to = msg.substring(1, i);
             msg = msg.substring(i);
         }
@@ -196,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function toggleImage(evt,id=-1) {
 
         let final_id=getIdString(this.id);
+
         if(id>0){
             final_id=id;
         }
@@ -227,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function getIdInt(id){
-        if(id==undefined || id==null){
+        if(id==undefined || id==null || id==NaN){
             return 0;
         }
         let reg = new RegExp(/[^\d]/g);
@@ -265,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function choixImage(e) {
         let id = getIdInt(this.id);
-
+        console.log("choixImg : ",id);
         if (e.target instanceof HTMLImageElement) {
             sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]", id_partie:id});
             toggleImage(id,id);
@@ -365,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function creationOnglet(){
         var nouvelOnglet = document.createElement("h2");
-        var nbPartieInvite = partieInvite+2; // +2 car les boutons radios vont jusqu'à 2 de base dans le chat (login et main)
+        var nbPartieInvite = partieInvite; // +2 car les boutons radios vont jusqu'à 2 de base dans le chat (login et main)
         var id = "Partie "+partieInvite;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
@@ -387,7 +404,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         div.innerHTML =
             "<div class = \"contentGame\" id=\"contentGame"+(nbPartieInvite)+"\">" +
-                "<h2>Chat du jeu - <span id=\"login_p_"+(nbPartieInvite)+"\">"+currentUser+"</span></h2>" +
+                "<h2>Chat partie "+partieInvite +" - <span id=\"login_p_"+(nbPartieInvite)+"\">"+currentUser+"</span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
                 "<aside>" +
                 "</aside>" +
@@ -419,7 +436,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.querySelector("body").appendChild(div);
 
         document.getElementById("btnChat_p_"+(nbPartieInvite)).addEventListener("click", function(e){
-            document.getElementById("radio2").checked = true;
+            document.getElementById("radio0").checked = true;
         });
 
         document.getElementById("btnEnvoyer_p_"+nbPartieInvite).addEventListener("click",envoyerMsgGame);
@@ -427,28 +444,18 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("btnFermer_p_"+nbPartieInvite).addEventListener("click",toggleImage);
         document.getElementById("btnRechercher_p_"+nbPartieInvite).addEventListener("click",rechercher);
         document.getElementById("bcResults"+nbPartieInvite).addEventListener("click",choixImage);
-        document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", function(e){
-            document.getElementById("radio2").checked = true;
-            let partie =  this.id;
-            let reg = new RegExp(/[^\d]/g);
-            let nb =partie;
-            nb = nb.replace(reg,"");
-            const res=parseInt(nb,10)-2;
-            partie = partie.replace(/btnQuitterGame_p_.*/ ,"Partie "+res);
-            document.getElementById("content").removeChild(document.getElementById(partie));
-            partie = partie.replace(/Partie .*/ ,"gameScreen"+(res+2));
-            document.querySelector("body").removeChild(document.getElementById(partie));
-        });
+        document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", quitterGame);
+
+
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
 
     function creationFenetreJeu(){
-        console.log("creationFEnetreJeu : 4");
         let partie =  this.id;
         let reg = new RegExp(/[^\d]/g);
         let nb =partie;
         nb = nb.replace(reg,"");
-        const res=parseInt(nb,10)+2;
+        const res=parseInt(nb,10);
         partie = partie.replace(/Partie .*/ ,"radio"+res);
         document.getElementById(partie).checked = true;
     }
@@ -461,16 +468,30 @@ document.addEventListener("DOMContentLoaded", function(_e) {
          sock.emit("joinGame",join);
          console.log("p_"+partieInvite);
          document.getElementById("p_"+partieInvite).removeEventListener("click",rejoindrePartie);
+         document.getElementById("p_"+partieInvite).removeAttribute("id");
          creationOnglet();
      }
-
+     function quitterGame() {
+         document.getElementById("radio0").checked = true;
+         let partie = this.id;
+         let reg = new RegExp(/[^\d]/g);
+         let nb = partie;
+         nb = nb.replace(reg, "");
+         const res = parseInt(nb, 10);
+         partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
+         document.getElementById("content").removeChild(document.getElementById(partie));
+         partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
+         document.querySelector("body").removeChild(document.getElementById(partie));
+         document.getElementById("radio"+(res)).remove();
+         sock.emit("quitGame",res);
+     }
     /**
      *  Quitter le chat et revenir à la page d'accueil.
      */
     function quitter() {
         currentUser = null;
         sock.emit("logout");
-        document.getElementById("radio1").checked = true;
+        document.getElementById("radio-1").checked = true;
     }
 
     /**
