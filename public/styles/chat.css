@@ -177,13 +177,13 @@ input[type=radio]:checked + div {
     border-radius: 10px;
     box-shadow: 10px 10px 10px #000;
 }
-#logScreen input, #bcImages input {
+#logScreen input, #bcImages input, .bcImagesGame input {
     padding: 3px;
     font-size: 80%;
     margin: 10px;
 }
 
-#bcImage {
+#bcImage, .bcImageGame{
     width: 400px;
     height: 80%;
     transform: translate(-50%, -50%);
@@ -195,29 +195,47 @@ input[type=radio]:checked + div {
     box-shadow: 10px 10px 10px #000;
     border-radius: 5px;
 }
-#bcImage input[type=text] {
+#bcImage input[type=text], .bcImageGame input[type=text] {
     margin: 10px;
     width: calc(100% - 120px);
 }
-#bcImage #btnFermer {
+
+#bcImage #btnFermer, .bcImageGame .btnFermerGame{
     position: absolute; 
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
 }
-#bcImage #bcResults {
+
+#bcImage #bcResults{
     height: calc(100% - 80px);
     background-color: white;
     overflow: scroll;
 }
-#bcImage #bcResults {
+
+.bcImageGame .bcResultsGame{
+    height: calc(100% - 80px);
+    background-color: white;
+    overflow: scroll;
+}
+
+#bcImage #bcResults{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-evenly;
 }
-#bcResults img {
+
+.bcImageGame .bcResultsGame{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+#bcResults img, .bcResultsGame img {
     width: 190px;
     margin: 2px;
     height: auto;

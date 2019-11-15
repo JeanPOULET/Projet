@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         "<input type=\"text\" class=\"rechercheGame\" id=\"recherche"+(nbPartieInvite)+"\" placeholder=\"Tapez ici le texte de votre recherche\">" +
                         "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(nbPartieInvite)+"\">" +
                     "</header>" +
-                    "<div class =\"bcResultsGame\" id=\"bcResults"+nbPartieInvite+"\">></div>" +
+                    "<div class =\"bcResultsGame\" id=\"bcResults"+nbPartieInvite+"\"></div>" +
                         "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
