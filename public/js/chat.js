@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué
      * Css gameScreen fix
-     *lololol
     */
 
     // socket ouverte vers le client
@@ -50,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     sock.on("invitation",function(invit){
         if(currentUser){
+            console.log("invitationneur : ",invit.from);
             partieInvite = invit.partie;
             if(invit.from !=null) {
                 fromInvit = invit.from;
@@ -109,8 +109,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
 
         document.querySelector("main > p:last-child").scrollIntoView();
+        console.log("fromInvit : ",fromInvit);
         if(partieInvite >0 && fromInvit!==currentUser){
-            document.getElementById("p_"+partieInvite).addEventListener("click",rejoindrePartie);
+            console.log("aff="+partieInvite);
+            document.getElementById("p_"+(partieInvite)).addEventListener("click",rejoindrePartie);
 
         }
 
@@ -120,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function traiterTexte(txt) {
         var ind = txt.indexOf("[img:");
         while (ind >= 0) {
+            console.log(txt);
             txt = txt.replace("\[img:",'<img src="');
             txt = txt.replace('\]','">');
             ind = txt.indexOf("[img:");
@@ -187,6 +190,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             if (this.readyState === XMLHttpRequest.DONE) {
                 if (this.status === 200) {
                     var data = JSON.parse(this.responseText).data;
+                    console.log(data);
                     var html = "";
                     for (var i in data) {
                         var url = data[i].images.fixed_height.url;
@@ -275,6 +279,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
                 sock.emit("message", invit);
             }
+            console.log(players);
             let join={
                 joiner: currentUser,
                 partie: partieInvite
@@ -300,10 +305,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Fait apparaitre l'onglet de la fenetre de jeu
      */
     function creationOnglet(){
-        if(partieInvite == -1){
-            partieInvite = 2;
-        }
-        partieInvite++;
         var nouvelOnglet = document.createElement("h2");
         var id = "Partie "+partieInvite;
         nouvelOnglet.innerHTML = id;
@@ -319,70 +320,76 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var input = document.createElement("input");
         input.setAttribute("type", "radio");
         input.setAttribute("name", "btnScreen");
-        input.setAttribute("id", "radio"+partieInvite);
+        input.setAttribute("id", "radio"+(partieInvite+2));
 
         var div = document.createElement("div");
-        div.setAttribute("id", "gameScreen"+partieInvite);
+        div.setAttribute("id", "gameScreen"+(partieInvite+2));
 
         div.innerHTML =
-            "<div class = \"contentGame\" id=\"contentGame"+partieInvite+"\">" +
-                "<h2>Chat du jeu - <span id=\"login_p_"+partieInvite+"\"></span></h2>" +
+            "<div class = \"contentGame\" id=\"contentGame"+(partieInvite+2)+"\">" +
+                "<h2>Chat du jeu - <span id=\"login_p_"+(partieInvite+2)+"\"></span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
                 "<aside>" +
                 "</aside>" +
                 "<main>" +
                 "</main>" +
                 "<footer>" +
-                    "<input type=\"text\" class =\"monMessageGame\" id=\"monMessage_p_"+partieInvite+"\">" +
-                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+partieInvite+"\">" +
-                    "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame\" id=\"btnEnvoyer_p_"+partieInvite+"\">" +
-                    "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+partieInvite+"\">" +
-                    "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+partieInvite+"\">" +
+                    "<input type=\"text\" class =\"monMessageGame\" id=\"monMessage_p_"+(partieInvite+2)+"\">" +
+                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+(partieInvite+2)+"\">" +
+                    "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame\" id=\"btnEnvoyer_p_"+(partieInvite+2)+"\">" +
+                    "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+(partieInvite+2)+"\">" +
+                    "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+(partieInvite+2)+"\">" +
                 "</footer>" +
                 "<div class =\"bcImageGame\" id=\"bcImage\" style=\"display: none;\">" +
                     "<header>" +
                         "<input type=\"text\" class=\"rechercheGame\" id=\"recherche\" placeholder=\"Tapez ici le texte de votre recherche\">" +
-                        "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+partieInvite+"\">" +
+                        "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(partieInvite+2)+"\">" +
                     "</header>" +
-                    "<div class =\"bcResultsGame\" id=\"bcResults_p_"+partieInvite+"\">></div>" +
-                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+partieInvite+"\"></footer>" +
+                    "<div class =\"bcResultsGame\" id=\"bcResults_p_"+(partieInvite+2)+"\">></div>" +
+                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(partieInvite+2)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
-                "<div class =\"gameMain\" id=\"gameMain_p_"+partieInvite+"\">" +
+                "<div class =\"gameMain\" id=\"gameMain_p_"+(partieInvite+2)+"\">" +
                     "<p> Ceci est un jeu</p>" +
-                    "<input type=\"button\" value=\"Lancer la partie\" id=\"btnLancer_p_"+partieInvite+"\">" +
+                    "<input type=\"button\" value=\"Lancer la partie\" id=\"btnLancer_p_"+(partieInvite+2)+"\">" +
                 "</div>" +
             "</div>";
 
         document.querySelector("body").appendChild(input);
         document.querySelector("body").appendChild(div);
 
-        document.getElementById("btnChat_p_"+partieInvite).addEventListener("click", function(e){
+        document.getElementById("btnChat_p_"+(partieInvite+2)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
         });
 
-        document.getElementById("btnQuitterGame_p_"+partieInvite).addEventListener("click", function(e){
+        document.getElementById("btnQuitterGame_p_"+(partieInvite+2)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
             let partie =  this.id;
+            console.log(this.id);
             let reg = new RegExp(/[^\d]/g);
             let nb =partie;
             nb = nb.replace(reg,"");
-            const res=parseInt(nb,10);
+            const res=parseInt(nb,10)-2;
             partie = partie.replace(/btnQuitterGame_p_.*/ ,"Partie "+res);
+            console.log(partie);
             document.getElementById("content").removeChild(document.getElementById(partie));
-            partie = partie.replace(/Partie .*/ ,"gameScreen"+res);
+            partie = partie.replace(/Partie .*/ ,"gameScreen"+(res+2));
+            console.log(partie);
             document.querySelector("body").removeChild(document.getElementById(partie));
         });
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
 
     function creationFenetreJeu(){
+        console.log("creationFEnetreJeu : 4");
         let partie =  this.id;
+        console.log(this.id);
         let reg = new RegExp(/[^\d]/g);
         let nb =partie;
         nb = nb.replace(reg,"");
-        const res=parseInt(nb,10);
+        const res=parseInt(nb,10)+2;
         partie = partie.replace(/Partie .*/ ,"radio"+res);
+        console.log(partie);
         document.getElementById(partie).checked = true;
     }
 
