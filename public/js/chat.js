@@ -82,8 +82,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         // affichage des nouveaux messages
-        var bcMessages = document.querySelector("#content main");
-
+        var bcMessages;
+        if(data.id_partie===0){
+            bcMessages = document.querySelector("#content main");
+        }else{
+            bcMessages = document.querySelector("#contentGame"+data.id_partie+" main");
+        }
+        
         var classe = "";
 
         if (data.from === currentUser) {
