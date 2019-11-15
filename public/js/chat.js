@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué
      * Css gameScreen fix
+     *lololol
     */
 
     // socket ouverte vers le client
