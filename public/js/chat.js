@@ -112,10 +112,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         data.text = traiterTexte(data.text);
 
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
+        if(data.id_partie===0){
+            document.querySelector("main > p:last-child").scrollIntoView();
+        }else{
+            document.querySelector("#contentGame"+data.id_partie+" main > p:last-child").scrollIntoView();
+        }
 
-        document.querySelector("main > p:last-child").scrollIntoView();
         console.log("fromInvit : ",fromInvit);
-        if(partieInvite >0 && fromInvit!==currentUser){
+        if(data.id_partie===0 && fromInvit!==currentUser){
             console.log("aff="+partieInvite);
             document.getElementById("p_"+(partieInvite)).addEventListener("click",rejoindrePartie);
 
@@ -163,9 +167,32 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             msg = msg.substring(i);
         }
         // envoi
-        sock.emit("message", { from: currentUser, to: to, text: msg });
+        sock.emit("message", { from: currentUser, to: to, text: msg,id_partie:0 });
 
         document.getElementById("monMessage").value = "";
+    }
+
+    function envoyerMsgGame(){
+        let id_btn = this.id;
+        let reg = new RegExp(/[^\d]/g);
+        let nb =id_btn;
+        nb = nb.replace(reg,"");
+        const res=parseInt(nb,10);
+        console.log("res = "+res);
+        let msg = document.getElementById("monMessage_p_"+res).value.trim();
+        if (!msg) return;
+
+        // message privé
+        let to = null;
+        if (msg.startsWith("@")) {
+            var i = msg.indexOf(" ");
+            to = msg.substring(1, i);
+            msg = msg.substring(i);
+        }
+        // envoi
+        sock.emit("message", { from: currentUser, to: to, text: msg, id_partie:res });
+
+        document.getElementById("monMessage_p_"+res).value = "";
     }
 
     /**
@@ -212,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function choixImage(e) {
         if (e.target instanceof HTMLImageElement) {
-            sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]"});
+            sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]", id_partie:0});
             toggleImage();
         }
 
@@ -279,7 +306,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     from: currentUser,
                     to: players[nbPartie][i],
                     text: "<a id=\"p_"+partieInvite+"\">Clique pour rejoindre mon invitation</a>",
-                    date: Date.now()
+                    date: Date.now(),
+                    id_partie:0
                 };
 
                 sock.emit("message", invit);
@@ -367,6 +395,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("btnChat_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
         });
+
+        document.getElementById("btnEnvoyer_p_"+nbPartieInvite).addEventListener("click",envoyerMsgGame);
 
         document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
