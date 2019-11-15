@@ -110,12 +110,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         document.querySelector("main > p:last-child").scrollIntoView();
         console.log("fromInvit : ",fromInvit);
-        if(partieInvite >0 && fromInvit!==currentUser){
+        if(fromInvit!==currentUser){
             console.log("aff="+partieInvite);
-            document.getElementById("p_"+(partieInvite)).addEventListener("click",rejoindrePartie);
-
+            document.getElementById("p_"+partieInvite).addEventListener("click",rejoindrePartie);
         }
-
     }
 
     // traitement des emojis
@@ -204,7 +202,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         xhttp.send(null);
     }
 
-
     function choixImage(e) {
         if (e.target instanceof HTMLImageElement) {
             sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]"});
@@ -285,7 +282,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 partie: partieInvite
             };
 
-
             sock.emit("joinGame",join);
             nbPartie++;
             creationOnglet();
@@ -295,7 +291,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*
      * Quitte la fenetre d'invitation
      */
-
     function annulerInvit(){
         document.getElementById("fenetreInvit").style.display="none";
         partieInvite--;
@@ -366,16 +361,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
             let partie =  this.id;
-            console.log(this.id);
             let reg = new RegExp(/[^\d]/g);
             let nb =partie;
             nb = nb.replace(reg,"");
             const res=parseInt(nb,10)-2;
             partie = partie.replace(/btnQuitterGame_p_.*/ ,"Partie "+res);
-            console.log(partie);
             document.getElementById("content").removeChild(document.getElementById(partie));
             partie = partie.replace(/Partie .*/ ,"gameScreen"+(res+2));
-            console.log(partie);
             document.querySelector("body").removeChild(document.getElementById(partie));
         });
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
@@ -384,13 +376,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function creationFenetreJeu(){
         console.log("creationFEnetreJeu : 4");
         let partie =  this.id;
-        console.log(this.id);
         let reg = new RegExp(/[^\d]/g);
         let nb =partie;
         nb = nb.replace(reg,"");
         const res=parseInt(nb,10)+2;
         partie = partie.replace(/Partie .*/ ,"radio"+res);
-        console.log(partie);
         document.getElementById(partie).checked = true;
     }
 
@@ -400,6 +390,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
            partie: partieInvite
          };
          sock.emit("joinGame",join);
+         console.log("p_"+partieInvite);
          document.getElementById("p_"+partieInvite).removeEventListener("click",rejoindrePartie);
          creationOnglet();
      }
