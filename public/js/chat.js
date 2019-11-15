@@ -163,6 +163,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("monMessage").value = "";
     }
 
+    function envoyerMsgGame(){
+        
+    }
+
     /**
      *  Fermer la zone de choix d'une image
      */
@@ -362,6 +366,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("btnChat_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
         });
+
+        document.getElementById("btnChat_p_"+nbPartieInvite).addEventListener("click",envoyerMsgGame);
 
         document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
