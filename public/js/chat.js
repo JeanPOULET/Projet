@@ -142,12 +142,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         return txt;
     }
 
-
-
     function afficherListe(newList) {
         document.querySelector("#content aside").innerHTML = newList.join("<br>");
     }
-
 
     /**
      *  Envoyer un message
@@ -196,23 +193,55 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /**
      *  Fermer la zone de choix d'une image
      */
-    function toggleImage() {
-        if (document.getElementById("bcImage").style.display === "none") {
-            document.getElementById("bcImage").style.display = "block";
-            document.getElementById("recherche").focus();
+    function toggleImage(evt,id=-1) {
+
+        let final_id=getIdString(this.id);
+        if(id>0){
+            final_id=id;
+        }
+        console.log("fid= "+final_id);
+        if (document.getElementById("bcImage"+final_id).style.display === "none") {
+            document.getElementById("bcImage"+final_id).style.display = "block";
+            document.getElementById("recherche"+final_id).focus();
         }
         else {
-            document.getElementById("bcImage").style.display = "none";
-            document.getElementById("recherche").value = "";
-            document.getElementById("bcResults").innerHTML = "";
+            document.getElementById("bcImage"+final_id).style.display = "none";
+            document.getElementById("recherche"+final_id).value = "";
+            document.getElementById("bcResults"+final_id).innerHTML = "";
         }
+    }
+    //renvoie en chaine le numéro d'id d'un résultat d'évenèment
+    function getIdString(id){
+        if(id==undefined || id==null){
+            return "";
+        }
+        let reg = new RegExp(/[^\d]/g);
+        id = id.replace(reg,"");
+        const val = parseInt(id,10);
+        console.log(val);
+        let final_id ="";
+        if(val>0 ){
+            final_id=val;
+        }
+        return final_id;
+    }
+
+    function getIdInt(id){
+        if(id==undefined || id==null){
+            return 0;
+        }
+        let reg = new RegExp(/[^\d]/g);
+        id = id.replace(reg,"");
+        const res=parseInt(id,10);
+        return res;
     }
 
     /**
      *  Recherche d'une image
      */
-    function rechercher(e) {
-        var queryString = document.getElementById("recherche").value;
+    function rechercher() {
+        let final_id = getIdString(this.id);
+        var queryString = document.getElementById("recherche"+final_id).value;
         queryString = queryString.replace(/\s/g,'+');
         // appel AJAX
         var xhttp = new XMLHttpRequest();
@@ -226,18 +255,20 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         var url = data[i].images.fixed_height.url;
                         html += "<img src='"+url+"'>";
                     }
-                    document.getElementById("bcResults").innerHTML = html;
+                    document.getElementById("bcResults"+final_id).innerHTML = html;
                 }
             }
         };
-        xhttp.open('GET', 'http://api.giphy.com/v1/gifs/search?q=' + queryString + '&limit=20&api_key=0X5obvHJHTxBVi92jfblPqrFbwtf1xig', true);
+        xhttp.open('GET', 'http://api.giphy.com/v1/gifs/search?q=' + queryString + '&limit=10&api_key=0X5obvHJHTxBVi92jfblPqrFbwtf1xig', true);
         xhttp.send(null);
     }
 
     function choixImage(e) {
+        let id = getIdInt(this.id);
+
         if (e.target instanceof HTMLImageElement) {
-            sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]", id_partie:0});
-            toggleImage();
+            sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]", id_partie:id});
+            toggleImage(id,id);
         }
 
     }
@@ -334,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function creationOnglet(){
         var nouvelOnglet = document.createElement("h2");
-        var nbPartieInvite = partieInvite+2;
+        var nbPartieInvite = partieInvite+2; // +2 car les boutons radios vont jusqu'à 2 de base dans le chat (login et main)
         var id = "Partie "+partieInvite;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
@@ -356,7 +387,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         div.innerHTML =
             "<div class = \"contentGame\" id=\"contentGame"+(nbPartieInvite)+"\">" +
-                "<h2>Chat du jeu - <span id=\"login_p_"+(nbPartieInvite)+"\"></span></h2>" +
+                "<h2>Chat du jeu - <span id=\"login_p_"+(nbPartieInvite)+"\">"+currentUser+"</span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
                 "<aside>" +
                 "</aside>" +
@@ -369,12 +400,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+(nbPartieInvite)+"\">" +
                     "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+(nbPartieInvite)+"\">" +
                 "</footer>" +
-                "<div class =\"bcImageGame\" id=\"bcImage\" style=\"display: none;\">" +
+                "<div class =\"bcImageGame\" id=\"bcImage"+nbPartieInvite+"\" style=\"display: none;\">" +
                     "<header>" +
-                        "<input type=\"text\" class=\"rechercheGame\" id=\"recherche\" placeholder=\"Tapez ici le texte de votre recherche\">" +
+                        "<input type=\"text\" class=\"rechercheGame\" id=\"recherche"+(nbPartieInvite)+"\" placeholder=\"Tapez ici le texte de votre recherche\">" +
                         "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(nbPartieInvite)+"\">" +
                     "</header>" +
-                    "<div class =\"bcResultsGame\" id=\"bcResults_p_"+(nbPartieInvite)+"\">></div>" +
+                    "<div class =\"bcResultsGame\" id=\"bcResults"+nbPartieInvite+"\">></div>" +
                         "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
@@ -392,7 +423,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         });
 
         document.getElementById("btnEnvoyer_p_"+nbPartieInvite).addEventListener("click",envoyerMsgGame);
-
+        document.getElementById("btnImage_p_"+nbPartieInvite).addEventListener("click",toggleImage);
+        document.getElementById("btnFermer_p_"+nbPartieInvite).addEventListener("click",toggleImage);
+        document.getElementById("btnRechercher_p_"+nbPartieInvite).addEventListener("click",rechercher);
+        document.getElementById("bcResults"+nbPartieInvite).addEventListener("click",choixImage);
         document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
             let partie =  this.id;

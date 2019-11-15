@@ -366,6 +366,19 @@ input[type=radio]:checked + div {
  * CSS pour le jeu
  */
 
+.bcImageGame{
+    width: 400px;
+    height: 80%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: darkgrey;
+    border: solid 1px #333;
+    box-shadow: 10px 10px 10px #000;
+    border-radius: 5px;
+}
+
 .gameMain{
     position: absolute;
     top: 50%;
