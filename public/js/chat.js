@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function(_e) {
 
-    /*
+    /* Liste des "bugs" trouvés
      * Bug graphique quand suppression partie
-     * Lien d'invitation bugué
+     * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Css gameScreen fix
+     *
     */
 
     // socket ouverte vers le client
