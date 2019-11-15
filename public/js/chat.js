@@ -306,6 +306,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function creationOnglet(){
         var nouvelOnglet = document.createElement("h2");
+        var nbPartieInvite = partieInvite+2;
         var id = "Partie "+partieInvite;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
@@ -320,49 +321,49 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var input = document.createElement("input");
         input.setAttribute("type", "radio");
         input.setAttribute("name", "btnScreen");
-        input.setAttribute("id", "radio"+(partieInvite+2));
+        input.setAttribute("id", "radio"+(nbPartieInvite));
 
         var div = document.createElement("div");
-        div.setAttribute("id", "gameScreen"+(partieInvite+2));
+        div.setAttribute("id", "gameScreen"+(nbPartieInvite));
 
         div.innerHTML =
-            "<div class = \"contentGame\" id=\"contentGame"+(partieInvite+2)+"\">" +
-                "<h2>Chat du jeu - <span id=\"login_p_"+(partieInvite+2)+"\"></span></h2>" +
+            "<div class = \"contentGame\" id=\"contentGame"+(nbPartieInvite)+"\">" +
+                "<h2>Chat du jeu - <span id=\"login_p_"+(nbPartieInvite)+"\"></span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
                 "<aside>" +
                 "</aside>" +
                 "<main>" +
                 "</main>" +
                 "<footer>" +
-                    "<input type=\"text\" class =\"monMessageGame\" id=\"monMessage_p_"+(partieInvite+2)+"\">" +
-                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+(partieInvite+2)+"\">" +
-                    "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame\" id=\"btnEnvoyer_p_"+(partieInvite+2)+"\">" +
-                    "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+(partieInvite+2)+"\">" +
-                    "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+(partieInvite+2)+"\">" +
+                    "<input type=\"text\" class =\"monMessageGame\" id=\"monMessage_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame\" id=\"btnEnvoyer_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+(nbPartieInvite)+"\">" +
                 "</footer>" +
                 "<div class =\"bcImageGame\" id=\"bcImage\" style=\"display: none;\">" +
                     "<header>" +
                         "<input type=\"text\" class=\"rechercheGame\" id=\"recherche\" placeholder=\"Tapez ici le texte de votre recherche\">" +
-                        "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(partieInvite+2)+"\">" +
+                        "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(nbPartieInvite)+"\">" +
                     "</header>" +
-                    "<div class =\"bcResultsGame\" id=\"bcResults_p_"+(partieInvite+2)+"\">></div>" +
-                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(partieInvite+2)+"\"></footer>" +
+                    "<div class =\"bcResultsGame\" id=\"bcResults_p_"+(nbPartieInvite)+"\">></div>" +
+                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
-                "<div class =\"gameMain\" id=\"gameMain_p_"+(partieInvite+2)+"\">" +
+                "<div class =\"gameMain\" id=\"gameMain_p_"+(nbPartieInvite)+"\">" +
                     "<p> Ceci est un jeu</p>" +
-                    "<input type=\"button\" value=\"Lancer la partie\" id=\"btnLancer_p_"+(partieInvite+2)+"\">" +
+                    "<input type=\"button\" value=\"Lancer la partie\" id=\"btnLancer_p_"+(nbPartieInvite)+"\">" +
                 "</div>" +
             "</div>";
 
         document.querySelector("body").appendChild(input);
         document.querySelector("body").appendChild(div);
 
-        document.getElementById("btnChat_p_"+(partieInvite+2)).addEventListener("click", function(e){
+        document.getElementById("btnChat_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
         });
 
-        document.getElementById("btnQuitterGame_p_"+(partieInvite+2)).addEventListener("click", function(e){
+        document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio2").checked = true;
             let partie =  this.id;
             console.log(this.id);

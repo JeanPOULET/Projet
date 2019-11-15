@@ -11,5 +11,13 @@
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeanPOULET/Projet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JeanPOULET/Projet/issues"
+  },
+  "homepage": "https://github.com/JeanPOULET/Projet#readme"
 }
