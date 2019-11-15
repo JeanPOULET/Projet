@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
            partie: partieInvite
          };
          sock.emit("joinGame",join);
-         document.getElementById("_p"+partieInvite).removeEventListener("click",rejoindrePartie);
+         document.getElementById("p_"+partieInvite).removeEventListener("click",rejoindrePartie);
          creationOnglet();
      }
 
@@ -403,7 +403,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         currentUser = null;
         sock.emit("logout");
         document.getElementById("radio1").checked = true;
-    };
+    }
 
     /**
      *  Mapping des boutons de l'interface avec des fonctions du client.
