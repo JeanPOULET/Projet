@@ -469,8 +469,15 @@ img{
     top :10%;
 
 }
+
+ .carte{
+
+}
+.amazons{
+    background-image: url(../images/amazons.png);
+}
 .gameMain .joueur {
-    
+
 }
 .gameScreen table thead tr th{
     width: 600px;

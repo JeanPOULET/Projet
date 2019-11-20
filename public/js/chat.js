@@ -417,6 +417,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var id = "Partie " + partieInvite;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
+        nouvelOnglet.style.cursor = "pointer";
         var taille = 0;
         for (let i = 0; i < document.getElementById("content").children.length; i++) {
             if (document.getElementById("content").children[i].tagName == "H2") {
@@ -617,11 +618,35 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             toDom.setAttribute("class","joueur");
             toDom.setAttribute("id",liste_joueurs.joueurs[i]+"_"+partieEnCours);
             gameMain.appendChild(toDom);
+            let main = document.createElement("main");
+            document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(main);
             for(let j=0;j<4;j++){
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
+                switch(i){
+                    case 0 :
+                        carte.classList.add("amazons");
+                        break;
+
+                    case 1 :
+                        carte.classList.add("carnivorous");
+                        break;
+
+                    case 2:
+                        carte.classList.add("cyborgs");
+                        break;
+                    case 3:
+                        carte.classList.add("indians");
+                        break;
+                    case 4:
+                        carte.classList.add("jokers");
+                        break;
+                    case 5:
+                        carte.classList.add("amazons");
+                        break;
+                }
                 carte.innerHTML = "je suis carte "+j;
-                document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(carte);
+                document.querySelector("#"+liste_joueurs.joueurs[i]+"_"+partieEnCours+" main").appendChild(carte);
             }
         }
 
@@ -633,13 +658,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         console.log("liste des joueurs pour partie n°"+partieLancee+" :: "+ players_liste.joueurs);
     }
 
-    function jouer(partieLancee, etat){
-        switch(etat){
-            case 1 :
-            case 2 :
-            case 3 :
-            case 4 :
-            case 5 :
+    function jouer(partieLancee, etat,joueur){
+        if(joueur!=currentUser) {
+            switch (etat) {
+                case 1 :
+                case 2 :
+                case 3 :
+                case 4 :
+                case 5 :
+            }
         }
     }
 
