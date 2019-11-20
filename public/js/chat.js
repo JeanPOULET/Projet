@@ -86,6 +86,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         afficherPlateau(num_partie);
     });
 
+    sock.on("debutManche",function(manche){
+        document.getElementById("message"+manche.num_partie).innerHTML ="Début de la manche";
+
+        document.getElementById("message"+manche.num_partie).innerHTML ="C'est à "+manche.joueur+" de jouer !";
+
+        jouer(manche.num_partie,1,manche.joueur);
+
+    });
+
     /**
      *  Connexion de l'utilisateur au chat.
      */
@@ -286,8 +295,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     var data = JSON.parse(this.responseText).data;
                     console.log(data);
                     var html = "";
-                    for (var i in data) {
-                        var url = data[i].images.fixed_height.url;
+                    for (let i in data) {
+                        let url = data[i].images.fixed_height.url;
                         html += "<img src='" + url + "'>";
                     }
                     document.getElementById("bcResults" + final_id).innerHTML = html;
@@ -451,6 +460,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     "</div>" +
                 "</div>" +
                 "<div class =\"gameMain\" id=\"gameMain_p_"+(nbPartieInvite)+"\">" +
+                "<div class='message'  id=\"message"+nbPartieInvite+"\"> </div>"+
                 "</div>" +
                 "<table>"+
                     "<thead>"+
@@ -595,20 +605,29 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         document.getElementById("gameMain_p_"+partieLancee).removeChild(document.getElementById("btnLancer_p_"+partieLancee));
         sock.emit("initialiserPartie",partieLancee);
-        jouer(partieLancee,0);
+        //jouer(partieLancee,0);
 
     }
 
     function afficherPlateau(partieEnCours){
         var gameMain = document.getElementById("gameMain_p_"+partieEnCours);
         var toDom="";
-
+        console.log("liste des joueurs : "+liste_joueurs.joueurs);
         for(let i in liste_joueurs.joueurs){
             console.log("i in listeJoueurs : "+liste_joueurs.joueurs[i]);
-            toDom +="<div class=\"joueur\" id=\""+liste_joueurs.joueurs[i]+"\">Yo mec</div>";
+            toDom= document.createElement("div");
+            toDom.setAttribute("class","joueur");
+            toDom.setAttribute("id",liste_joueurs.joueurs[i]+"_"+partieEnCours);
+            gameMain.appendChild(toDom);
+            for(let j=0;j<4;j++){
+                let carte = document.createElement("div");
+                carte.setAttribute("class","carte");
+                carte.innerHTML = "je suis carte "+j;
+                document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(carte);
+            }
         }
 
-        gameMain.innerHTML = toDom;
+
 
     }
 
@@ -618,16 +637,18 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     }
 
-    function jouer(partieLancee, etat){
 
-        switch(etat){
-            case 1 :
-            case 2 :
-            case 3 :
-            case 4 :
-            case 5 :
+
+    function jouer(partieLancee, etat,joueur){
+        if(joueur===currentUser){
+            switch(etat){
+                case 1 :
+                case 2 :
+                case 3 :
+                case 4 :
+                case 5 :
+            }
         }
-
 
     }
 

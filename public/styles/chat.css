@@ -42,6 +42,7 @@ body > div {
     top: -35px;
     left: -1px;
 }
+
 #content h3 {
     right: -11px;
     top: -28px;
@@ -61,6 +62,11 @@ body > div {
     font-size: 16px;
     margin: 3px;
 }
+
+#content main p a{
+    cursor: pointer;
+}
+
 #content main .mp {
     color: darkblue;   
 }
@@ -265,6 +271,10 @@ input[type=radio]:checked + div {
     background-color: inherit;
 }
 
+#fenetreInvit #invitations label{
+    cursor:pointer;
+}
+
 #fenetreInvit input[type=checkbox]{
     visibility: hidden; 
 }
@@ -436,4 +446,10 @@ img{
 .gameScreen thead {
     background-color: #333;
     color: #fff;
+}
+
+
+.message {
+    left: 70%;
+    top:50%;
 }

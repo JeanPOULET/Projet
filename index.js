@@ -89,8 +89,9 @@ io.on('connection', function (socket) {
             id_partie:invit.partie
         };
         for(let i in joueurs[invit.partie]){
-            if(i!==undefined) {
+            if(joueurs[invit.partie][i]!==undefined) {
                 clients[joueurs[invit.partie][i]].emit("listeGame", liste);
+                clients[joueurs[invit.partie][i]].emit("message", { from: null, to: null, text: currentID + " a rejoint la partie", date: Date.now(),id_partie:invit.partie });
             }
         }
 
@@ -147,11 +148,30 @@ io.on('connection', function (socket) {
         for(let i in joueurs[partieLancee]){
             clients[joueurs[partieLancee][i]].emit("iniPartie",partieLancee);
         }
-        //jouer(partieLancee);
+        jouer(partieLancee,0);
 
 
     });
+    function jouer(partieLancee, etat){
 
+        switch(etat){
+            case 0 :
+                let rand = Math.floor(Math.random()*(joueurs[partieLancee].length-1));
+                console.log("rand : "+rand);
+
+                for(let i in joueurs[partieLancee]){
+                    clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
+                 }
+            case 1 :
+
+            case 2 :
+            case 3 :
+            case 4 :
+            case 5 :
+        }
+
+
+    }
 
 
     /**
