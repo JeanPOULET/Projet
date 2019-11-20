@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //liste des joueurs
     var players = [[]];
+    var liste_joueurs =null;
 
     //indice de partie du serveur
     var partieInvite =-1;
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("listeGame", function (liste) {
+        liste_joueurs = liste;
         if (currentUser) {
             afficherListe(liste.joueurs, liste.id_partie);
             creationTableauScore(liste.joueurs, liste.id_partie);
@@ -74,9 +76,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     });
 
-    sock.on("suppressionPartie", function (num_partie) {
+    sock.on("suppressionInvitation", function (num_partie) {
         console.log("je dois delete la partie : "+num_partie);
         removeIDpartie(num_partie);
+    });
+
+    sock.on("iniPartie",function(num_partie){
+        console.log("La partie est lancée n°"+num_partie);
+        afficherPlateau(num_partie);
     });
 
     /**
@@ -585,8 +592,22 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
+        document.getElementById("gameMain_p_"+partieLancee).removeChild(document.getElementById("btnLancer_p_"+partieLancee));
         sock.emit("initialiserPartie",partieLancee);
         jouer(partieLancee,0);
+    }
+
+    function afficherPlateau(partieEnCours){
+        var gameMain = document.getElementById("gameMain_p_"+partieEnCours);
+        var toDom="";
+
+        for(let i in liste_joueurs.joueurs){
+            console.log("i in listeJoueurs : "+liste_joueurs.joueurs[i]);
+            toDom +="<div class=\"joueur\" id=\""+liste_joueurs.joueurs[i]+"\">Yo mec</div>";
+        }
+
+        gameMain.innerHTML = toDom;
+
     }
 
     function lancerPartie(partieLancee){

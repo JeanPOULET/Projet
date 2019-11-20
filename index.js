@@ -143,9 +143,15 @@ io.on('connection', function (socket) {
      */
 
     socket.on("initialiserPartie",function(partieLancee){
-        io.sockets.emit("suppressionPartie",partieLancee);
+        io.sockets.emit("suppressionInvitation",partieLancee);
+        for(let i in joueurs[partieLancee]){
+            clients[joueurs[partieLancee][i]].emit("iniPartie",partieLancee);
+        }
+        //jouer(partieLancee);
+
 
     });
+
 
 
     /**
