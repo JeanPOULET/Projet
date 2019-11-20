@@ -397,6 +397,12 @@ input[type=radio]:checked + div {
     border-radius: 5px;
 }
 
+.gameScreen{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
 .gameMain{
     position: absolute;
     top: 0%;
@@ -405,9 +411,32 @@ input[type=radio]:checked + div {
     width: 100%;
 }
 
-.boutonStart{
+.gameMain input{
     position: absolute;
     top: 50%;
-    left: 60%;
+    left: 25%;
 }
 
+img{
+    position: absolute;
+    display: inline-block;
+    left: 10%;
+    top: 8%;
+}
+
+.gameScreen table{
+    position: absolute;
+    display: inline-block;
+    background-color: inherit;
+    left: 10%;
+    top: 85%;
+}
+
+.gameScreen table, td {
+    border: 1px solid #333;
+}
+
+.gameScreen thead {
+    background-color: #333;
+    color: #fff;
+}
