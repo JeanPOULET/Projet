@@ -408,6 +408,7 @@ input[type=radio]:checked + div {
     position: absolute;
     height: 100%;
     width: 100%;
+    background-image: url("../images/fondJeu.png");
 }
 
 .gameMain{
@@ -415,13 +416,13 @@ input[type=radio]:checked + div {
     top: 0%;
     left: 40%;
     height: 100%;
-    width: 100%;
+    width: 60%
 }
 
 .gameMain input{
     position: absolute;
     top: 50%;
-    left: 25%;
+    left: 45%;
 }
 
 img{
@@ -435,17 +436,23 @@ img{
     position: absolute;
     display: inline-block;
     background-color: inherit;
-    left: 10%;
+    left: 5%;
     top: 85%;
 }
 
 .gameScreen table, td {
     border: 1px solid #333;
+    text-align:center; 
 }
 
 .gameScreen thead {
     background-color: #333;
     color: #fff;
+    text-align:center;
+}
+
+.gameScreen td{
+    width: 100px;
 }
 
 
@@ -453,3 +460,8 @@ img{
     left: 70%;
     top:50%;
 }
+.gameScreen table thead tr th{
+    width: 600px;
+}
+
+

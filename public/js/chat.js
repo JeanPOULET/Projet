@@ -465,7 +465,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "<table>"+
                     "<thead>"+
                         "<tr>"+
-                            "<th colspan=\"2\">Tableau des scores</th>"+
+                            "<th colspan=\"6\">Tableau des scores</th>"+
                         "</tr>"+
                     "</thead>"+
                     "<tbody>"+
@@ -595,7 +595,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
         currentUser = null;
 
-
         sock.emit("logout");
 
         document.getElementById("radio-1").checked = true;
@@ -605,8 +604,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         document.getElementById("gameMain_p_"+partieLancee).removeChild(document.getElementById("btnLancer_p_"+partieLancee));
         sock.emit("initialiserPartie",partieLancee);
-        //jouer(partieLancee,0);
-
+        jouer(partieLancee,0);
     }
 
     function afficherPlateau(partieEnCours){
@@ -632,24 +630,17 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function lancerPartie(partieLancee){
-        console.log("liste des joueurs pour partie n°"+partieLancee+" :: "+ liste_joueurs.joueurs);
-
-
+        console.log("liste des joueurs pour partie n°"+partieLancee+" :: "+ players_liste.joueurs);
     }
 
-
-
-    function jouer(partieLancee, etat,joueur){
-        if(joueur===currentUser){
-            switch(etat){
-                case 1 :
-                case 2 :
-                case 3 :
-                case 4 :
-                case 5 :
-            }
+    function jouer(partieLancee, etat){
+        switch(etat){
+            case 1 :
+            case 2 :
+            case 3 :
+            case 4 :
+            case 5 :
         }
-
     }
 
     /**
