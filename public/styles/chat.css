@@ -456,9 +456,21 @@ img{
 }
 
 
-.message {
-    left: 70%;
-    top:50%;
+.gameMain .message {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+
+
+}
+
+.gameMain .joueur .sPage{
+    position: absolute;
+    top :10%;
+
+}
+.gameMain .joueur {
+    
 }
 .gameScreen table thead tr th{
     width: 600px;
