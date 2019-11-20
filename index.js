@@ -129,6 +129,11 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on("lancerPartie",function(partieLancee){
+        io.sockets.emit("suppressionPartie",partieLancee);
+
+    });
+
 
     /**
      *  Gestion des déconnexions
@@ -142,10 +147,14 @@ io.on('connection', function (socket) {
             joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
             console.log(joueurs);
             if(joueurs[game].length ===0){
+                io.sockets.emit("suppressionPartie",game);
                 delete joueurs[game];
                 partie--;
+                if(partie===0){
+                    partie=1;
+                }
                 io.sockets.emit("invitation",{partie:partie,from:null});
-                io.sockets.emit("suppressionPartie",partie);
+
             }else {
                 let liste = {
                     joueurs: joueurs[game],

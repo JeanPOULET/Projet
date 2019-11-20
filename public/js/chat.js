@@ -9,16 +9,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     // socket ouverte vers le client
     var sock = io.connect();
-    
+
     // utilisateur courant 
     var currentUser = null;
 
     //liste des users
-    var users =null;
+    var users = null;
 
     //liste des joueurs
     var players = [[]];
-    var players_liste=null;
+    var players_liste = null;
 
     //indice de partie du serveur
     var partieInvite =-1;
@@ -26,55 +26,63 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //host
     var host = null;
+    
     //nombre de partie du joueur
     var nbPartie = 0;
 
+    //tableau dans lequel le joueur fait partie
+    var tabPartie=null;
+
     // on attache les événements que si le client est connecté.
-    sock.on("bienvenue", function(id) {
+    sock.on("bienvenue", function (id) {
         if (currentUser) {
             document.querySelector("#content main").innerHTML = "";
             document.getElementById("monMessage").value = "";
             document.getElementById("login").innerHTML = id;
             document.getElementById("radio0").checked = true;
             currentUser = id;
-            fromInvit=currentUser;
+            fromInvit = currentUser;
         }
     });
-    sock.on("message", function(msg) {
+    sock.on("message", function (msg) {
         if (currentUser) {
             afficherMessage(msg);
         }
     });
-    sock.on("liste", function(liste) {
-        users =liste;
+    sock.on("liste", function (liste) {
+        users = liste;
         if (currentUser) {
-            afficherListe(liste,0);
+            afficherListe(liste, 0);
         }
     });
 
-    sock.on("listeGame",function(liste){
+    sock.on("listeGame", function (liste) {
         players_liste = liste;
-        if(currentUser){
-            afficherListe(liste.joueurs,liste.id_partie);
+        if (currentUser) {
+            afficherListe(liste.joueurs, liste.id_partie);
         }
     });
 
-    sock.on("invitation",function(invit){
-        if(currentUser){
-            console.log("invitationneur : ",invit.from);
+    sock.on("invitation", function (invit) {
+        if (currentUser) {
+            console.log("invitationneur : ", invit.from);
             partieInvite = invit.partie;
             fromInvit = currentUser;
-            if(invit.from !=null) {
+            if (invit.from != null) {
                 fromInvit = invit.from;
             }
         }
 
     });
 
-    sock.on("suppresionPartie",function(num_partie){
-        if(document.getElementById("p_"+num_partie) !=null){
-            document.getElementById("p_"+partieInvite).removeAttribute("id");
-        }
+    sock.on("suppressionPartie", function (num_partie) {
+        console.log("je dois delete la partie : "+num_partie);
+        removeIDpartie(num_partie);
+        /*
+        if (document.getElementById("p_" + num_partie) != null) {
+            document.getElementById("p_" + partieInvite).removeAttribute("id");
+            document.getElementById("p_" + partieInvite).removeEventListener("click",rejoindrePartie);
+        }*/
 
     });
 
@@ -85,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         // recupération du pseudo
         var user = document.getElementById("pseudo").value.trim();
-        if (! user) return;
+        if (!user) return;
         document.getElementById("radio0").check = true;
         currentUser = user;
         sock.emit("login", user);
@@ -103,29 +111,28 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         // affichage des nouveaux messages
         var bcMessages;
-        console.log("id_partie : "+data.id_partie);
-        if(data.id_partie===0){
+        console.log("id_partie : " + data.id_partie);
+        if (data.id_partie === 0) {
             bcMessages = document.querySelector("#content main");
-        }else{
-            bcMessages = document.querySelector("#contentGame"+data.id_partie+" main");
+        } else {
+            bcMessages = document.querySelector("#contentGame" + data.id_partie + " main");
         }
-        
+
         var classe = "";
 
         if (data.from === currentUser) {
             classe = "moi";
-        }
-        else if (data.from == null) {
+        } else if (data.from == null) {
             classe = "system";
         }
 
         if (data.to != null) {
-            classe = classe || "mp";
+            classe = classe || "mp";
             data.from += " (à " + data.to + ")";
         }
 
         let date = new Date(data.date);
-        date = date.toISOString().substr(11,8);
+        date = date.toISOString().substr(11, 8);
         if (data.from == null) {
             data.from = "[admin]";
         }
@@ -133,16 +140,17 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         data.text = traiterTexte(data.text);
 
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
-        if(data.id_partie===0){
+        if (data.id_partie === 0) {
             document.querySelector("main > p:last-child").scrollIntoView();
-        }else{
-            document.querySelector("#contentGame"+data.id_partie+" main > p:last-child").scrollIntoView();
+        } else {
+            document.querySelector("#contentGame" + data.id_partie + " main > p:last-child").scrollIntoView();
         }
 
-        console.log("fromInvit : ",fromInvit);
-        if(data.id_partie===0 && fromInvit!==currentUser){
-            console.log("aff="+partieInvite);
-            document.getElementById("p_"+partieInvite).addEventListener("click",rejoindrePartie);
+        console.log("fromInvit : ", fromInvit);
+        if (data.id_partie === 0 && fromInvit !== currentUser) {
+            console.log("aff=" + partieInvite);
+            alert("Vous êtes invité par "+fromInvit+" pour la partie n°"+partieInvite+" !");
+            document.getElementById("p_" + partieInvite).addEventListener("click", rejoindrePartie);
         }
     }
 
@@ -151,24 +159,24 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var ind = txt.indexOf("[img:");
         while (ind >= 0) {
             console.log(txt);
-            txt = txt.replace("\[img:",'<img src="');
-            txt = txt.replace('\]','">');
+            txt = txt.replace("\[img:", '<img src="');
+            txt = txt.replace('\]', '">');
             ind = txt.indexOf("[img:");
         }
-        txt = txt.replace(/:[-]?\)/g,'<span class="emoji sourire"></span>');
-        txt = txt.replace(/:[-]?D/g,'<span class="emoji banane"></span>');
-        txt = txt.replace(/:[-]?[oO]/g,'<span class="emoji grrr"></span>');
-        txt = txt.replace(/<3/g,'<span class="emoji love"></span>');
-        txt = txt.replace(/:[-]?[Ss]/g,'<span class="emoji malade"></span>');
+        txt = txt.replace(/:[-]?\)/g, '<span class="emoji sourire"></span>');
+        txt = txt.replace(/:[-]?D/g, '<span class="emoji banane"></span>');
+        txt = txt.replace(/:[-]?[oO]/g, '<span class="emoji grrr"></span>');
+        txt = txt.replace(/<3/g, '<span class="emoji love"></span>');
+        txt = txt.replace(/:[-]?[Ss]/g, '<span class="emoji malade"></span>');
         return txt;
     }
 
-    function afficherListe(newList,game) {
-        console.log("game : ",game);
-        if(game==0){
+    function afficherListe(newList, game) {
+        console.log("game : ", game);
+        if (game == 0) {
             document.querySelector("#content aside").innerHTML = newList.join("<br>");
-        }else{
-            document.querySelector("#contentGame"+game+" aside").innerHTML = newList.join("<br>");
+        } else {
+            document.querySelector("#contentGame" + game + " aside").innerHTML = newList.join("<br>");
         }
 
     }
@@ -189,19 +197,19 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             msg = msg.substring(i);
         }
         // envoi
-        sock.emit("message", { from: currentUser, to: to, text: msg,id_partie:0 });
+        sock.emit("message", {from: currentUser, to: to, text: msg, id_partie: 0});
 
         document.getElementById("monMessage").value = "";
     }
 
-    function envoyerMsgGame(){
+    function envoyerMsgGame() {
         let id_btn = this.id;
         let reg = new RegExp(/[^\d]/g);
-        let nb =id_btn;
-        nb = nb.replace(reg,"");
-        const res=parseInt(nb,10);
-        console.log("res = "+res);
-        let msg = document.getElementById("monMessage_p_"+res).value.trim();
+        let nb = id_btn;
+        nb = nb.replace(reg, "");
+        const res = parseInt(nb, 10);
+        console.log("res = " + res);
+        let msg = document.getElementById("monMessage_p_" + res).value.trim();
         if (!msg) return;
 
         // message privé
@@ -212,55 +220,55 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             msg = msg.substring(i);
         }
         // envoi
-        sock.emit("message", { from: currentUser, to: to, text: msg, id_partie:res });
+        sock.emit("message", {from: currentUser, to: to, text: msg, id_partie: res});
 
-        document.getElementById("monMessage_p_"+res).value = "";
+        document.getElementById("monMessage_p_" + res).value = "";
     }
 
     /**
      *  Fermer la zone de choix d'une image
      */
-    function toggleImage(evt,id=-1) {
+    function toggleImage(evt, id = -1) {
 
-        let final_id=getIdString(this.id);
+        let final_id = getIdString(this.id);
 
-        if(id>0){
-            final_id=id;
+        if (id > 0) {
+            final_id = id;
         }
-        console.log("fid= "+final_id);
-        if (document.getElementById("bcImage"+final_id).style.display === "none") {
-            document.getElementById("bcImage"+final_id).style.display = "block";
-            document.getElementById("recherche"+final_id).focus();
-        }
-        else {
-            document.getElementById("bcImage"+final_id).style.display = "none";
-            document.getElementById("recherche"+final_id).value = "";
-            document.getElementById("bcResults"+final_id).innerHTML = "";
+        console.log("fid= " + final_id);
+        if (document.getElementById("bcImage" + final_id).style.display === "none") {
+            document.getElementById("bcImage" + final_id).style.display = "block";
+            document.getElementById("recherche" + final_id).focus();
+        } else {
+            document.getElementById("bcImage" + final_id).style.display = "none";
+            document.getElementById("recherche" + final_id).value = "";
+            document.getElementById("bcResults" + final_id).innerHTML = "";
         }
     }
+
     //renvoie en chaine le numéro d'id d'un résultat d'évenèment
-    function getIdString(id){
-        if(id==undefined || id==null){
+    function getIdString(id) {
+        if (id == undefined || id == null) {
             return "";
         }
         let reg = new RegExp(/[^\d]/g);
-        id = id.replace(reg,"");
-        const val = parseInt(id,10);
+        id = id.replace(reg, "");
+        const val = parseInt(id, 10);
         console.log(val);
-        let final_id ="";
-        if(val>0 ){
-            final_id=val;
+        let final_id = "";
+        if (val > 0) {
+            final_id = val;
         }
         return final_id;
     }
 
-    function getIdInt(id){
-        if(id==undefined || id==null || id==NaN){
+    function getIdInt(id) {
+        if (id == undefined || id == null || id == NaN) {
             return 0;
         }
         let reg = new RegExp(/[^\d]/g);
-        id = id.replace(reg,"");
-        const res=parseInt(id,10);
+        id = id.replace(reg, "");
+        const res = parseInt(id, 10);
         return res;
     }
 
@@ -269,11 +277,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function rechercher() {
         let final_id = getIdString(this.id);
-        var queryString = document.getElementById("recherche"+final_id).value;
-        queryString = queryString.replace(/\s/g,'+');
+        var queryString = document.getElementById("recherche" + final_id).value;
+        queryString = queryString.replace(/\s/g, '+');
         // appel AJAX
         var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function(_e) {
+        xhttp.onreadystatechange = function (_e) {
             if (this.readyState === XMLHttpRequest.DONE) {
                 if (this.status === 200) {
                     var data = JSON.parse(this.responseText).data;
@@ -281,9 +289,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     var html = "";
                     for (var i in data) {
                         var url = data[i].images.fixed_height.url;
-                        html += "<img src='"+url+"'>";
+                        html += "<img src='" + url + "'>";
                     }
-                    document.getElementById("bcResults"+final_id).innerHTML = html;
+                    document.getElementById("bcResults" + final_id).innerHTML = html;
                 }
             }
         };
@@ -293,10 +301,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function choixImage(e) {
         let id = getIdInt(this.id);
-        console.log("choixImg : ",id);
+        console.log("choixImg : ", id);
         if (e.target instanceof HTMLImageElement) {
-            sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]", id_partie:id});
-            toggleImage(id,id);
+            sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]", id_partie: id});
+            toggleImage(id, id);
         }
 
     }
@@ -305,34 +313,34 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /**
      * Permet de séléctionné les membres que l'on veut inviter dans une partie
      */
-    function fenetreInvitation(){
+    function fenetreInvitation() {
         var metoru = 0;
         document.querySelector('#invitations').innerHTML = "";
         var invites = users;
-        for(let i in invites){
+        for (let i in invites) {
             let id = invites[i];
-            if(id!=currentUser){
+            if (id != currentUser) {
                 let btn = document.createElement("div");
 
-                btn.innerHTML = "<input type='checkbox' name=\""+id+"\" id="+id+"><label id=\"label"+id+"\" for="+id+">"+id+"</label>";
+                btn.innerHTML = "<input type='checkbox' name=\"" + id + "\" id=" + id + "><label id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
                 document.querySelector('#invitations').appendChild(btn);
-                document.getElementById(id).addEventListener("click", function(){
-                    if(document.getElementById(id).hasAttribute("checked")){
+                document.getElementById(id).addEventListener("click", function () {
+                    if (document.getElementById(id).hasAttribute("checked")) {
                         metoru--;
-                        document.getElementById("label"+id).style.backgroundColor = "initial";
+                        document.getElementById("label" + id).style.backgroundColor = "initial";
                         document.getElementById(id).removeAttribute("checked");
-                        players[nbPartie].splice(players[nbPartie].indexOf(id),1);
-                    }else{
-                        if(metoru >= 5){
+                        players[nbPartie].splice(players[nbPartie].indexOf(id), 1);
+                    } else {
+                        if (metoru >= 5) {
                             alert("Pas plus de 5 à la fois guignol");
                             document.getElementById(id).removeAttribute("checked");
-                            document.getElementById("label"+id).style.backgroundColor = "initial";
-                        }else{
+                            document.getElementById("label" + id).style.backgroundColor = "initial";
+                        } else {
                             document.getElementById(id).setAttribute("checked", "checked");
-                            document.getElementById("label"+id).style.backgroundColor = "yellow";
-                            document.getElementById("label"+id).style.transitionDuration = "0.5s";
+                            document.getElementById("label" + id).style.backgroundColor = "yellow";
+                            document.getElementById("label" + id).style.transitionDuration = "0.5s";
                             metoru++;
-                            if(players[nbPartie] ===undefined) {
+                            if (players[nbPartie] === undefined) {
                                 players[nbPartie] = [];
                             }
                             players[nbPartie].push(id);
@@ -340,41 +348,44 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     }
                 });
             }
-            document.getElementById("fenetreInvit").style.display="block";
+            document.getElementById("fenetreInvit").style.display = "block";
         }
-        sock.emit("invitation",null);
+        sock.emit("invitation", null);
     }
 
     /**
      * Envoie les invitations aux membres séléctionnés
      */
-    function invitation(){
-        if(players[nbPartie] != undefined) {
+    function invitation() {
+        if (players[nbPartie] != undefined) {
             document.getElementById("fenetreInvit").style.display = "none";
-            let invitation ={
-                to:players[nbPartie],
+            let invitation = {
+                to: players[nbPartie],
                 from: currentUser,
-                partie : partieInvite
+                partie: partieInvite
             };
-            sock.emit("invitation",invitation);
+            sock.emit("invitation", invitation);
             for (let i in players[nbPartie]) {
                 let invit = {
                     from: currentUser,
                     to: players[nbPartie][i],
-                    text: "<a id=\"p_"+partieInvite+"\">Clique pour rejoindre mon invitation</a>",
+                    text: "<a id=\"p_" + partieInvite + "\">Clique pour rejoindre mon invitation</a>",
                     date: Date.now(),
-                    id_partie:0
+                    id_partie: 0
                 };
 
                 sock.emit("message", invit);
             }
             console.log(players);
-            let join={
+            let join = {
                 joiner: currentUser,
                 partie: partieInvite
             };
-
-            sock.emit("joinGame",join);
+            if(tabPartie===null){
+                tabPartie=[];
+            }
+            tabPartie.push(partieInvite);
+            sock.emit("joinGame", join);
             nbPartie++;
             host = currentUser;
             creationOnglet();
@@ -384,35 +395,35 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*
      * Quitte la fenetre d'invitation
      */
-    function annulerInvit(){
-        document.getElementById("fenetreInvit").style.display="none";
+    function annulerInvit() {
+        document.getElementById("fenetreInvit").style.display = "none";
         partieInvite--;
     }
 
     /*
      * Fait apparaitre l'onglet de la fenetre de jeu
      */
-    function creationOnglet(){
+    function creationOnglet() {
         var nouvelOnglet = document.createElement("h2");
         var nbPartieInvite = partieInvite; // +2 car les boutons radios vont jusqu'à 2 de base dans le chat (login et main)
-        var id = "Partie "+partieInvite;
+        var id = "Partie " + partieInvite;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
         var taille = 0;
         for (let i = 0; i < document.getElementById("content").children.length; i++) {
-            if(document.getElementById("content").children[i].tagName == "H2"){
+            if (document.getElementById("content").children[i].tagName == "H2") {
                 taille += document.getElementById("content").children[i].offsetWidth;
             }
         }
-        nouvelOnglet.style.left = ""+taille+"px";
+        nouvelOnglet.style.left = "" + taille + "px";
         document.getElementById("content").insertBefore(nouvelOnglet, document.querySelector("h3"));
         var input = document.createElement("input");
         input.setAttribute("type", "radio");
         input.setAttribute("name", "btnScreen");
-        input.setAttribute("id", "radio"+(nbPartieInvite));
+        input.setAttribute("id", "radio" + (nbPartieInvite));
 
         var div = document.createElement("div");
-        div.setAttribute("id", "gameScreen"+(nbPartieInvite));
+        div.setAttribute("id", "gameScreen" + (nbPartieInvite));
 
         div.innerHTML =
             "<div class = \"contentGame\" id=\"contentGame"+(nbPartieInvite)+"\">" +
@@ -453,56 +464,83 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.querySelector(".gameMain").appendChild(inputGameStart);
         }
 
-        document.getElementById("btnChat_p_"+(nbPartieInvite)).addEventListener("click", function(e){
+        document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function (e) {
             document.getElementById("radio0").checked = true;
         });
 
-        document.getElementById("btnEnvoyer_p_"+nbPartieInvite).addEventListener("click",envoyerMsgGame);
-        document.getElementById("btnImage_p_"+nbPartieInvite).addEventListener("click",toggleImage);
-        document.getElementById("btnFermer_p_"+nbPartieInvite).addEventListener("click",toggleImage);
-        document.getElementById("btnRechercher_p_"+nbPartieInvite).addEventListener("click",rechercher);
-        document.getElementById("bcResults"+nbPartieInvite).addEventListener("click",choixImage);
-        document.getElementById("btnQuitterGame_p_"+(nbPartieInvite)).addEventListener("click", quitterGame);
+        document.getElementById("btnEnvoyer_p_" + nbPartieInvite).addEventListener("click", envoyerMsgGame);
+        document.getElementById("btnLancer_p_" + nbPartieInvite).addEventListener("click", lancerPartie);
+        document.getElementById("btnImage_p_" + nbPartieInvite).addEventListener("click", toggleImage);
+        document.getElementById("btnFermer_p_" + nbPartieInvite).addEventListener("click", toggleImage);
+        document.getElementById("btnRechercher_p_" + nbPartieInvite).addEventListener("click", rechercher);
+        document.getElementById("bcResults" + nbPartieInvite).addEventListener("click", choixImage);
+        document.getElementById("btnQuitterGame_p_" + (nbPartieInvite)).addEventListener("click", quitterGame);
 
 
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
 
-    function creationFenetreJeu(){
-        let partie =  this.id;
+    function creationFenetreJeu() {
+        let partie = this.id;
         let reg = new RegExp(/[^\d]/g);
-        let nb =partie;
-        nb = nb.replace(reg,"");
-        const res=parseInt(nb,10);
-        partie = partie.replace(/Partie .*/ ,"radio"+res);
+        let nb = partie;
+        nb = nb.replace(reg, "");
+        const res = parseInt(nb, 10);
+        partie = partie.replace(/Partie .*/, "radio" + res);
         document.getElementById(partie).checked = true;
     }
 
-     function rejoindrePartie(){
-         let join ={
-           joiner: currentUser,
-           partie: partieInvite
-         };
-         sock.emit("joinGame",join);
-         console.log("p_"+partieInvite);
-         document.getElementById("p_"+partieInvite).removeEventListener("click",rejoindrePartie);
-         document.getElementById("p_"+partieInvite).removeAttribute("id");
-         creationOnglet();
-     }
+    function rejoindrePartie() {
+        let join = {
+            joiner: currentUser,
+            partie: partieInvite
+        };
+        sock.emit("joinGame", join);
+
+        console.log("p_" + partieInvite);
+        document.getElementById("p_" + partieInvite).removeEventListener("click", rejoindrePartie);
+        document.getElementById("p_" + partieInvite).removeAttribute("id");
+        //removeIDpartie();
+        creationOnglet();
+    }
+
+    function removeIDpartie(num_partie) {
+        if (document.getElementById("p_" + num_partie) !== null) {
+            document.getElementById("p_" + num_partie).removeEventListener("click", rejoindrePartie);
+            document.getElementById("p_" + num_partie).removeAttribute("id");
+
+        }
+    }
 
 
 
-     function quitterGame() {
+     function quitterGame(id) {
+        console.log("id quitterGame : "+id);
          document.getElementById("radio0").checked = true;
-         let partie = this.id;
-         let reg = new RegExp(/[^\d]/g);
-         let nb = partie;
-         nb = nb.replace(reg, "");
-         const res = parseInt(nb, 10);
-         partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-         document.getElementById("content").removeChild(document.getElementById(partie));
-         partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
-         document.querySelector("body").removeChild(document.getElementById(partie));
+         let res;
+         if(id>1) {
+             res=id;
+             document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
+             document.getElementById("content").removeChild(document.getElementById("Partie "+res));
+             
+         }else{
+             let partie = this.id;
+             let reg = new RegExp(/[^\d]/g);
+             let nb = partie;
+             nb = nb.replace(reg, "");
+             res = parseInt(nb, 10);
+             partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
+             document.getElementById("content").removeChild(document.getElementById(partie));
+             partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
+             document.querySelector("body").removeChild(document.getElementById(partie));
+
+         }
+         for(let i in tabPartie){
+             if(tabPartie[i]===res){
+                 delete tabPartie[i];
+                 break;
+             }
+         }
          document.getElementById("radio"+(res)).remove();
          sock.emit("quitGame",res);
      }
@@ -511,8 +549,19 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function quitter() {
         currentUser = null;
+        for(let i in tabPartie){
+            quitterGame(tabPartie[i]);
+        }
+
         sock.emit("logout");
+
         document.getElementById("radio-1").checked = true;
+    }
+
+    function lancerPartie(){
+        let partieLancee = getIdInt(this.id);
+        sock.emit("lancerPartie",partieLancee);
+
     }
 
     /**
