@@ -448,7 +448,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "<table>"+
                     "<thead>"+
                         "<tr>"+
-                            "<th colspan=\"2\">Tableau des scores</th>"+
+                            "<td colspan=\"6\">Tableau des scores</td>"+
                         "</tr>"+
                     "</thead>"+
                     "<tbody>"+
@@ -578,7 +578,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
         currentUser = null;
 
-
         sock.emit("logout");
 
         document.getElementById("radio-1").checked = true;
@@ -588,17 +587,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         sock.emit("initialiserPartie",partieLancee);
         jouer(partieLancee,0);
-
     }
 
     function lancerPartie(partieLancee){
         console.log("liste des joueurs pour partie n°"+partieLancee+" :: "+ players_liste.joueurs);
-
-
     }
 
     function jouer(partieLancee, etat){
-
         switch(etat){
             case 1 :
             case 2 :
@@ -606,8 +601,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             case 4 :
             case 5 :
         }
-
-
     }
 
     /**
