@@ -23,8 +23,8 @@ var clients = {};       // id -> socket
 
 /** Gestion des parties et des joueurs **/
 
-var joueurs = [[]];
-var partie=1;
+var joueurs = [[]]; //[indice_partie][joueurs]
+var partie=1; //indice de la partie qu'on peut crée
 
 // Quand un client se connecte, on le note dans la console
 io.on('connection', function (socket) {
@@ -52,6 +52,12 @@ io.on('connection', function (socket) {
         // envoi de la nouvelle liste à tous les clients connectés
         io.sockets.emit("liste", Object.keys(clients));
     });
+
+    /**
+     * Fonctions pour :
+     *      inviter des personnes
+     *      rejoindre une partie
+     */
 
     socket.on("invitation",function(invit){
         if(invit===null){
@@ -131,6 +137,11 @@ io.on('connection', function (socket) {
         }
     });
 
+    /**
+     * Gérer les parties
+     *
+     */
+
     socket.on("initialiserPartie",function(partieLancee){
         io.sockets.emit("suppressionPartie",partieLancee);
 
@@ -209,6 +220,5 @@ io.on('connection', function (socket) {
         }
         console.log("Client déconnecté");
     });
-    
-    
+
 });

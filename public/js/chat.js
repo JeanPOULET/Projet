@@ -555,16 +555,28 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
         sock.emit("initialiserPartie",partieLancee);
-        lancerPartie(partieLancee);
+        jouer(partieLancee,0);
 
     }
 
     function lancerPartie(partieLancee){
         console.log("liste des joueurs pour partie n°"+partieLancee+" :: "+ players_liste.joueurs);
 
+
     }
 
+    function jouer(partieLancee, etat){
 
+        switch(etat){
+            case 1 :
+            case 2 :
+            case 3 :
+            case 4 :
+            case 5 :
+        }
+
+
+    }
 
     /**
      *  Mapping des boutons de l'interface avec des fonctions du client.
