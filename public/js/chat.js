@@ -68,6 +68,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     });
 
+    sock.on("suppresionPartie",function(num_partie){
+        if(document.getElementById("p_"+num_partie) !=null){
+            document.getElementById("p_"+partieInvite).removeAttribute("id");
+        }
+
+    });
+
     /**
      *  Connexion de l'utilisateur au chat.
      */
@@ -472,6 +479,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
          document.getElementById("p_"+partieInvite).removeAttribute("id");
          creationOnglet();
      }
+
+
+
      function quitterGame() {
          document.getElementById("radio0").checked = true;
          let partie = this.id;

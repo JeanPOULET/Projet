@@ -145,6 +145,7 @@ io.on('connection', function (socket) {
                 delete joueurs[game];
                 partie--;
                 io.sockets.emit("invitation",{partie:partie,from:null});
+                io.sockets.emit("suppressionPartie",partie);
             }else {
                 let liste = {
                     joueurs: joueurs[game],
