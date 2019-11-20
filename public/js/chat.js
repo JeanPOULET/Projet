@@ -514,26 +514,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function quitterGame(id) {
         console.log("id quitterGame : "+id);
         document.getElementById("radio0").checked = true;
-        let res;
-        if(id>=1) {
-            res=id;
-            document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
-            document.getElementById("content").removeChild(document.getElementById("Partie "+res));
-
-        }else{
-            let partie = this.id;
-            let reg = new RegExp(/[^\d]/g);
-            let nb = partie;
-            nb = nb.replace(reg, "");
-            res = parseInt(nb, 10);
-            partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-            document.getElementById("content").removeChild(document.getElementById(partie));
-            partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
-            document.querySelector("body").removeChild(document.getElementById(partie));
-
-    function quitterGame(id) {
-        console.log("id quitterGame : "+id);
-        document.getElementById("radio0").checked = true;
          let res;
          if(id>=1) {
              res=id;
@@ -581,10 +561,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         sock.emit("lancerPartie",partieLancee);
 
-    }
-
-    function lancerPartie(){
-        
     }
 
     /**
