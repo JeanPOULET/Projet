@@ -462,6 +462,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             inputGameStart.setAttribute("value", "Lancer la partie");
             inputGameStart.setAttribute("id", "btnLancer_p_"+nbPartieInvite);
             document.querySelector(".gameMain").appendChild(inputGameStart);
+            document.getElementById("btnLancer_p_" + nbPartieInvite).addEventListener("click", lancerPartie);
         }
 
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function (e) {
@@ -469,7 +470,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         });
 
         document.getElementById("btnEnvoyer_p_" + nbPartieInvite).addEventListener("click", envoyerMsgGame);
-        document.getElementById("btnLancer_p_" + nbPartieInvite).addEventListener("click", lancerPartie);
         document.getElementById("btnImage_p_" + nbPartieInvite).addEventListener("click", toggleImage);
         document.getElementById("btnFermer_p_" + nbPartieInvite).addEventListener("click", toggleImage);
         document.getElementById("btnRechercher_p_" + nbPartieInvite).addEventListener("click", rechercher);
@@ -558,6 +558,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         sock.emit("lancerPartie",partieLancee);
 
+    }
+
+    function lancerPartie(){
+        
     }
 
     /**
