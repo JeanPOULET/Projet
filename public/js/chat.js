@@ -486,11 +486,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         };
         sock.emit("joinGame", join);
 
+
         console.log("p_" + partieInvite);
         document.getElementById("p_" + partieInvite).removeEventListener("click", rejoindrePartie);
         document.getElementById("p_" + partieInvite).removeAttribute("id");
         //removeIDpartie();
         creationOnglet();
+        fromInvit=currentUser;
     }
 
     function removeIDpartie(num_partie) {
@@ -502,10 +504,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
 
-
-     function quitterGame(id) {
+    function quitterGame(id) {
         console.log("id quitterGame : "+id);
-         document.getElementById("radio0").checked = true;
+        document.getElementById("radio0").checked = true;
          let res;
          if(id>=1) {
              res=id;
@@ -537,10 +538,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      *  Quitter le chat et revenir à la page d'accueil.
      */
     function quitter() {
-        currentUser = null;
         for(let i in tabPartie){
+            console.log("du coup si");
             quitterGame(tabPartie[i]);
         }
+        currentUser = null;
+
 
         sock.emit("logout");
 
