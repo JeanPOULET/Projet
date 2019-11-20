@@ -475,8 +475,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("btnRechercher_p_" + nbPartieInvite).addEventListener("click", rechercher);
         document.getElementById("bcResults" + nbPartieInvite).addEventListener("click", choixImage);
         document.getElementById("btnQuitterGame_p_" + (nbPartieInvite)).addEventListener("click", quitterGame);
-
-
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
 
@@ -508,42 +506,40 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if (document.getElementById("p_" + num_partie) !== null) {
             document.getElementById("p_" + num_partie).removeEventListener("click", rejoindrePartie);
             document.getElementById("p_" + num_partie).removeAttribute("id");
-
         }
     }
 
-
-
-     function quitterGame(id) {
+    function quitterGame(id) {
         console.log("id quitterGame : "+id);
-         document.getElementById("radio0").checked = true;
-         let res;
-         if(id>=1) {
-             res=id;
-             document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
-             document.getElementById("content").removeChild(document.getElementById("Partie "+res));
+        document.getElementById("radio0").checked = true;
+        let res;
+        if(id>=1) {
+            res=id;
+            document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
+            document.getElementById("content").removeChild(document.getElementById("Partie "+res));
 
-         }else{
-             let partie = this.id;
-             let reg = new RegExp(/[^\d]/g);
-             let nb = partie;
-             nb = nb.replace(reg, "");
-             res = parseInt(nb, 10);
-             partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-             document.getElementById("content").removeChild(document.getElementById(partie));
-             partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
-             document.querySelector("body").removeChild(document.getElementById(partie));
+        }else{
+            let partie = this.id;
+            let reg = new RegExp(/[^\d]/g);
+            let nb = partie;
+            nb = nb.replace(reg, "");
+            res = parseInt(nb, 10);
+            partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
+            document.getElementById("content").removeChild(document.getElementById(partie));
+            partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
+            document.querySelector("body").removeChild(document.getElementById(partie));
 
-         }
-         for(let i in tabPartie){
-             if(tabPartie[i]===res){
-                 delete tabPartie[i];
-                 break;
-             }
-         }
-         document.getElementById("radio"+(res)).remove();
-         sock.emit("quitGame",res);
-     }
+        }
+        for(let i in tabPartie){
+            if(tabPartie[i]===res){
+                delete tabPartie[i];
+                break;
+            }
+        }
+        document.getElementById("radio"+(res)).remove();
+        sock.emit("quitGame",res);
+    }
+
     /**
      *  Quitter le chat et revenir à la page d'accueil.
      */
