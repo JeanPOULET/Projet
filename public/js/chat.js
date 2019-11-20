@@ -459,6 +459,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if(host != null){
             var inputGameStart = document.createElement("input");
             inputGameStart.setAttribute("type", "button");
+            inputGameStart.setAttribute("class", "boutonStart");
             inputGameStart.setAttribute("value", "Lancer la partie");
             inputGameStart.setAttribute("id", "btnLancer_p_"+nbPartieInvite);
             document.querySelector(".gameMain").appendChild(inputGameStart);
@@ -558,10 +559,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         sock.emit("lancerPartie",partieLancee);
 
-    }
-
-    function lancerPartie(){
-        
     }
 
     /**
