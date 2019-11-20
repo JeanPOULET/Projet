@@ -510,6 +510,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
          if(id>1) {
              res=id;
              document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
+             document.getElementById("content").removeChild(document.getElementById("Partie "+res));
+             
          }else{
              let partie = this.id;
              let reg = new RegExp(/[^\d]/g);
