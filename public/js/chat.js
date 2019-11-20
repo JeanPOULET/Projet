@@ -448,7 +448,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "<table>"+
                     "<thead>"+
                         "<tr>"+
-                            "<td colspan=\"6\">Tableau des scores</td>"+
+                            "<th colspan=\"6\">Tableau des scores</th>"+
                         "</tr>"+
                     "</thead>"+
                     "<tbody>"+
