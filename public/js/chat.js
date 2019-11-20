@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     //indice de partie du serveur
     var partieInvite =-1;
     var fromInvit=currentUser;
+
+    //host
+    var host = null;
     //nombre de partie du joueur
     var nbPartie = 0;
 
@@ -373,6 +376,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
             sock.emit("joinGame",join);
             nbPartie++;
+            host = currentUser;
             creationOnglet();
         }
     }
@@ -436,12 +440,18 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "</div>" +
                 "<div class =\"gameMain\" id=\"gameMain_p_"+(nbPartieInvite)+"\">" +
                     "<p> Ceci est un jeu</p>" +
-                    "<input type=\"button\" value=\"Lancer la partie\" id=\"btnLancer_p_"+(nbPartieInvite)+"\">" +
                 "</div>" +
             "</div>";
 
         document.querySelector("body").appendChild(input);
         document.querySelector("body").appendChild(div);
+        if(host != null){
+            var inputGameStart = document.createElement("input");
+            inputGameStart.setAttribute("type", "button");
+            inputGameStart.setAttribute("value", "Lancer la partie");
+            inputGameStart.setAttribute("id", "btnLancer_p_"+nbPartieInvite);
+            document.querySelector(".gameMain").appendChild(inputGameStart);
+        }
 
         document.getElementById("btnChat_p_"+(nbPartieInvite)).addEventListener("click", function(e){
             document.getElementById("radio0").checked = true;
