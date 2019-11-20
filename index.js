@@ -83,7 +83,9 @@ io.on('connection', function (socket) {
             id_partie:invit.partie
         };
         for(let i in joueurs[invit.partie]){
-            clients[joueurs[invit.partie][i]].emit("listeGame",liste);
+            if(i!==undefined) {
+                clients[joueurs[invit.partie][i]].emit("listeGame", liste);
+            }
         }
 
         console.log(joueurs);

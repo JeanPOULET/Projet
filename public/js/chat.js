@@ -78,12 +78,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     sock.on("suppressionPartie", function (num_partie) {
         console.log("je dois delete la partie : "+num_partie);
         removeIDpartie(num_partie);
-        /*
-        if (document.getElementById("p_" + num_partie) != null) {
-            document.getElementById("p_" + partieInvite).removeAttribute("id");
-            document.getElementById("p_" + partieInvite).removeEventListener("click",rejoindrePartie);
-        }*/
-
     });
 
     /**
@@ -461,9 +455,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             inputGameStart.setAttribute("type", "button");
             inputGameStart.setAttribute("value", "Lancer la partie");
             inputGameStart.setAttribute("id", "btnLancer_p_"+nbPartieInvite);
-            document.querySelector(".gameMain").appendChild(inputGameStart);
+            document.getElementById("gameMain_p_"+nbPartieInvite).appendChild(inputGameStart);
             document.getElementById("btnLancer_p_" + nbPartieInvite).addEventListener("click", initialiserPartie);
         }
+        host=null;
 
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function (e) {
             document.getElementById("radio0").checked = true;
@@ -560,8 +555,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
         sock.emit("initialiserPartie",partieLancee);
+        lancerPartie(partieLancee);
 
     }
+
+    function lancerPartie(partieLancee){
+        console.log("liste des joueurs pour partie n°"+partieLancee+" :: "+ players_liste.joueurs);
+
+    }
+
+
 
     /**
      *  Mapping des boutons de l'interface avec des fonctions du client.
