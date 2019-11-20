@@ -270,10 +270,7 @@ input[type=radio]:checked + div {
 }
 
 #content main p a{
-    text-decoration: underline;
-    text-underline: blue;
-
-
+    text-decoration: underline blue;
 }
 #content main p a:hover {
     background-color:yellow;
