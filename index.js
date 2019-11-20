@@ -73,7 +73,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("joinGame",function(invit){
-        console.log("partie rejoignée par"+invit.joiner);
+        console.log("partie rejointe par"+invit.joiner);
         if(joueurs[invit.partie]=== undefined){
             joueurs[invit.partie]=[];
         }
@@ -195,6 +195,19 @@ io.on('connection', function (socket) {
     socket.on("disconnect", function(reason) {
         // si client était identifié
         if (currentID) {
+            console.log("current :"+currentID);
+            console.log(" avant filtrage==> "+joueurs);
+            for(let i in joueurs) {
+                console.log("Joueurs[i] "+joueurs[i]);
+
+                joueurs[i].filter(function (game) {
+                    console.log("Game :"+game);
+                    return game !== currentID
+                });
+
+
+            }
+            console.log(" après filtrage==> "+joueurs);
             // envoi de l'information de déconnexion
             socket.broadcast.emit("message",
                 { from: null, to: null, text: currentID + " vient de se déconnecter de l'application", date: Date.now(),id_partie:0 } );
