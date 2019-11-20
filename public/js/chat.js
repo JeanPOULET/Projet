@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(_e) {
 
-    /* Liste des "bugs" trouvés
+    /*** Liste des "bugs" trouvés ***
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Css gameScreen fix
@@ -518,11 +518,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         console.log("id quitterGame : "+id);
          document.getElementById("radio0").checked = true;
          let res;
-         if(id>1) {
+         if(id>=1) {
              res=id;
              document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
              document.getElementById("content").removeChild(document.getElementById("Partie "+res));
-             
+
          }else{
              let partie = this.id;
              let reg = new RegExp(/[^\d]/g);
