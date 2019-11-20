@@ -83,7 +83,9 @@ io.on('connection', function (socket) {
             id_partie:invit.partie
         };
         for(let i in joueurs[invit.partie]){
-            clients[joueurs[invit.partie][i]].emit("listeGame",liste);
+            if(i!==undefined) {
+                clients[joueurs[invit.partie][i]].emit("listeGame", liste);
+            }
         }
 
         console.log(joueurs);
@@ -129,7 +131,7 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("lancerPartie",function(partieLancee){
+    socket.on("initialiserPartie",function(partieLancee){
         io.sockets.emit("suppressionPartie",partieLancee);
 
     });
@@ -142,38 +144,36 @@ io.on('connection', function (socket) {
     socket.on("quitGame",function(game){
         if(currentID){
             console.log("Sortie de la partie "+game+" par "+currentID);
-
-
-            joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
+            quitGame(game);
             console.log(joueurs);
-            if(joueurs[game].length ===0){
-                io.sockets.emit("suppressionPartie",game);
-                delete joueurs[game];
-                partie--;
-                if(partie===0){
-                    partie=1;
-                }
-                io.sockets.emit("invitation",{partie:partie,from:null});
+        }
+    });
 
-            }else {
-                let liste = {
-                    joueurs: joueurs[game],
-                    id_partie: game
-                };
-                for(let i in joueurs[game]){
-                    clients[joueurs[game][i]].emit("listeGame",liste);
-                    clients[joueurs[game][i]].emit("message",{from:null, to:null, text: currentID + " a quitté la partie", date:Date.now(),id_partie:game});
-                }
-
+    function quitGame(game){
+        joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
+        console.log(joueurs);
+        if(joueurs[game].length ===0){
+            io.sockets.emit("suppressionPartie",game);
+            delete joueurs[game];
+            partie--;
+            if(partie===0){
+                partie=1;
             }
-            console.log(joueurs);
+            io.sockets.emit("invitation",{partie:partie,from:null});
 
+        }else {
+            let liste = {
+                joueurs: joueurs[game],
+                id_partie: game
+            };
+            for(let i in joueurs[game]){
+                clients[joueurs[game][i]].emit("listeGame",liste);
+                clients[joueurs[game][i]].emit("message",{from:null, to:null, text: currentID + " a quitté la partie", date:Date.now(),id_partie:game});
+            }
 
         }
 
-    });
-
-
+    }
     // fermeture
     socket.on("logout", function() {
         // si client était identifié (devrait toujours être le cas)
@@ -189,8 +189,6 @@ io.on('connection', function (socket) {
         }
     });
 
-
-
     // déconnexion de la socket
     socket.on("disconnect", function(reason) {
         // si client était identifié
@@ -198,14 +196,7 @@ io.on('connection', function (socket) {
             console.log("current :"+currentID);
             console.log(" avant filtrage==> "+joueurs);
             for(let i in joueurs) {
-                console.log("Joueurs[i] "+joueurs[i]);
-
-                joueurs[i].filter(function (game) {
-                    console.log("Game :"+game);
-                    return game !== currentID
-                });
-
-
+                quitGame(i);
             }
             console.log(" après filtrage==> "+joueurs);
             // envoi de l'information de déconnexion
