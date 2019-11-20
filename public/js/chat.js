@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //liste des joueurs
     var players = [[]];
-    var players_liste = null;
 
     //indice de partie du serveur
     var partieInvite =-1;
@@ -57,9 +56,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("listeGame", function (liste) {
-        players_liste = liste;
         if (currentUser) {
             afficherListe(liste.joueurs, liste.id_partie);
+            creationTableauScore(liste.joueurs, liste.id_partie);
         }
     });
 
@@ -172,7 +171,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         } else {
             document.querySelector("#contentGame" + game + " aside").innerHTML = newList.join("<br>");
         }
-
     }
 
     /**
@@ -417,9 +415,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         input.setAttribute("id", "radio" + (nbPartieInvite));
 
         var div = document.createElement("div");
+        div.setAttribute("class", "gameScreen");
         div.setAttribute("id", "gameScreen" + (nbPartieInvite));
 
         div.innerHTML =
+            "<img id=\"imageTitre\" src=\"../images/titre.png\">"+
             "<div class = \"contentGame\" id=\"contentGame"+(nbPartieInvite)+"\">" +
                 "<h2>Chat partie "+partieInvite +" - <span id=\"login_p_"+(nbPartieInvite)+"\">"+currentUser+"</span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
@@ -444,12 +444,25 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     "</div>" +
                 "</div>" +
                 "<div class =\"gameMain\" id=\"gameMain_p_"+(nbPartieInvite)+"\">" +
-                    "<p> Ceci est un jeu</p>" +
                 "</div>" +
+                "<table>"+
+                    "<thead>"+
+                        "<tr>"+
+                            "<th colspan=\"2\">Tableau des scores</th>"+
+                        "</tr>"+
+                    "</thead>"+
+                    "<tbody>"+
+                        "<tr>"+
+                        "</tr>"+
+                        "<tr>"+
+                        "</tr>"+
+                    "</tbody>"+
+                "</table>"+
             "</div>";
 
         document.querySelector("body").appendChild(input);
         document.querySelector("body").appendChild(div);
+
         if(host != null){
             var inputGameStart = document.createElement("input");
             inputGameStart.setAttribute("type", "button");
@@ -471,6 +484,25 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("bcResults" + nbPartieInvite).addEventListener("click", choixImage);
         document.getElementById("btnQuitterGame_p_" + (nbPartieInvite)).addEventListener("click", quitterGame);
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
+    }
+
+    function creationTableauScore(newList, game) {
+        if (game != 0){
+            document.querySelector(".gameScreen table tbody tr:nth-of-type(1)").innerHTML = "";
+            document.querySelector(".gameScreen table tbody tr:nth-of-type(2)").innerHTML = "";
+            console.log(newList);
+            for(let i in newList){
+                var tdName = document.createElement("td");
+                document.querySelector(".gameScreen table tbody tr:nth-of-type(1)").appendChild(tdName);
+                var tdNameText = document.createTextNode(newList[i]);
+                tdName.appendChild(tdNameText);
+                var tdScore = document.createElement("td");
+                document.querySelector(".gameScreen table tbody tr:nth-of-type(2)").appendChild(tdScore);
+                var tdScoreText = document.createTextNode("0");
+                tdScore.appendChild(tdScoreText);
+            }
+            
+        }
     }
 
     function creationFenetreJeu() {
