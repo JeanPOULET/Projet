@@ -462,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             inputGameStart.setAttribute("value", "Lancer la partie");
             inputGameStart.setAttribute("id", "btnLancer_p_"+nbPartieInvite);
             document.querySelector(".gameMain").appendChild(inputGameStart);
-            document.getElementById("btnLancer_p_" + nbPartieInvite).addEventListener("click", lancerPartie);
+            document.getElementById("btnLancer_p_" + nbPartieInvite).addEventListener("click", initialiserPartie);
         }
 
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function (e) {
@@ -557,9 +557,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("radio-1").checked = true;
     }
 
-    function lancerPartie(){
+    function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
-        sock.emit("lancerPartie",partieLancee);
+        sock.emit("initialiserPartie",partieLancee);
 
     }
 

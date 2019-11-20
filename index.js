@@ -129,7 +129,7 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("lancerPartie",function(partieLancee){
+    socket.on("initialiserPartie",function(partieLancee){
         io.sockets.emit("suppressionPartie",partieLancee);
 
     });
