@@ -399,6 +399,8 @@ input[type=radio]:checked + div {
 
 .gameMain{
     position: absolute;
-    top: 50%;
-    left: 65%;
+    top: 0%;
+    left: 40%;
+    height: 100%;
+    width: 100%;
 }
