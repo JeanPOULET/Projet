@@ -470,12 +470,36 @@ img{
 
 }
 
- .carte{
-
+.carte{
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 .amazons{
     background-image: url(../images/amazons.png);
 }
+
+.carnivorous{
+    background-image: url(../images/carnivorous.png);
+}
+
+.cyborgs{
+    background-image: url(../images/cyborgs.png);
+}
+
+.indians{
+    background-image: url(../images/indians.png);
+}
+
+.jokers{
+    background-image: url(../images/jokers.png);
+}
+
+.swallows{
+    background-image: url(../images/swallows.png);
+}
+
 .gameMain .joueur {
 
 }
