@@ -287,6 +287,7 @@ input[type=radio]:checked + div {
     transition-duration: 2s;
 
 }
+
 /*
  *Css pour le chat du jeu
  *
@@ -356,6 +357,7 @@ input[type=radio]:checked + div {
 }   
 
 /** Pied de zone de chat */        
+
 .contentGame footer {
     position: absolute; 
     bottom: 0;
@@ -425,7 +427,7 @@ input[type=radio]:checked + div {
     left: 45%;
 }
 
-img{
+#imageTitre{
     position: absolute;
     display: inline-block;
     left: 10%;
