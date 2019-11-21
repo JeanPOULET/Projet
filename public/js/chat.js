@@ -634,7 +634,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             pile.setAttribute("id","pile_"+joueur+"_"+partieEnCours);
             document.getElementById(joueur+"_"+partieEnCours).appendChild(pile);
             document.getElementById(joueur+"_"+partieEnCours).appendChild(main);
-                 
+
             for(let j=0;j<4;j++){
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
@@ -659,6 +659,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         break;
                 }
                 document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(carte);
+                if(joueur == currentUser){
+                    document.querySelector(".joueur:nth-of-type(1) > main").addEventListener("click", function(e) {
+                        if (e.target.tagName == "MAIN") {
+                            return;
+                        }
+                        console.log("c la carte");
+                    });
+                }
             }
         }
 
