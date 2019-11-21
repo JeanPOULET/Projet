@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*** Liste des "bugs" trouvés ***
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
-     * Css gameScreen fix
      *
     */
 
@@ -325,6 +324,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var metoru = 0;
         document.querySelector('#invitations').innerHTML = "";
         var invites = users;
+        if(metoru == 0){
+            document.getElementById("btnInviter").disabled = true;
+        }
         for (let i in invites) {
             let id = invites[i];
             if (id != currentUser) {
@@ -335,6 +337,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.getElementById(id).addEventListener("click", function () {
                     if (document.getElementById(id).hasAttribute("checked")) {
                         metoru--;
+                        if(metoru == 0){
+                            document.getElementById("btnInviter").disabled = true;
+                        }
                         document.getElementById("label" + id).style.backgroundColor = "initial";
                         document.getElementById(id).removeAttribute("checked");
                         players[nbPartie].splice(players[nbPartie].indexOf(id), 1);
@@ -348,6 +353,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                             document.getElementById("label" + id).style.backgroundColor = "yellow";
                             document.getElementById("label" + id).style.transitionDuration = "0.5s";
                             metoru++;
+                            if(metoru > 0){
+                                document.getElementById("btnInviter").removeAttribute("disabled");
+                            }
                             if (players[nbPartie] === undefined) {
                                 players[nbPartie] = [];
                             }
