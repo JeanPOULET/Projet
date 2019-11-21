@@ -542,6 +542,14 @@ input[type=radio]:checked + div {
     transform: rotate(-90deg);
 }
 
+.pile{
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url(../images/carre_skull.png) ;
+}
+
 
 
 

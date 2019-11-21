@@ -89,7 +89,11 @@ io.on('connection', function (socket) {
             id_partie:invit.partie
         };
         for(let i in joueurs[invit.partie]){
+<<<<<<< HEAD
             if(joueurs[invit.partie][i]!==undefined && clients[joueurs[invit.partie][i]] != undefined) {
+=======
+            if(joueurs[invit.partie][i]!==undefined && clients[joueurs[invit.partie][i]] != undefined ) {
+>>>>>>> fe34828200b03ed0726c6ca83a39c57e7b88f6b9
                 clients[joueurs[invit.partie][i]].emit("listeGame", liste);
                 clients[joueurs[invit.partie][i]].emit("message", { from: null, to: null, text: currentID + " a rejoint la partie", date: Date.now(),id_partie:invit.partie });
             }
@@ -162,6 +166,7 @@ io.on('connection', function (socket) {
                 for(let i in joueurs[partieLancee]){
                     clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
                  }
+                 break;
             case 1 :
 
             case 2 :

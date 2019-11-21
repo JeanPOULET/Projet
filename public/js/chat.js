@@ -622,7 +622,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var toDom="";
         console.log("liste des joueurs : "+liste_joueurs.joueurs);
         for(let i in liste_joueurs.joueurs){
-            console.log("i in listeJoueurs : "+liste_joueurs.joueurs[i]);
+            let joueur= liste_joueurs.joueurs[i];
+            console.log("i in listeJoueurs : "+joueur);
             toDom= document.createElement("div");
             toDom.setAttribute("class","joueur");
             toDom.setAttribute("id",liste_joueurs.joueurs[i]+"_"+partieEnCours);
@@ -630,10 +631,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             let main = document.createElement("main");
             let pile = document.createElement("div");
             pile.setAttribute("class","pile");
-            pile.setAttribute("id","pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours);
-            document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(pile);
-            document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(main);
-
+            pile.setAttribute("id","pile_"+joueur+"_"+partieEnCours);
+            document.getElementById(joueur+"_"+partieEnCours).appendChild(pile);
+            document.getElementById(joueur+"_"+partieEnCours).appendChild(main);
+                 
             for(let j=0;j<4;j++){
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
@@ -658,7 +659,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         carte.classList.add("swallows");
                         break;
                 }
-                document.querySelector("#"+liste_joueurs.joueurs[i]+"_"+partieEnCours+" main").appendChild(carte);
+                document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(carte);
             }
         }
 
