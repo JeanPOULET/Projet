@@ -626,8 +626,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             console.log("i in listeJoueurs : "+joueur);
             toDom= document.createElement("div");
             toDom.setAttribute("class","joueur");
-            toDom.setAttribute("id",joueur+"_"+partieEnCours);
-            gameMain.appendChild(toDom);
+            toDom.setAttribute("id",liste_joueurs.joueurs[i]+"_"+partieEnCours);
+            gameMain.insertBefore(toDom, document.getElementById("message"+partieEnCours));
             let main = document.createElement("main");
             let pile = document.createElement("div");
             pile.setAttribute("class","pile");
@@ -641,6 +641,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 switch(i){
                     case '0':
                         carte.classList.add("amazons");
+                        carte.style = "top: 0px; left: "+j*4+"vh";
                         break;
                     case '1' :
                         carte.classList.add("carnivorous");
