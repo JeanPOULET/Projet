@@ -373,7 +373,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Envoie les invitations aux membres séléctionnés
      */
     function invitation() {
-        if (players[nbPartie] != undefined) {
+        console.log("invitation : "+players[nbPartie]);
+        if (players[nbPartie] != undefined  && players[nbPartie] != []) {
             document.getElementById("fenetreInvit").style.display = "none";
             let invitation = {
                 to: players[nbPartie],
@@ -627,7 +628,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             toDom.setAttribute("id",liste_joueurs.joueurs[i]+"_"+partieEnCours);
             gameMain.appendChild(toDom);
             let main = document.createElement("main");
+            let pile = document.createElement("div");
+            pile.setAttribute("class","pile");
+            pile.setAttribute("id","pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours);
+            document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(pile);
             document.getElementById(liste_joueurs.joueurs[i]+"_"+partieEnCours).appendChild(main);
+
             for(let j=0;j<4;j++){
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
