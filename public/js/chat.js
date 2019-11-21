@@ -365,7 +365,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Envoie les invitations aux membres séléctionnés
      */
     function invitation() {
-        if (players[nbPartie] != undefined) {
+        console.log("invitation : "+players[nbPartie]);
+        if (players[nbPartie] != undefined  && players[nbPartie] != []) {
             document.getElementById("fenetreInvit").style.display = "none";
             let invitation = {
                 to: players[nbPartie],
