@@ -624,28 +624,25 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
                 switch(i){
-                    case 0 :
+                    case '0':
                         carte.classList.add("amazons");
                         break;
-
-                    case 1 :
+                    case '1' :
                         carte.classList.add("carnivorous");
                         break;
-
-                    case 2:
+                    case '2':
                         carte.classList.add("cyborgs");
                         break;
-                    case 3:
+                    case '3':
                         carte.classList.add("indians");
                         break;
-                    case 4:
+                    case '4':
                         carte.classList.add("jokers");
                         break;
-                    case 5:
-                        carte.classList.add("amazons");
+                    case '5':
+                        carte.classList.add("swallows");
                         break;
                 }
-                carte.innerHTML = "je suis carte "+j;
                 document.querySelector("#"+liste_joueurs.joueurs[i]+"_"+partieEnCours+" main").appendChild(carte);
             }
         }
