@@ -644,7 +644,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             toDom= document.createElement("div");
             toDom.setAttribute("class","joueur");
             toDom.setAttribute("id",joueur+"_"+partieEnCours);
-            toDom.innerHTML = joueur;
             gameMain.insertBefore(toDom, document.getElementById("message"+partieEnCours));
             let main = document.createElement("main");
             let pile = document.createElement("div");
