@@ -547,7 +547,11 @@ input[type=radio]:checked + div {
     height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-image: url(../images/carre_skull.png) ;
+    background-image: url(../images/carre_skull.png);
+    position: absolute;
+    left: 35%;
+    top: -150%;
+
 }
 
 
