@@ -691,6 +691,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     });
                 }
             }
+            var pseudo = document.createElement("p");
+            pseudo.innerHTML = liste_joueurs.joueurs[i];
+            pseudo.setAttribute("class","pseudo");
+            document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(pseudo);
         }
 
 
