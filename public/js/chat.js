@@ -80,9 +80,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         removeIDpartie(num_partie);
     });
 
-    sock.on("iniPartie",function(num_partie){
-        console.log("La partie est lancée n°"+num_partie);
-        afficherPlateau(num_partie);
+    sock.on("iniPartie",function(initialisation){
+        console.log("La partie est lancée n°"+initialisation.partieLancee);
+        afficherPlateau(initialisation.partieLancee, initialisation.cranes);
     });
 
     sock.on("debutManche",function(manche){
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         document.getElementById("message"+manche.num_partie).innerHTML ="C'est à "+manche.joueur+" de jouer !";
 
-        jouer(manche.num_partie,1,manche.joueur);
+        jouer(manche.num_partie,1,manche.joueur, manche.cranes);
 
     });
 
@@ -617,16 +617,18 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         jouer(partieLancee,0);
     }
 
-    function afficherPlateau(partieEnCours){
+    function afficherPlateau(partieEnCours, cranes){
         var gameMain = document.getElementById("gameMain_p_"+partieEnCours);
-        var toDom="";
+
         console.log("liste des joueurs : "+liste_joueurs.joueurs);
         for(let i in liste_joueurs.joueurs){
+            var toDom="";
             let joueur= liste_joueurs.joueurs[i];
             console.log("i in listeJoueurs : "+joueur);
             toDom= document.createElement("div");
             toDom.setAttribute("class","joueur");
-            toDom.setAttribute("id",liste_joueurs.joueurs[i]+"_"+partieEnCours);
+            toDom.setAttribute("id",joueur+"_"+partieEnCours);
+            toDom.innerHTML = joueur;
             gameMain.insertBefore(toDom, document.getElementById("message"+partieEnCours));
             let main = document.createElement("main");
             let pile = document.createElement("div");
@@ -638,6 +640,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             for(let j=0;j<4;j++){
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
+                console.log("Cranes[i] = ",cranes[i]);
+                if(cranes[i] ===j){
+                    carte.classList.add("crane");
+                }else{
+                    carte.classList.add("rose");
+                }
+                if(joueur == currentUser){
+                    carte.classList.add("retournee");
+                }
+
                 switch(i){
                     case '0':
                         carte.classList.add("amazons");
@@ -665,7 +677,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         if (e.target.tagName == "MAIN") {
                             return;
                         }
-                        console.log("c la carte");
+                        if(joueur != currentUser){
+                            return;
+                        }
+                        let elt = e.target;
+                        while(! elt.classList.contains("carte")){
+                            elt = elt.parentElement;
+                        }
+                        elt = elt.firstChild.firstChild;
+                        console.log(elt);
                     });
                 }
             }

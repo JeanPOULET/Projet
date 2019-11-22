@@ -145,8 +145,13 @@ io.on('connection', function (socket) {
 
     socket.on("initialiserPartie",function(partieLancee){
         io.sockets.emit("suppressionInvitation",partieLancee);
+        let cranes = [];
+        for(let j=0;j<joueurs[partieLancee].length;j++){
+            let rand_crane = Math.floor(Math.random()*4);
+            cranes.push(rand_crane);
+        }
         for(let i in joueurs[partieLancee]){
-            clients[joueurs[partieLancee][i]].emit("iniPartie",partieLancee);
+            clients[joueurs[partieLancee][i]].emit("iniPartie",{partieLancee:partieLancee, cranes:cranes});
         }
         jouer(partieLancee,0);
 
