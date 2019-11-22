@@ -673,7 +673,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 }
                 document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(carte);
                 if(joueur == currentUser){
-                    document.querySelector(".joueur:nth-of-type(1) > main").addEventListener("click", function(e) {
+                    console.log("je susi i = "+i);
+                    let indice = i+1;
+                    document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indice+") > main").addEventListener("click", function(e) {
                         if (e.target.tagName == "MAIN") {
                             return;
                         }
