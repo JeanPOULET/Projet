@@ -628,7 +628,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             toDom= document.createElement("div");
             toDom.setAttribute("class","joueur");
             toDom.setAttribute("id",joueur+"_"+partieEnCours);
-            toDom.innerHTML = joueur;
             gameMain.insertBefore(toDom, document.getElementById("message"+partieEnCours));
             let main = document.createElement("main");
             let pile = document.createElement("div");
@@ -674,7 +673,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(carte);
                 if(joueur == currentUser){
                     console.log("je susi i = "+i);
-                    let indice = i+1;
+                    let indice = parseInt(i)+1;
+                    console.log("guignol : #gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indice+") > main");
                     document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indice+") > main").addEventListener("click", function(e) {
                         if (e.target.tagName == "MAIN") {
                             return;
