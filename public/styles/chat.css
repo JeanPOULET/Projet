@@ -543,18 +543,38 @@ input[type=radio]:checked + div {
 }
 
 .pile{
+    position: absolute;
+    left: 35%;
+    top: -150%;
     width: 100px;
     height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url(../images/carre_skull.png);
-    position: absolute;
-    left: 35%;
-    top: -150%;
-
 }
 
+.pseudo{
+    position: absolute;
+    left:-10%;
+    top: 20%;
+    text-align: right;
+}
 
+.gameMain .joueur:nth-of-type(3) p{
+    transform: rotate(-90deg);
+}
+
+.gameMain .joueur:nth-of-type(4) p{
+    transform: rotate(180deg);
+}
+
+.gameMain .joueur:nth-of-type(5) p{
+    transform: rotate(180deg);
+}
+
+.gameMain .joueur:nth-of-type(6) p{
+    transform: rotate(90deg);
+}
 
 
 
