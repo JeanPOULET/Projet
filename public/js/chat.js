@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //tableau dans lequel le joueur fait partie
     var tabPartie=null;
+    //tableau pour savoir dans chaque partie si c'est au tour du currentUser
+    var mon_tour=null;
 
     // on attache les événements que si le client est connecté.
     sock.on("bienvenue", function (id) {
@@ -89,10 +91,24 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("message"+manche.num_partie).innerHTML ="Début de la manche";
 
         document.getElementById("message"+manche.num_partie).innerHTML ="C'est à "+manche.joueur+" de jouer !";
-
+        actualiserTabTour(manche.num_partie,manche.joueur);
         jouer(manche.num_partie,1,manche.joueur, manche.cranes);
 
     });
+
+    function actualiserTabTour(num_partie, joueur){
+        if(mon_tour==null){
+            mon_tour=[];
+        }
+        if(mon_tour[num_partie] ==undefined){
+            mon_tour[num_partie] = [];
+        }
+        if(joueur == currentUser){
+            mon_tour[num_partie] = true;
+        }else{
+            mon_tour[num_partie] = false;
+        }
+    }
 
     /**
      *  Connexion de l'utilisateur au chat.
@@ -682,11 +698,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         if(joueur != currentUser){
                             return;
                         }
+                        if(!mon_tour[partieEnCours]){
+                            return;
+                        }
                         let elt = e.target;
                         while(! elt.classList.contains("carte")){
                             elt = elt.parentElement;
                         }
-                        elt = elt.firstChild.firstChild;
+                        elt.classList.add("selectionne");
+                        mon_tour[partieEnCours] = false;
                         console.log(elt);
                     });
                 }
