@@ -464,7 +464,11 @@ input[type=radio]:checked + div {
 .gameMain .message {
     position: absolute;
     top: 50%;
-    left: 45%;
+    left: 30%;
+    text-shadow:0 0 2px #FF0000,0 0 30px #FF0000,5px 9px 5px #333, 0 0 150px #FF0000;
+    color:#FF0000;
+    background-color:#262626;
+
 }
 
 .gameMain .joueur .sPage{
@@ -555,9 +559,11 @@ input[type=radio]:checked + div {
 
 .pseudo{
     position: absolute;
-    left:-10%;
+    left:-15%;
     top: 20%;
     text-align: right;
+    text-shadow:   -1px -1px 0 #fff,  1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 1px 1px 10px #141414;color:#333;
+    background-color:#EDFFF6;
 }
 
 .gameMain .joueur:nth-of-type(3) p{
