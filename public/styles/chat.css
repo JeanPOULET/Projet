@@ -421,9 +421,9 @@ input[type=radio]:checked + div {
     width: 60%
 }
 
-.gameMain input{
+.gameMain .message{
     position: absolute;
-    top: 50%;
+    top: 30%;
     left: 45%;
 }
 
@@ -576,5 +576,36 @@ input[type=radio]:checked + div {
     transform: rotate(90deg);
 }
 
+.gameMain .btnMiser{
+    position:absolute;
+    top :95%;
+    left :45%;
+}
 
+.gameMain .txtMiser{
+    position:absolute;
+    top :90%;
+    left :40%;
+}
+
+.gameMain .btnLancer{
+    position:absolute;
+    top:50%;
+    left:40%;
+}
+
+.gameMain .defausse{
+    position:absolute;
+    top:50%;
+    left:40%;
+
+}
+
+.gameMain .defausse > .carte + .rose {
+    background-image: url(../images/recto_roses.png);
+}
+
+.gameMain .defausse > .carte + .crane {
+    background-image: url(../images/recto_skull.png);
+}
 
