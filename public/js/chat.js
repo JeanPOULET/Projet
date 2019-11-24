@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*** ToDo
      * Possibilité de se coucher (bouton uniquement présent)
      * mise à jour du tableau de points
-     * Finir la partie quand il y a réellement un vainqueur
+     * Finir la partie quand il y a réellement un vainqueur ou plus qu'un joueur
      * le css omg
+     * Retirer la carte de qqun qui a pioché dans ta pile un crane
      *
      */
 
