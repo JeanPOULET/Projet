@@ -646,11 +646,32 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             for(let i in newList){
                 var tdName = document.createElement("td");
                 document.querySelector(".gameScreen table tbody tr:nth-of-type(1)").appendChild(tdName);
-                var tdNameText = document.createTextNode(newList[i]);
+                var tdNameText;
+                switch(i){
+                    case '0':
+                        tdNameText = document.createTextNode("amazons");
+                        break;
+                    case '1' :
+                        tdNameText = document.createTextNode("carnivorous");
+                        break;
+                    case '2':
+                        tdNameText = document.createTextNode("cyborgs");
+                        break;
+                    case '3':
+                        tdNameText = document.createTextNode("indians");
+                        break;
+                    case '4':
+                        tdNameText = document.createTextNode("jokers");
+                        break;
+                    case '5':
+                        tdNameText = document.createTextNode("swallows");
+                        break;
+                }
                 tdName.appendChild(tdNameText);
                 var tdScore = document.createElement("td");
                 document.querySelector(".gameScreen table tbody tr:nth-of-type(2)").appendChild(tdScore);
                 var tdScoreText = document.createTextNode("0");
+                tdScore.setAttribute("id", "score_"+newList[i]+"_"+game);
                 tdScore.appendChild(tdScoreText);
             }
             
@@ -847,7 +868,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 switch(i){
                     case '0':
                         carte.classList.add("amazons");
-                        carte.style = "top: 0px; left: "+j*4+"vh";
                         break;
                     case '1' :
                         carte.classList.add("carnivorous");

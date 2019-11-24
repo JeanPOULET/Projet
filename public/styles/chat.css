@@ -111,6 +111,8 @@ body > div {
     background-color: white;
     line-height: 1;
     font-size: 14px;
+    overflow: auto;
+
 }
 
 /** 
@@ -387,6 +389,7 @@ input[type=radio]:checked + div {
     background-color: white;
     line-height: 1;
     font-size: 14px;
+    overflow: auto;
 }
 
 /*
@@ -420,12 +423,13 @@ input[type=radio]:checked + div {
     height: 100%;
     width: 60%
 }
-
+/*
 .gameMain .message{
     position: absolute;
     top: 30%;
     left: 45%;
-}
+    font-size: 22px;
+}*/
 
 #imageTitre{
     position: absolute;
@@ -454,20 +458,19 @@ input[type=radio]:checked + div {
 }
 
 .gameScreen td{
+    max-width: 100px;
+    overflow: hidden;
     width: 100px;
-}
-
-.gameScreen table thead tr th{
-    width: 600px;
 }
 
 .gameMain .message {
     position: absolute;
-    top: 50%;
-    left: 30%;
+    top: 48%;
+    left: 33%;
     text-shadow:0 0 2px #FF0000,0 0 30px #FF0000,5px 9px 5px #333, 0 0 150px #FF0000;
     color:#FF0000;
     background-color:#262626;
+    font-size: 22px;
 
 }
 
@@ -559,9 +562,11 @@ input[type=radio]:checked + div {
 
 .pseudo{
     position: absolute;
-    left:-15%;
+    left: 100%;
     top: 20%;
-    text-align: right;
+    width: 100px;
+    text-align: center;
+    overflow: auto;
     text-shadow:   -1px -1px 0 #fff,  1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 1px 1px 10px #141414;color:#333;
     background-color:#EDFFF6;
 }
@@ -584,14 +589,14 @@ input[type=radio]:checked + div {
 
 .gameMain .btnMiser{
     position:absolute;
-    top :95%;
-    left :45%;
+    top :65%;
+    left :47%;
 }
 
 .gameMain .txtMiser{
     position:absolute;
-    top :90%;
-    left :40%;
+    top :60%;
+    left :43%;
 }
 
 .gameMain .btnLancer{
