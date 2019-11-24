@@ -4,15 +4,26 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Si un gars est dans la fenêtre d'invitations et reçoit une invitation id_partie à 0
+     * Mise de la meme somme que la mise actuelle
     */
 
     /*** ToDo
      * Possibilité de se coucher (bouton uniquement présent)
      * mise à jour du tableau de points
      * Finir la partie quand il y a réellement un vainqueur ou plus qu'un joueur
-     * le css omg
+     * le css un peu moins omg 
      * Retirer la carte de qqun qui a pioché dans ta pile un crane
      *
+     */
+
+    /*** ToFerBO
+     * style bouton unable
+     * empilement jeton
+     * mettre des fleurs
+     * style chat
+     * style acceuil
+     * ajout texte mise courante et le miseur max
+     * 
      */
 
     // socket ouverte vers le client
