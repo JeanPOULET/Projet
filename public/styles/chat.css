@@ -612,11 +612,18 @@ input[type=radio]:checked + div {
 
 }
 
-.gameMain .defausse > .carte + .rose {
+.gameMain .defausse > .carte + .rose > .selectionne{
     background-image: url(../images/recto_roses.png);
 }
 
-.gameMain .defausse > .carte + .crane {
+.gameMain .defausse > .carte + .crane > .selectionne{
     background-image: url(../images/recto_skull.png);
 }
 
+.gameMain .main > .carte + .rose >  .retournee{
+    background-image: url(../images/recto_roses.png);
+}
+
+.gameMain .main > .carte + .crane > .retournee{
+    background-image: url(../images/recto_skull.png);
+}

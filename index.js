@@ -24,6 +24,8 @@ var clients = {};       // id -> socket
 /** Gestion des parties et des joueurs **/
 
 var joueurs = [[]]; //[indice_partie][joueurs]
+var scores = [[]];
+var isCouche = [[]];
 var partie=1; //indice de la partie qu'on peut crée
 
 // Quand un client se connecte, on le note dans la console
@@ -83,7 +85,19 @@ io.on('connection', function (socket) {
         if(joueurs[invit.partie]=== undefined){
             joueurs[invit.partie]=[];
         }
+
+        if(scores[invit.partie] === undefined){
+            scores[invit.partie] =[];
+        }
+
+        if(isCouche[invit.partie] === undefined){
+            isCouche[invit.partie] = [];
+        }
+
         joueurs[invit.partie].push(invit.joiner);
+        scores[invit.partie].push(0);
+        isCouche[invit.partie].push(false);
+
         let liste ={
             joueurs:joueurs[invit.partie],
             id_partie:invit.partie
@@ -96,6 +110,8 @@ io.on('connection', function (socket) {
         }
 
         console.log(joueurs);
+        console.log(scores);
+        console.log(isCouche);
     });
 
     /**
@@ -153,7 +169,7 @@ io.on('connection', function (socket) {
         for(let i in joueurs[partieLancee]){
             clients[joueurs[partieLancee][i]].emit("iniPartie",{partieLancee:partieLancee, cranes:cranes});
         }
-        jouer(partieLancee,0);
+        jouer(partieLancee);
 
 
     });
@@ -173,58 +189,24 @@ io.on('connection', function (socket) {
 
     socket.on("carteSelectionneePile",function(obj) {
         let partieLancee = obj.partieEnCours;
-
-        for(let i in joueurs[partieLancee]){
-
+        for(let i=0;i< joueurs[partieLancee].length;++i){
             clients[joueurs[partieLancee][i]].emit("pileVersDefausse",{partieLancee:partieLancee, joueur:obj.joueur, pileDeJoueur:obj.pileDeJoueur, carte:obj.carte });
+        }
+        if(obj.gagne){
+            let indiceScoreJoueur = getIndiceScoreJoueur(obj.joueur,partieLancee);
+            console.log("indiceDeScore : "+indiceScoreJoueur);
+            let scoreJoueur = (scores[partieLancee][indiceScoreJoueur])+1;
+            console.log("Score de joueur : "+scoreJoueur);
+            scores[partieLancee][indiceScoreJoueur]+=1;
 
-            if(obj.gagne){
-                victoire(partieLancee,obj.joueur,obj.points);
-            }
-
-            if(obj.perdu){
-                defaite(partieLancee,obj.joueur,obj.pileDeJoueur);
-            }
-
+            victoire(partieLancee,obj.joueur,scoreJoueur);
         }
 
-
-
+        if(obj.perdu){
+            defaite(partieLancee,obj.joueur,obj.pileDeJoueur);
+        }
+        console.log(scores[partieLancee]);
     });
-
-    function defaite(partieEnCours, joueur, doitEnleverCarte){
-        console.log("reset_manche joueur : "+choixJoueur(partieEnCours,joueur));
-        for(let i=0; i<joueurs[partieEnCours].length;i++){
-            clients[joueurs[partieEnCours][i]].emit("perdManche",
-                {perdant:joueur,
-                    partieLancee:partieEnCours,
-                    doitEnleverCarte:doitEnleverCarte});
-            clients[joueurs[partieEnCours][i]].emit("resetManche",
-                {partieLancee:partieEnCours,
-                    joueur:joueur,
-                    victoire:false,
-                    prochainJoueur:doitEnleverCarte});
-        }
-
-
-    }
-    function victoire(partieEnCours,joueur,points){
-        for(let i=0; i<joueurs[partieEnCours].length;i++) {
-            clients[joueurs[partieEnCours][i]].emit("gagneManche",
-                {
-                    vainqueur: joueur,
-                    partieLancee: partieEnCours,
-                    points: points
-                });
-            clients[joueurs[partieEnCours][i]].emit("resetManche",
-                {
-                    joueur:joueur,
-                    partieLancee: partieEnCours,
-                    prochainJoueur: choixJoueur(partieEnCours, joueur),
-                    victoire:true
-                });
-        }
-    }
 
     socket.on("mise",function(mise){
         let partieLancee = mise.partieEnCours;
@@ -244,43 +226,141 @@ io.on('connection', function (socket) {
                     mise: mise.mise
                 });
             }
-            }
+        }
     });
 
+    socket.on("seCouche",function(obj){
+
+        let partieLancee = obj.partieEnCours;
+        let prochainJoueur="";
+        let indice = getIndiceScoreJoueur(obj.joueur,partieLancee);
+        isCouche[partieLancee][indice]=true;
+        let cpt=0;
+        let indice_joueur_debout=0;
+        for(let i=0;i<isCouche[partieLancee].length;i++){
+            if(isCouche[partieLancee][i]){
+                indice_joueur_debout=i;
+                cpt++;
+            }
+        }
+        console.log("cpt = "+cpt);
+        console.log(isCouche[partieLancee]);
+        if(cpt===1){
+            for(let i=0; i<joueurs[partieLancee].length;i++){
+                clients[joueurs[partieLancee][i]].emit("revelation",{
+                    partieLancee:partieLancee,
+                    joueur:joueurs[partieLancee][indice_joueur_debout],
+                    mise:obj.mise
+                });
+            }
+        }else {
+
+            prochainJoueur = choixJoueur(partieLancee, obj.joueur);
+            for (let i = 0; i < joueurs[partieLancee].length; ++i) {
+                clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
+                    partieLancee: partieLancee,
+                    joueur: obj.joueur,
+                    prochainJoueur: prochainJoueur
+                });
+            }
+        }
+
+
+    });
+
+    socket.on("carteARetirer",function(obj){
+        let partieLancee = obj.partieEnCours;
+        for(let i=0;i< joueurs[partieLancee].length;++i){
+            clients[joueurs[partieLancee][i]].emit("carteRetiree",{partieLancee:partieLancee, joueur:obj.joueur, carte:obj.carte });
+        }
+
+
+    });
+
+    function defaite(partieEnCours, joueur, doitEnleverCarte){
+        for(let i=0;i<isCouche[partieEnCours].length;i++){
+            isCouche[partieEnCours][i]=false;
+        }
+        console.log("reset_manche joueur : "+choixJoueur(partieEnCours,joueur));
+        for(let i=0; i<joueurs[partieEnCours].length;i++){
+            clients[joueurs[partieEnCours][i]].emit("perdManche",
+                {perdant:joueur,
+                    partieLancee:partieEnCours,
+                    doitEnleverCarte:doitEnleverCarte});
+            clients[joueurs[partieEnCours][i]].emit("resetManche",
+                {partieLancee:partieEnCours,
+                    joueur:joueur,
+                    victoire:false,
+                    victoireTotale:false,
+                    prochainJoueur:doitEnleverCarte});
+        }
+    }
+
+    function victoire(partieEnCours,joueur,points){
+        for(let i=0;i<isCouche[partieEnCours].length;i++){
+            isCouche[partieEnCours][i]=false;
+        }
+        let vt=false;
+        if(points===2){
+            vt=true;
+        }
+
+        for(let i=0; i<joueurs[partieEnCours].length;i++) {
+
+            clients[joueurs[partieEnCours][i]].emit("gagneManche",
+                {
+                    vainqueur: joueur,
+                    partieLancee: partieEnCours,
+                    points: points
+                });
+
+            clients[joueurs[partieEnCours][i]].emit("resetManche",
+                {
+                    joueur:joueur,
+                    partieLancee: partieEnCours,
+                    prochainJoueur: choixJoueur(partieEnCours, joueur),
+                    victoire:true,
+                    victoireTotale:vt
+                });
+        }
+    }
 
     function choixJoueur(partie,joueurActuel){
-
+        let indice=0;
         for(let j=0;j<joueurs[partie].length;j++){
             if(joueurs[partie][j] === joueurActuel){
                 j++;
                 if(j===joueurs[partie].length){
                     j=0;
                 }
+                while(isCouche[partie][j]){
+                    j++;
+                    if(j===joueurs[partie].length){
+                        j=0;
+                    }
+                }
                 return joueurs[partie][j];
+
             }
         }
     }
 
-
-    function jouer(partieLancee, etat){
-
-        switch(etat){
-            case 0 :
-                let rand = Math.floor(Math.random()*(joueurs[partieLancee].length-1));
-                console.log("rand : "+rand);
-
-                for(let i in joueurs[partieLancee]){
-                    clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
-                 }
-                 break;
-            case 1 :
-
-            case 2 :
-            case 3 :
-            case 4 :
-            case 5 :
+    function getIndiceScoreJoueur(nomJoueur, partieEnCours) {
+        for (let i = 0; i < joueurs[partieEnCours].length; i++) {
+            if (nomJoueur === joueurs[partieEnCours][i]) {
+                return i;
+            }
         }
+    }
 
+    function jouer(partieLancee){
+
+        let rand = Math.floor(Math.random()*(joueurs[partieLancee].length-1));
+        console.log("rand : "+rand);
+
+        for(let i in joueurs[partieLancee]){
+            clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
+         }
 
     }
 
@@ -303,6 +383,8 @@ io.on('connection', function (socket) {
         if(joueurs[game].length ===0){
             io.sockets.emit("suppressionPartie",game);
             delete joueurs[game];
+            delete scores[game];
+            delete isCouche[game];
             partie--;
             if(partie===0){
                 partie=1;
