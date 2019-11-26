@@ -384,17 +384,36 @@ io.on('connection', function (socket) {
 
     socket.on("quitGame",function(game){
         if(currentID){
-            console.log("Sortie de la partie "+game+" par "+currentID);
-            quitGame(game);
+            console.log("Sortie de la partie "+game.partieEnCours+" par "+currentID);
+            quitGame(game.partieEnCours,game.cartes);
             console.log(joueurs);
         }
     });
 
-    function quitGame(game){
-        joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
-        ias[game].push(currentID);
+    function quitGame(game,cartes){
+
+        if(cartes!=null) {
+            let ia = {
+                joueur: currentID,
+                cartes: cartes
+            };
+            ias[game].push(ia);
+        }else{
+            joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
+        }
+        if(joueurs[game].length ===1){
+            clients[joueurs[game][0]].emit("resetManche",
+                {
+                    joueur:joueurs[game][0],
+                    partieLancee: game,
+                    prochainJoueur: choixJoueur(game, joueurs[game][0]),
+                    victoire:true,
+                    victoireTotale:true
+                });
+        }
         console.log(joueurs);
-        if(joueurs[game].length ===0){
+        console.log(ias);
+        if(joueurs[game].length ===0 || ias[game].length===joueurs[game].length){
             io.sockets.emit("suppressionPartie",game);
             delete joueurs[game];
             delete ias[game];
@@ -417,6 +436,7 @@ io.on('connection', function (socket) {
             }
 
         }
+
 
     }
     // fermeture

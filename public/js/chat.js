@@ -748,7 +748,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             partie: partieInvite
         };
         sock.emit("joinGame", join);
-
+        if(tabPartie===null){
+            tabPartie=[];
+        }
+        tabPartie.push(partieInvite);
 
         console.log("p_" + partieInvite);
         document.getElementById("p_" + partieInvite).removeEventListener("click", rejoindrePartie);
@@ -765,16 +768,39 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
+    function getIDsCartesMain(num_partie){
+
+        let cartes=[];
+        let main = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" main");
+        if(main.childElementCount===0){
+            return null;
+        }
+        for(let i=0;i<main.childElementCount;i++){
+            cartes[i]=main.children[i].id;
+        }
+
+
+        console.log(cartes);
+        return cartes;
+    }
+
     function quitterGame(id) {
         console.log("id quitterGame : "+id);
         if(partieAquitter>0){
             id=partieAquitter;
         }
-        console.log("id quitterGame : "+id);
+
         document.getElementById("radio0").checked = true;
          let res;
+         let obj;
          if(id>=1) {
              res=id;
+             obj={
+                 joueur:currentUser,
+                 cartes: getIDsCartesMain(res),
+                 partieEnCours:res
+             };
+             console.log("id quitterGame if : "+res);
              document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
              document.getElementById("content").removeChild(document.getElementById("Partie "+res));
 
@@ -784,12 +810,20 @@ document.addEventListener("DOMContentLoaded", function(_e) {
              let nb = partie;
              nb = nb.replace(reg, "");
              res = parseInt(nb, 10);
+             res=getIdInt(partie);
+             console.log("id quitterGame : "+res);
+             obj={
+                 joueur:currentUser,
+                 cartes: getIDsCartesMain(res),
+                 partieEnCours:res
+             };
              partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
              document.getElementById("content").removeChild(document.getElementById(partie));
              partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
              document.querySelector("body").removeChild(document.getElementById(partie));
 
          }
+
          for(let i=0; i< tabPartie.length;++i){
              if(tabPartie[i]===res){
                  delete tabPartie[i];
@@ -799,8 +833,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                  break;
              }
          }
+
+
          document.getElementById("radio"+(res)).remove();
-         sock.emit("quitGame",res);
+         sock.emit("quitGame",obj);
          partieAquitter=-1;
      }
     /**
@@ -889,6 +925,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             };
             mon_tour[partieEnCours] = false;
             sock.emit("mise",mise);
+            document.getElementById("txtMiser"+id).value="";
 
 
         });
@@ -1059,7 +1096,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         while(! elt.classList.contains("carte")){
             elt = elt.parentElement;
         }
-        //elt.classList.add("selectionne");
         let id =elt.id;
 
         let partieEnCours = getIdDoubleInt(id);
@@ -1151,7 +1187,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             while (!elt.classList.contains("carte")) {
                 elt = elt.parentElement;
             }
-            //elt.classList.add("selectionne");
 
             if(elt.classList.contains("crane")){
                 perdu=true;
@@ -1164,16 +1199,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 mon_tour[partieEnCours]=false;
 
             }
-
-            /*if(nbPoints == null){
-                nbPoints=[];
-            }
-            if(nbPoints[partieEnCours]==undefined){
-                nbPoints[partieEnCours]=0;
-            }
-            if(gagne){
-                nbPoints[partieEnCours]+=1;
-            }*/
 
             let obj = {
                 joueur: currentUser,
