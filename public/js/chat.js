@@ -1044,9 +1044,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnCoucher.setAttribute("value","Se coucher");
 
 
-        let divMise = document.querySelector(".divMise");
+        let divMise = document.querySelector("#divMise"+partieEnCours);
 
-        divMise.insertBefore(miseGenerale,document.querySelector(".txtMiser"));
+        divMise.insertBefore(miseGenerale,document.querySelector("#txtMiser"+partieEnCours));
         divMise.appendChild(btnCoucher);
         btnCoucher.addEventListener("click",seCoucher);
         btnCoucher.disabled = true;
