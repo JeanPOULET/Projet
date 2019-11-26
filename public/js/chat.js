@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * style chat
      * style acceuil
      * ajout texte mise courante et le miseur max
+     * mise
+     * bouton coucher
+     * vidage mise
      * 
      */
 
