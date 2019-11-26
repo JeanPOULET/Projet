@@ -494,12 +494,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         var metoru = 0;
         document.querySelector('#invitations').innerHTML = "";
         var invites = users;
-        if(metoru == 0){
+        if(metoru === 0){
             document.getElementById("btnInviter").disabled = true;
         }
         for (let i in invites) {
             let id = invites[i];
-            if (id != currentUser) {
+            if (id !== currentUser) {
                 let btn = document.createElement("div");
 
                 btn.innerHTML = "<input type='checkbox' name=\"" + id + "\" id=" + id + "><label id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
@@ -507,7 +507,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.getElementById(id).addEventListener("click", function () {
                     if (document.getElementById(id).hasAttribute("checked")) {
                         metoru--;
-                        if(metoru == 0){
+                        if(metoru === 0){
                             document.getElementById("btnInviter").disabled = true;
                         }
                         document.getElementById("label" + id).style.backgroundColor = "initial";
@@ -544,7 +544,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function invitation() {
         console.log("invitation : "+players[nbPartie]);
-        if (players[nbPartie] != undefined  && players[nbPartie] != []) {
+        if (players[nbPartie] !== undefined  && players[nbPartie] !== []) {
             document.getElementById("fenetreInvit").style.display = "none";
             let invitation = {
                 to: players[nbPartie],
@@ -641,7 +641,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(nbPartieInvite)+"\">" +
                     "</header>" +
                     "<div class =\"bcResultsGame\" id=\"bcResults"+nbPartieInvite+"\"></div>" +
-                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
+                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\" id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
                 "<div class =\"gameMain\" id=\"gameMain_p_"+nbPartieInvite+"\">" +
@@ -861,6 +861,60 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         //jouer(partieLancee,0);
     }
 
+    function setBtnMiserListener(partieEnCours) {
+        document.getElementById("btnMiser" + partieEnCours).addEventListener("click", function () {
+            let id = getIdInt(this.id);
+            let nbCartes = getNombreCartesPlateau(partieEnCours);
+
+            if (document.getElementById("pile_" + currentUser + "_" + id).childElementCount < 1) {
+                return;
+            }
+
+            let miseValue = document.getElementById("txtMiser" + id).value;
+
+            if (isNaN(parseInt(miseValue))) {
+                return;
+            }
+
+            let miseFinale = false;
+
+            let miseActuel;
+            let miseActuelhtml = document.getElementById("miseGenerale" + partieEnCours).innerHTML;
+            miseActuel = getIdInt(miseActuelhtml);
+            console.log("mise value = " + parseInt(miseValue) + " & mise actuel = " + miseActuel);
+            if (parseInt(miseValue) <= miseActuel || parseInt(miseValue) === 0) {
+                document.getElementById("txtMiser" + id).value = "";
+                return;
+            }
+            /*if(miseActuel === parseInt(miseValue)){
+                miseFinale=true;
+            }*/
+
+            let nbCartesSurPlateau = getNombreCartesPlateau(partieEnCours);
+
+            if (parseInt(miseValue) <= 0 || parseInt(miseValue) > nbCartesSurPlateau) {
+                document.getElementById("txtMiser" + id).value = "";
+                return;
+            }
+            if (parseInt(miseValue) === nbCartesSurPlateau) {
+                miseFinale = true;
+            }
+
+            console.log("je clique et mise : " + miseValue);
+            let mise = {
+                partieEnCours: partieEnCours,
+                joueur: currentUser,
+                mise: miseValue,
+                miseFinale: miseFinale
+            };
+            mon_tour[partieEnCours] = false;
+            sock.emit("mise", mise);
+            document.getElementById("txtMiser" + id).value = "";
+
+        });
+    }
+
+
     function afficherPlateau(partieEnCours, cranes){
         let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
 
@@ -877,58 +931,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         gameMain.appendChild(btnMiser);
         gameMain.appendChild(txtMiser);
-
-        document.getElementById("btnMiser"+partieEnCours).addEventListener("click",function(){
-            let id = getIdInt(this.id);
-            let nbCartes = getNombreCartesPlateau(partieEnCours);
-
-            if(document.getElementById("pile_"+currentUser+"_"+id).childElementCount <1){
-                return;
-            }
-
-            let miseValue = document.getElementById("txtMiser"+id).value;
-
-            if(isNaN(parseInt(miseValue))){
-                return;
-            }
-
-            let miseFinale = false;
-
-            let miseActuel;
-            let miseActuelhtml = document.getElementById("miseGenerale"+partieEnCours).innerHTML;
-            miseActuel = getIdInt(miseActuelhtml);
-            console.log("mise value = "+parseInt(miseValue)+ " & mise actuel = "+miseActuel);
-            if(parseInt(miseValue) <= miseActuel || parseInt(miseValue) ===0){
-                document.getElementById("txtMiser"+id).value="";
-                return;
-            }
-            /*if(miseActuel === parseInt(miseValue)){
-                miseFinale=true;
-            }*/
-
-            let nbCartesSurPlateau = getNombreCartesPlateau(partieEnCours);
-
-            if(parseInt(miseValue) <=0 || parseInt(miseValue)>nbCartesSurPlateau){
-                document.getElementById("txtMiser"+id).value="";
-                return;
-            }
-            if(parseInt(miseValue) === nbCartesSurPlateau){
-                miseFinale=true;
-            }
-
-            console.log("je clique et mise : "+ miseValue);
-            let mise ={
-                partieEnCours:partieEnCours,
-                joueur:currentUser,
-                mise:miseValue,
-                miseFinale:miseFinale
-            };
-            mon_tour[partieEnCours] = false;
-            sock.emit("mise",mise);
-            document.getElementById("txtMiser"+id).value="";
-
-
-        });
+        setBtnMiserListener(partieEnCours);
 
         console.log("liste des joueurs : "+liste_joueurs[partieEnCours]);
         for(let i=0;i<liste_joueurs[partieEnCours].length; i++){
