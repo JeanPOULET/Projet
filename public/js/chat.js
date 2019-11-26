@@ -225,6 +225,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     });
 
+    sock.on("joueurElimine",function(obj){
+        document.getElementById("message"+obj.partieLancee).innerHTML =obj.joueur+" est eliminé !";
+        if(obj.joueur===currentUser){
+            quitterGame(obj.partieLancee);
+        }
+    });
+
 
     function actualiserTabTour(num_partie, joueur){
         if(miseAutorise ==null){
@@ -247,16 +254,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.getElementById("btnCoucher" + num_partie).removeAttribute("disabled");
             }
 
-
-
         }else{
             mon_tour[num_partie] = false;
             document.getElementById("btnMiser"+num_partie).disabled=true;
             document.getElementById("btnCoucher" + num_partie).disabled = true;
 
             }
-
-
         console.log("mon_tour : "+mon_tour);
     }
 

@@ -282,6 +282,14 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on("joueurElimine",function(obj){
+        let partieLancee = obj.partieEnCours;
+        for(let i=0;i< joueurs[partieLancee].length;++i){
+            clients[joueurs[partieLancee][i]].emit("joueurElimine",{partieLancee:partieLancee, joueur:obj.joueur });
+        }
+
+    });
+
     function defaite(partieEnCours, joueur, doitEnleverCarte){
         for(let i=0;i<isCouche[partieEnCours].length;i++){
             isCouche[partieEnCours][i]=false;
