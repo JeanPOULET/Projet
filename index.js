@@ -238,7 +238,7 @@ io.on('connection', function (socket) {
         let cpt=0;
         let indice_joueur_debout=0;
         for(let i=0;i<isCouche[partieLancee].length;i++){
-            if(isCouche[partieLancee][i]){
+            if(!isCouche[partieLancee][i]){
                 indice_joueur_debout=i;
                 cpt++;
             }

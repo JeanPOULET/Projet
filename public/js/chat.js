@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     var indices = null;
     //tableau
     var nbCartesChoisis =0;
+    var maxNbPile=0;
 
     var partieAquitter=-1;
 
@@ -1133,7 +1134,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         console.log("nbCartesChoisis : "+nbCartesChoisis);
-        if(nbCartesChoisis>=getNombreCartesPile(partieEnCours,currentUser) || pileDeJoueur === currentUser) {
+        if(nbCartesChoisis>=maxNbPile  || pileDeJoueur === currentUser) {
             nbCartesChoisis++;
             while (!elt.classList.contains("carte")) {
                 elt = elt.parentElement;
@@ -1285,6 +1286,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function addPileListener(partieEnCours){
+        maxNbPile= getNombreCartesPile(partieEnCours,currentUser);
         for(let i=0;i<liste_joueurs.joueurs.length;i++){
             document.getElementById("pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours).addEventListener("click",pileVersDefausse);
         }
@@ -1299,6 +1301,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function disableListenerPile(partieEnCours){
+        maxNbPile=0;
         for(let i=0;i<liste_joueurs.joueurs.length;i++){
             document.getElementById("pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours).removeEventListener("click",pileVersDefausse);
         }
