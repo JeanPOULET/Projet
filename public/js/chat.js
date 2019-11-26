@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     */
 
     /*** ToDo
-     * Finir la partie quand il y a plus qu'un joueur
      * les ia...
      *
      */
@@ -58,8 +57,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     var miseAutorise = null;
     //tableau pour avoir dans chaque partie l'indice pour le sélecteur sur la main du joueur
     var indices = null;
-    //tableau
+    //nombre de cartes choisis lors de la selection des cartes dans les piles
     var nbCartesChoisis =0;
+    //nombre maximum actuel de cartes dans les piles
     var maxNbPile=0;
 
     var partieAquitter=-1;
@@ -668,7 +668,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.querySelector("body").appendChild(div);
 
         if(host != null){
-            var inputGameStart = document.createElement("input");
+            let inputGameStart = document.createElement("input");
             inputGameStart.setAttribute("type", "button");
             inputGameStart.setAttribute("value", "Lancer la partie");
             inputGameStart.setAttribute("class","btnLancer");
@@ -678,7 +678,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
         host=null;
 
-        document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function (e) {
+        document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function () {
             document.getElementById("radio0").checked = true;
         });
 
@@ -693,38 +693,38 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function creationTableauScore(newList, game) {
 
-        if (game != 0){
+        if (game !== 0){
             document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(1)").innerHTML = "";
             document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(2)").innerHTML = "";
             console.log(newList);
-            for(let i in newList){
-                var tdName = document.createElement("td");
+            for(let i=0;i<newList.length;i++){
+                let tdName = document.createElement("td");
                 document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(1)").appendChild(tdName);
-                var tdNameText;
+                let tdNameText;
                 switch(i){
-                    case '0':
+                    case 0:
                         tdNameText = document.createTextNode("amazons");
                         break;
-                    case '1' :
+                    case 1 :
                         tdNameText = document.createTextNode("carnivorous");
                         break;
-                    case '2':
+                    case 2:
                         tdNameText = document.createTextNode("cyborgs");
                         break;
-                    case '3':
+                    case 3:
                         tdNameText = document.createTextNode("indians");
                         break;
-                    case '4':
+                    case 4:
                         tdNameText = document.createTextNode("jokers");
                         break;
-                    case '5':
+                    case 5:
                         tdNameText = document.createTextNode("swallows");
                         break;
                 }
                 tdName.appendChild(tdNameText);
-                var tdScore = document.createElement("td");
+                let tdScore = document.createElement("td");
                 document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(2)").appendChild(tdScore);
-                var tdScoreText = document.createTextNode("0");
+                let tdScoreText = document.createTextNode("0");
                 tdScore.setAttribute("id", "score_"+newList[i]+"_"+game);
                 tdScore.appendChild(tdScoreText);
             }
@@ -843,9 +843,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      *  Quitter le chat et revenir à la page d'accueil.
      */
     function quitter() {
-        for(let i in tabPartie){
-            console.log("du coup si");
-            quitterGame(tabPartie[i]);
+        if(tabPartie!=null) {
+            for (let i = 0; i < tabPartie.length; i++) {
+                quitterGame(tabPartie[i]);
+            }
         }
         currentUser = null;
 
@@ -858,14 +859,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let partieLancee = getIdInt(this.id);
         document.getElementById("gameMain_p_"+partieLancee).removeChild(document.getElementById("btnLancer_p_"+partieLancee));
         sock.emit("initialiserPartie",partieLancee);
-        //jouer(partieLancee,0);
     }
 
     function setBtnMiserListener(partieEnCours) {
         document.getElementById("btnMiser" + partieEnCours).addEventListener("click", function () {
             let id = getIdInt(this.id);
-            let nbCartes = getNombreCartesPlateau(partieEnCours);
-
             if (document.getElementById("pile_" + currentUser + "_" + id).childElementCount < 1) {
                 return;
             }
@@ -1210,7 +1208,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 carte: elt.id,
                 perdu:perdu,
                 gagne:gagne
-                //points:nbPoints[partieEnCours],
 
             };
 
