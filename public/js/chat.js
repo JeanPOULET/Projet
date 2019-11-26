@@ -1162,6 +1162,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
         tab.innerHTML = points;
 
+        let pile = document.getElementById("pile_"+vainqueur+"_"+partieEnCours);
+        pile.classList.add("retournee");
+
     }
 
     function getPseudo(id){

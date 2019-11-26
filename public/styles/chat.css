@@ -679,6 +679,11 @@ input[type=radio]:checked + div {
     background-image: url(../images/recto_roses.png);
 }
 
+.pile.retournee{
+    background-image: url(../images/carre_roses.png);
+}
+
+
 .joueur main > .retournee.crane  {
     background-image: url(../images/recto_skull.png);
 }
