@@ -14,16 +14,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     /*** ToFerBO
      * style bouton unable
-     * empilement jeton
      * mettre des fleurs
      * style chat
      * style acceuil
-     * ajout texte mise courante et le miseur max
-     * mise
-     * bouton coucher
-     * vidage mise
-     *
-     * pseudo quand pose carte
+     * 
      */
 
     // socket ouverte vers le client
