@@ -549,6 +549,12 @@ input[type=radio]:checked + div {
     transform: rotate(-90deg);
 }
 
+.nbCartePile{
+    position: absolute;
+    left: 70%;
+    top: 15%;
+}
+
 .pile{
     position: relative;
     left: 35%;
@@ -592,16 +598,18 @@ input[type=radio]:checked + div {
     transform: rotate(90deg);
 }
 
-.gameMain .btnMiser{
-    position:absolute;
-    top :65%;
-    left :47%;
+.divMise{
+    position: absolute;
+    top :55%;
+    left :40%;
+    text-align: center;
 }
 
-.gameMain .txtMiser{
-    position:absolute;
-    top :60%;
-    left :43%;
+.divMise .txtMiser{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
 }
 
 .gameMain .btnLancer{

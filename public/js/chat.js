@@ -15,15 +15,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     /*** ToFerBO
      * style bouton unable
-     * empilement jeton
      * mettre des fleurs
      * style chat
      * style acceuil
      * ajout texte mise courante et le miseur max
-     * mise
-     * bouton coucher
-     * vidage mise
-     * 
+     * pseudo quand pose carte
      */
 
     // socket ouverte vers le client
@@ -828,6 +824,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function afficherPlateau(partieEnCours, cranes){
         let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
 
+        let divMise = document.createElement("div");
+        divMise.setAttribute("class", "divMise");
+        gameMain.appendChild(divMise);
         let txtMiser = document.createElement("input");
         txtMiser.setAttribute("class","txtMiser");
         txtMiser.setAttribute("id","txtMiser"+partieEnCours);
@@ -839,8 +838,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnMiser.setAttribute("type","button");
         btnMiser.setAttribute("value","Miser");
 
-        gameMain.appendChild(btnMiser);
-        gameMain.appendChild(txtMiser);
+        divMise.appendChild(txtMiser);
+        divMise.appendChild(btnMiser);
 
         document.getElementById("btnMiser"+partieEnCours).addEventListener("click",function(){
             let id = getIdInt(this.id);
@@ -904,11 +903,17 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             gameMain.insertBefore(toDom, document.getElementById("message"+partieEnCours));
             let main = document.createElement("main");
             let pile = document.createElement("div");
-
+            let nbCartePile = document.createElement("p");
 
             pile.setAttribute("class","pile");
             pile.setAttribute("id","pile_"+joueur+"_"+partieEnCours);
+
+            nbCartePile.setAttribute("class","nbCartePile");
+            nbCartePile.setAttribute("id","nbCartePile_"+joueur+"_"+partieEnCours);
+            nbCartePile.innerHTML = "0";
+
             document.getElementById(joueur+"_"+partieEnCours).appendChild(pile);
+            document.getElementById(joueur+"_"+partieEnCours).appendChild(nbCartePile);
             document.getElementById(joueur+"_"+partieEnCours).appendChild(main);
 
 
@@ -992,14 +997,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnCoucher.setAttribute("value","Se coucher");
 
 
-        let mess = document.getElementById("message"+partieEnCours);
-        let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
-        gameMain.insertBefore(miseGenerale,mess);
-        gameMain.insertBefore(btnCoucher,mess);
+        let txtMise = document.querySelector(".txtMiser");
+        document.querySelector(".divMise").insertBefore(miseGenerale, txtMise);
+        document.querySelector(".divMise").appendChild(btnCoucher);
         btnCoucher.addEventListener("click",seCoucher);
         btnCoucher.disabled = true;
-
-
     }
 
     function seCoucher(){
@@ -1086,6 +1088,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function actualiserPile(partieEnCours, joueur, carte){
+        
         let pile = document.getElementById("pile_"+joueur+"_"+partieEnCours);
         let carte_a_remove = document.getElementById(carte);
         let query = "#"+joueur+"_"+partieEnCours+" main";
@@ -1093,7 +1096,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             carte_a_remove.classList.remove("retournee");
         }
         document.querySelector(query).removeChild(carte_a_remove);
+        
         pile.appendChild(carte_a_remove);
+        console.log("coucou"+partieEnCours+joueur);
+        document.querySelector(".nbCartePile").innerText = getNombreCartesPile(partieEnCours, joueur);
 
     }
     function actualiserDefausse(partieEnCours,pileDeJoueur,carte){
