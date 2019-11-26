@@ -423,13 +423,7 @@ input[type=radio]:checked + div {
     height: 100%;
     width: 60%
 }
-/*
-.gameMain .message{
-    position: absolute;
-    top: 30%;
-    left: 45%;
-    font-size: 22px;
-}*/
+
 
 #imageTitre{
     position: absolute;
@@ -465,6 +459,7 @@ input[type=radio]:checked + div {
 
 .gameMain .message {
     position: absolute;
+    max-width: 700px;
     top: 48%;
     left: 33%;
     text-shadow:0 0 2px #FF0000,0 0 30px #FF0000,5px 9px 5px #333, 0 0 150px #FF0000;
@@ -526,8 +521,8 @@ input[type=radio]:checked + div {
 }
 
 .gameMain .joueur:nth-of-type(3){
-    top: 45vh;
-    left: -5vw;
+    top: 40vh;
+    left: -3vw;
     transform: rotate(90deg);
 }
 
@@ -544,8 +539,8 @@ input[type=radio]:checked + div {
 }
 
 .gameMain .joueur:nth-of-type(6){
-    top:45vh;
-    right: -5vw;
+    top:40vh;
+    right: -3vw;
     transform: rotate(-90deg);
 }
 
@@ -637,6 +632,27 @@ input[type=radio]:checked + div {
     background:#000000;
 }
 
+.divMise input[type=text] {
+    font-family: "Open Sans", sans-serif;
+    border: 0.1em solid #ccc;
+    border-radius: 0.2em;
+    background-color: #f9f9f9;
+    padding: 0em 1em;
+    font-size: 12px;
+    border: 5px solid white; 
+    -webkit-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    -moz-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    padding: 8px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 0 10px 0;
+}
 
 .gameMain .btnLancer{
     position:absolute;
