@@ -917,6 +917,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function afficherPlateau(partieEnCours, cranes){
         let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
 
+        let divMise = document.createElement("div");
+        divMise.setAttribute("class","divMise");
+        divMise.setAttribute("id","divMise"+partieEnCours);
+
         let txtMiser = document.createElement("input");
         txtMiser.setAttribute("class","txtMiser");
         txtMiser.setAttribute("id","txtMiser"+partieEnCours);
@@ -928,8 +932,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnMiser.setAttribute("type","button");
         btnMiser.setAttribute("value","Miser");
 
-        gameMain.appendChild(btnMiser);
-        gameMain.appendChild(txtMiser);
+        gameMain.appendChild(divMise);
+        divMise.appendChild(txtMiser);
+        divMise.appendChild(btnMiser);
+        
         setBtnMiserListener(partieEnCours);
 
         console.log("liste des joueurs : "+liste_joueurs[partieEnCours]);
@@ -1031,10 +1037,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnCoucher.setAttribute("value","Se coucher");
 
 
-        let mess = document.getElementById("message"+partieEnCours);
-        let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
-        gameMain.insertBefore(miseGenerale,mess);
-        gameMain.insertBefore(btnCoucher,mess);
+        let divMise = document.querySelector(".divMise");
+
+        divMise.insertBefore(miseGenerale,document.querySelector(".txtMiser"));
+        divMise.appendChild(btnCoucher);
         btnCoucher.addEventListener("click",seCoucher);
         btnCoucher.disabled = true;
 
