@@ -569,6 +569,8 @@ input[type=radio]:checked + div {
 .pile .carte{ 
     display: inherit;
     position: absolute;
+    top: 7px;
+    left: 7px;
 }
 
 .pseudo{
