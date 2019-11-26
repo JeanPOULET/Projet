@@ -401,7 +401,8 @@ io.on('connection', function (socket) {
         }else{
             joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
         }
-        if(joueurs[game].length ===1){
+        
+        if(joueurs[game].length - ias[game].length===1){
             clients[joueurs[game][0]].emit("resetManche",
                 {
                     joueur:joueurs[game][0],
@@ -413,6 +414,7 @@ io.on('connection', function (socket) {
         }
         console.log(joueurs);
         console.log(ias);
+        console.log(ias[game][0].cartes);
         if(joueurs[game].length ===0 || ias[game].length===joueurs[game].length){
             io.sockets.emit("suppressionPartie",game);
             delete joueurs[game];
