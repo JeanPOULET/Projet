@@ -1,5 +1,5 @@
 ***************
-* Commandes à faire à la racine du projet  
+* Commandes à faire à la racine du projet dans cet ordre
 npm init
 npm install express --save
 npm install socket.io --save
