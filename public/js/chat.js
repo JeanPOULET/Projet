@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * mettre des fleurs
      * style chat
      * style acceuil
-     * ajout texte mise courante et le miseur max
      * pseudo quand pose carte
      */
 
@@ -876,7 +875,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         divMise.appendChild(txtMiser);
         divMise.appendChild(btnMiser);
-        
+
         document.getElementById("btnMiser" + partieEnCours).addEventListener("click", function () {
             let id = getIdInt(this.id);
             if (document.getElementById("pile_" + currentUser + "_" + id).childElementCount < 1) {
