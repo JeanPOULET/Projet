@@ -136,26 +136,20 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("message"+nouvel_manche.partieLancee).innerHTML ="C'est à "+nouvel_manche.prochainJoueur+" de jouer !";
         actualiserTabTour(nouvel_manche.partieLancee,nouvel_manche.prochainJoueur);
         actualiserPile(nouvel_manche.partieLancee,nouvel_manche.joueur,nouvel_manche.carte);
-
     });
 
     sock.on("mise",function(mise){
         document.getElementById("message"+mise.partieLancee).innerHTML ="C'est à "+mise.prochainJoueur+" de jouer !";
         miseAutorise[mise.partieLancee] =true;
         actualiserTabTour(mise.partieLancee,mise.prochainJoueur);
-
-
         updateMiseGenerale(mise.partieLancee,mise.mise);
-
         disableListenerMain(mise.partieLancee);
-
 
     });
 
     sock.on("joueurSeCouche",function(couche){
         document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ! C'est à "+couche.prochainJoueur+" de joueur !";
         actualiserTabTour(couche.partieLancee,couche.prochainJoueur);
-
     });
 
     sock.on("pileVersDefausse",function(pile){
@@ -196,11 +190,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes !";
         }
         nbCartesChoisis=0;
-        resetAffichage(reset.partieLancee);
-        disableListenerMain(reset.partieLancee);
-        disableListenerPile(reset.partieLancee);
-        document.getElementById("miseGenerale"+reset.partieLancee).innerHTML ="Mise actuelle : 0";
+
         if(!reset.victoireTotale) {
+            document.getElementById("miseGenerale"+reset.partieLancee).innerHTML ="Mise actuelle : 0";
+            disableListenerMain(reset.partieLancee);
+            disableListenerPile(reset.partieLancee);
+            resetAffichage(reset.partieLancee);
             enableListenerMain(reset.partieLancee);
             actualiserTabTour(reset.partieLancee, reset.prochainJoueur);
         }else{
@@ -211,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
 
     });
-
 
     sock.on("revelation",function(revel){
         document.getElementById("message"+revel.partieLancee).innerHTML =revel.joueur+" tire les cartes !";
@@ -332,6 +326,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             console.log("aff=" + partieInvite);
             alert("Vous êtes invité par "+fromInvit+" pour la partie n°"+partieInvite+" !");
             document.getElementById("p_" + partieInvite).addEventListener("click", rejoindrePartie);
+        }
+        if(fromInvit===currentUser && data.id_partie==0 ){
+            removeIDpartie(partieInvite);
         }
     }
 
@@ -569,9 +566,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 joiner: currentUser,
                 partie: partieInvite
             };
-            if(tabPartie===null){
-                tabPartie=[];
-            }
+
+
+            iniTabs(partieInvite);
             tabPartie.push(partieInvite);
             sock.emit("joinGame", join);
             nbPartie++;
@@ -743,15 +740,29 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById(partie).checked = true;
     }
 
+    function iniTabs(num_partie) {
+        if(tabPartie===null){
+            tabPartie=[];
+        }
+        if(indices == null){
+            indices = [];
+        }
+        if(miseAutorise ==null){
+            miseAutorise=[];
+        }
+        if(miseAutorise[num_partie]===undefined){
+            miseAutorise[num_partie]=false;
+        }
+
+    }
+
     function rejoindrePartie() {
         let join = {
             joiner: currentUser,
             partie: partieInvite
         };
         sock.emit("joinGame", join);
-        if(tabPartie===null){
-            tabPartie=[];
-        }
+        iniTabs(partieInvite);
         tabPartie.push(partieInvite);
 
         console.log("p_" + partieInvite);
@@ -773,6 +784,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         let cartes=[];
         let main = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" main");
+        if(main ===null){
+            return null;
+        }
+
         if(main.childElementCount===0){
             return null;
         }
@@ -989,9 +1004,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(carte);
                 if(joueur === currentUser){
                     let indice = i+1;
-                    if(indices == null){
-                        indices = [];
-                    }
+
                     indices[partieEnCours] = indice;
                     enableListenerMain(partieEnCours);
 
@@ -1321,18 +1334,20 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         for(let j=0;j<liste_joueurs[partieEnCours].length;j++){
             let pile = document.getElementById("pile_"+liste_joueurs[partieEnCours][j]+"_"+partieEnCours);
-            while(pile.firstChild){
-                let carte = pile.firstChild;
-                let carte_id = pile.firstElementChild.id;
-                console.log("la carte pile ==>"+carte_id);
-                let main_id = getPseudo(carte_id);
-                carte.classList.remove("selectionne");
-                if(currentUser===main_id){
-                    carte.classList.add("retournee");
+            if(pile!=null) {
+                while (pile.firstChild) {
+                    let carte = pile.firstChild;
+                    let carte_id = pile.firstElementChild.id;
+                    console.log("la carte pile ==>" + carte_id);
+                    let main_id = getPseudo(carte_id);
+                    carte.classList.remove("selectionne");
+                    if (currentUser === main_id) {
+                        carte.classList.add("retournee");
+                    }
+                    let main = document.querySelector("#" + main_id + "_" + partieEnCours + " main");
+                    pile.removeChild(pile.firstChild);
+                    main.appendChild(carte);
                 }
-                let main = document.querySelector("#"+main_id+"_"+partieEnCours+" main");
-                pile.removeChild(pile.firstChild);
-                main.appendChild(carte);
             }
         }
     }
