@@ -168,6 +168,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     });
 
+    sock.on("joueurPart",function(aurevoir){
+        deleteJoueur(aurevoir.joueur,aurevoir.id_partie);
+    });
+
     sock.on("resetManche",function(reset){
         let msg=reset.joueur;
         if(reset.victoire && !reset.victoireTotale){
@@ -807,7 +811,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
              obj={
                  joueur:currentUser,
                  cartes: getIDsCartesMain(res),
-                 partieEnCours:res
+                 partieEnCours:res,
+                 monTour:mon_tour[res]
              };
              console.log("id quitterGame if : "+res);
              document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
@@ -824,7 +829,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
              obj={
                  joueur:currentUser,
                  cartes: getIDsCartesMain(res),
-                 partieEnCours:res
+                 partieEnCours:res,
+                 monTour:mon_tour[res]
              };
              partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
              document.getElementById("content").removeChild(document.getElementById(partie));
@@ -1110,9 +1116,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnCoucher.setAttribute("value","Se coucher");
 
 
-        let divMise = document.querySelector(".divMise");
+        let divMise = document.querySelector("#divMise"+partieEnCours);
 
-        divMise.insertBefore(miseGenerale,document.querySelector(".txtMiser"));
+        divMise.insertBefore(miseGenerale,document.querySelector("#txtMiser"+partieEnCours));
         divMise.appendChild(btnCoucher);
         btnCoucher.addEventListener("click",seCoucher);
         btnCoucher.disabled = true;
@@ -1227,6 +1233,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function actualiserTableau(partieEnCours, vainqueur,points){
         let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
         tab.innerHTML = points;
+
+        let pile = document.getElementById("pile_"+vainqueur+"_"+partieEnCours);
+        pile.classList.add("retournee");
 
     }
 
@@ -1422,6 +1431,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         maxNbPile= getNombreCartesPile(partieEnCours,currentUser);
         for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
             document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).addEventListener("click",pileVersDefausse);
+        }
+    }
+
+    function deleteJoueur(joueur,partieEnCours){
+        let joueurToDelete = document.getElementById(joueur+"_"+partieEnCours);
+        let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
+        if(joueurToDelete!=null){
+            gameMain.removeChild(joueurToDelete);
         }
     }
 

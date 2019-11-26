@@ -387,6 +387,9 @@ io.on('connection', function (socket) {
             console.log("Sortie de la partie "+game.partieEnCours+" par "+currentID);
             quitGame(game.partieEnCours,game.cartes);
             console.log(joueurs);
+            if(game.monTour && joueurs[game.partieEnCours]!==undefined){
+                jouer(game.partieEnCours);
+            }
         }
     });
 
@@ -431,8 +434,15 @@ io.on('connection', function (socket) {
                 joueurs: joueurs[game],
                 id_partie: game
             };
+            let aurevoir ={
+                joueur:currentID,
+                id_partie:game
+            };
+
             for(let i in joueurs[game]){
+
                 clients[joueurs[game][i]].emit("listeGame",liste);
+                clients[joueurs[game][i]].emit("joueurPart",aurevoir);
                 clients[joueurs[game][i]].emit("message",{from:null, to:null, text: currentID + " a quitté la partie", date:Date.now(),id_partie:game});
             }
 

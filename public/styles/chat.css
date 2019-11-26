@@ -684,6 +684,11 @@ input[type=radio]:checked + div {
     content : "\00269C";
 }
 
+.pile.retournee{
+    background-image: url(../images/carre_roses.png);
+}
+
+
 .joueur main > .retournee.crane  {
     content : "\002620";
 }*/
