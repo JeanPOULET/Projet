@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * bouton coucher
      * vidage mise
      *
+     * pseudo quand pose carte
      */
 
     // socket ouverte vers le client
