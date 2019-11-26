@@ -482,28 +482,16 @@ input[type=radio]:checked + div {
     display: inline-block;
 }
 
-.amazons{
-    background-image: url(../images/amazons.png);
+.amazons, .carnivorous, .cyborgs, .indians, .jokers, .swallows{
+    width: 80px;
+    height: 80px;
 }
 
-.carnivorous{
-    background-image: url(../images/carnivorous.png);
-}
-
-.cyborgs{
-    background-image: url(../images/cyborgs.png);
-}
-
-.indians{
-    background-image: url(../images/indians.png);
-}
-
-.jokers{
-    background-image: url(../images/jokers.png);
-}
-
-.swallows{
-    background-image: url(../images/swallows.png);
+.divCarte{
+    position: relative;
+    top:-20%;
+    left: 6%;
+    font-size: 70px;
 }
 
 .joueur{
@@ -632,6 +620,7 @@ input[type=radio]:checked + div {
     background:#000000;
 }
 
+
 .divMise input[type=text] {
     font-family: "Open Sans", sans-serif;
     border: 0.1em solid #ccc;
@@ -658,27 +647,43 @@ input[type=radio]:checked + div {
     position:absolute;
     top:50%;
     left:40%;
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ed3330;
+    padding: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
 }
 
+.gameMain .btnLancer:hover{
+    background: #434343;
+    letter-spacing: 1px;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+    transition: all 0.4s ease 0s;
+}
 .gameMain .defausse{
     position:absolute;
     top:35%;
     left:40%;
-
 }
-
+/*
 .defausse >  .selectionne.rose  {
-    background-image: url(../images/recto_roses.png);
+    content : "\00269C";
 }
 
 .defausse > .selectionne.crane {
-    background-image: url(../images/recto_skull.png);
+    content : "\002620";
 }
 
 .joueur main > .retournee.rose  {
-    background-image: url(../images/recto_roses.png);
+    content : "\00269C";
 }
 
 .joueur main > .retournee.crane  {
-    background-image: url(../images/recto_skull.png);
-}
+    content : "\002620";
+}*/
