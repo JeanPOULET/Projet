@@ -612,7 +612,6 @@ input[type=radio]:checked + div {
 
 }
 
-
 .defausse >  .selectionne + .rose  {
     background-image: url(../images/recto_roses.png);
 }

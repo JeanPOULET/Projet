@@ -24,6 +24,7 @@ var clients = {};       // id -> socket
 /** Gestion des parties et des joueurs **/
 
 var joueurs = [[]]; //[indice_partie][joueurs]
+var ias = [[]];
 var scores = [[]];
 var isCouche = [[]];
 var partie=1; //indice de la partie qu'on peut crée
@@ -92,6 +93,10 @@ io.on('connection', function (socket) {
 
         if(isCouche[invit.partie] === undefined){
             isCouche[invit.partie] = [];
+        }
+
+        if(ias[invit.partie]  === undefined){
+            ias[invit.partie] = [];
         }
 
         joueurs[invit.partie].push(invit.joiner);
@@ -379,10 +384,12 @@ io.on('connection', function (socket) {
 
     function quitGame(game){
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
+        ias[game].push(currentID);
         console.log(joueurs);
         if(joueurs[game].length ===0){
             io.sockets.emit("suppressionPartie",game);
             delete joueurs[game];
+            delete ias[game];
             delete scores[game];
             delete isCouche[game];
             partie--;

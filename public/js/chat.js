@@ -4,15 +4,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Si un gars est dans la fenêtre d'invitations et reçoit une invitation id_partie à 0
-     * --Mise de la meme somme que la mise actuelle--
+     *
     */
 
     /*** ToDo
-     * Possibilité de se coucher (bouton uniquement présent)
-     * mise à jour du tableau de points
-     * Finir la partie quand il y a réellement un vainqueur ou plus qu'un joueur
-     * le css un peu moins omg 
-     * Retirer la carte de qqun qui a pioché dans ta pile un crane
+     * Finir la partie quand il y a plus qu'un joueur
+     * les ia...
      *
      */
 
@@ -37,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //liste des joueurs
     var players = [[]];
-    var liste_joueurs =null;
+    var liste_joueurs =[[]];
 
     //indice de partie du serveur
     var partieInvite =-1;
@@ -65,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     var partieAquitter=-1;
 
     //
-    var nbPoints=null;
+    //var nbPoints=null;
 
     // on attache les événements que si le client est connecté.
     sock.on("bienvenue", function (id) {
@@ -91,10 +88,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("listeGame", function (liste) {
-        liste_joueurs = liste;
+        if(liste_joueurs[liste.id_partie] === undefined){
+            liste_joueurs[liste.id_partie] =[];
+        }
+        liste_joueurs[liste.id_partie] = liste.joueurs;
+        console.log("liste joueurs : "+liste_joueurs);
         if (currentUser) {
             afficherListe(liste.joueurs, liste.id_partie);
-            creationTableauScore(liste.joueurs, liste.id_partie);
+
         }
     });
 
@@ -118,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     sock.on("iniPartie",function(initialisation){
         console.log("La partie est lancée n°"+initialisation.partieLancee);
         afficherPlateau(initialisation.partieLancee, initialisation.cranes);
+        creationTableauScore(liste_joueurs[initialisation.partieLancee], initialisation.partieLancee);
     });
 
     sock.on("debutManche",function(manche){
@@ -636,12 +638,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\"id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
-                "<div class =\"gameMain\" id=\"gameMain_p_"+(nbPartieInvite)+"\">" +
+                "<div class =\"gameMain\" id=\"gameMain_p_"+nbPartieInvite+"\">" +
                 "<div class='message'  id=\"message"+nbPartieInvite+"\"> </div>"+
                 "<div class='defausse' id=\"defausse"+nbPartieInvite+"\"></div>"+
 
                 "</div>" +
-                "<table>"+
+                "<table id=\"table"+nbPartieInvite+"\">"+
                     "<thead>"+
                         "<tr>"+
                             "<th colspan=\"6\">Tableau des scores</th>"+
@@ -684,13 +686,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function creationTableauScore(newList, game) {
+
         if (game != 0){
-            document.querySelector(".gameScreen table tbody tr:nth-of-type(1)").innerHTML = "";
-            document.querySelector(".gameScreen table tbody tr:nth-of-type(2)").innerHTML = "";
+            document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(1)").innerHTML = "";
+            document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(2)").innerHTML = "";
             console.log(newList);
             for(let i in newList){
                 var tdName = document.createElement("td");
-                document.querySelector(".gameScreen table tbody tr:nth-of-type(1)").appendChild(tdName);
+                document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(1)").appendChild(tdName);
                 var tdNameText;
                 switch(i){
                     case '0':
@@ -714,7 +717,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 }
                 tdName.appendChild(tdNameText);
                 var tdScore = document.createElement("td");
-                document.querySelector(".gameScreen table tbody tr:nth-of-type(2)").appendChild(tdScore);
+                document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(2)").appendChild(tdScore);
                 var tdScoreText = document.createTextNode("0");
                 tdScore.setAttribute("id", "score_"+newList[i]+"_"+game);
                 tdScore.appendChild(tdScoreText);
@@ -781,9 +784,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
              document.querySelector("body").removeChild(document.getElementById(partie));
 
          }
-         for(let i in tabPartie){
+         for(let i=0; i< tabPartie.length;++i){
              if(tabPartie[i]===res){
                  delete tabPartie[i];
+                 delete liste_joueurs[i];
+                 delete indices[i];
+                 delete miseAutorise[i];
                  break;
              }
          }
@@ -881,10 +887,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         });
 
-        console.log("liste des joueurs : "+liste_joueurs.joueurs);
-        for(let i=0;i<liste_joueurs.joueurs.length; i++){
+        console.log("liste des joueurs : "+liste_joueurs[partieEnCours]);
+        for(let i=0;i<liste_joueurs[partieEnCours].length; i++){
             let toDom="";
-            let joueur= liste_joueurs.joueurs[i];
+            let joueur= liste_joueurs[partieEnCours][i];
             console.log("i in listeJoueurs : "+joueur);
             toDom = document.createElement("div");
             toDom.setAttribute("class","joueur");
@@ -947,7 +953,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 }
             }
             let pseudo = document.createElement("p");
-            pseudo.innerHTML = liste_joueurs.joueurs[i];
+            pseudo.innerHTML = liste_joueurs[partieEnCours][i];
             pseudo.setAttribute("class","pseudo");
             document.getElementById(joueur+"_"+partieEnCours).appendChild(pseudo);
 
@@ -958,10 +964,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function getNombreCartesPlateau(partieEnCours){
-        let nb_joueurs = liste_joueurs.joueurs.length;
+        let nb_joueurs = liste_joueurs[partieEnCours].length;
         let nb_cartes =0;
         for(let i=0;i<nb_joueurs;i++){
-            nb_cartes += document.getElementById("pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours).childElementCount;
+            nb_cartes += document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).childElementCount;
         }
         return nb_cartes;
     }
@@ -1153,7 +1159,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
             }
 
-            if(nbPoints == null){
+            /*if(nbPoints == null){
                 nbPoints=[];
             }
             if(nbPoints[partieEnCours]==undefined){
@@ -1161,7 +1167,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             }
             if(gagne){
                 nbPoints[partieEnCours]+=1;
-            }
+            }*/
 
             let obj = {
                 joueur: currentUser,
@@ -1169,8 +1175,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 partieEnCours: partieEnCours,
                 carte: elt.id,
                 perdu:perdu,
-                gagne:gagne,
-                points:nbPoints[partieEnCours],
+                gagne:gagne
+                //points:nbPoints[partieEnCours],
 
             };
 
@@ -1196,11 +1202,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function retirerCarteRandom(partieEnCours){
+        let isDcd =false;
         let nb_cartes_restantes = getNombreCarteMain(partieEnCours);
         let carte;
         if(nb_cartes_restantes===1){
             carte = document.querySelector("#"+currentUser+"_"+partieEnCours+" main").firstElementChild.id;
             document.querySelector("#"+currentUser+"_"+partieEnCours+" main").removeChild(document.querySelector("#"+currentUser+"_"+partieEnCours+" main").firstChild);
+            isDcd=true;
         }else{
             let rand = Math.floor(Math.random()*4);
             while(document.getElementById("c_"+rand+"_"+currentUser+"_"+partieEnCours) ==null){
@@ -1214,17 +1222,29 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let obj ={
             joueur:currentUser,
             partieEnCours:partieEnCours,
-            carte:carte
+            carte:carte,
+            elimine:isDcd
         };
 
         sock.emit("carteARetirer",obj);
     }
 
     function retirerCartePlateau(partieEnCours,joueur,carte){
+        let nb_cartes_restantes = getNombreCarteMain(partieEnCours);
+
         let main = document.querySelector("#"+joueur+"_"+partieEnCours+" main");
         console.log("la carte : "+carte);
         let carte_a_remove = document.getElementById(carte);
         main.removeChild(carte_a_remove);
+
+        let obj ={
+            joueur:currentUser,
+            partieEnCours:partieEnCours
+
+        };
+        if(joueur === currentUser && nb_cartes_restantes===1){
+            sock.emit("joueurElimine", obj);
+        }
 
     }
 
@@ -1267,8 +1287,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             main.appendChild(carte);
         }
 
-        for(let j=0;j<liste_joueurs.joueurs.length;j++){
-            let pile = document.getElementById("pile_"+liste_joueurs.joueurs[j]+"_"+partieEnCours);
+        for(let j=0;j<liste_joueurs[partieEnCours].length;j++){
+            let pile = document.getElementById("pile_"+liste_joueurs[partieEnCours][j]+"_"+partieEnCours);
             while(pile.firstChild){
                 let carte = pile.firstChild;
                 let carte_id = pile.firstElementChild.id;
@@ -1287,8 +1307,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function addPileListener(partieEnCours){
         maxNbPile= getNombreCartesPile(partieEnCours,currentUser);
-        for(let i=0;i<liste_joueurs.joueurs.length;i++){
-            document.getElementById("pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours).addEventListener("click",pileVersDefausse);
+        for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
+            document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).addEventListener("click",pileVersDefausse);
         }
     }
 
@@ -1302,8 +1322,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function disableListenerPile(partieEnCours){
         maxNbPile=0;
-        for(let i=0;i<liste_joueurs.joueurs.length;i++){
-            document.getElementById("pile_"+liste_joueurs.joueurs[i]+"_"+partieEnCours).removeEventListener("click",pileVersDefausse);
+        for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
+            document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).removeEventListener("click",pileVersDefausse);
         }
     }
 
