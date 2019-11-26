@@ -482,11 +482,6 @@ input[type=radio]:checked + div {
     display: inline-block;
 }
 
-.amazons, .carnivorous, .cyborgs, .indians, .jokers, .swallows{
-    width: 80px;
-    height: 80px;
-}
-
 .divCarte{
     position: relative;
     top:-20%;
@@ -494,8 +489,18 @@ input[type=radio]:checked + div {
     font-size: 70px;
 }
 
+.class0Rose::before{
+    content: "⚜";
+}
+
+.class0Crane::before{
+    content: "☠";
+}
+
 .joueur{
     position: absolute;
+    width: 320px;
+    height: 180px;
 }
 
 .gameMain .joueur:nth-of-type(1){
@@ -541,7 +546,7 @@ input[type=radio]:checked + div {
 .pile{
     position: relative;
     left: 35%;
-    top: -150%;
+    top: -10px;
     width: 100px;
     height: 100px;
     background-size: contain;
@@ -558,8 +563,8 @@ input[type=radio]:checked + div {
 
 .pseudo{
     position: absolute;
-    left: 300px;
-    top: 20%;
+    left: 250px;
+    top: 15%;
     width: 100px;
     text-align: center;
     overflow: auto;
@@ -673,15 +678,15 @@ input[type=radio]:checked + div {
 }
 /*
 .defausse >  .selectionne.rose  {
-    content : "\00269C";
+    background-image: url(../images/recto_roses.png);
 }
 
 .defausse > .selectionne.crane {
-    content : "\002620";
+    background-image: url(../images/recto_skull.png);
 }
 
 .joueur main > .retournee.rose  {
-    content : "\00269C";
+    background-image: url(../images/recto_roses.png);
 }
 
 .pile.retournee{
@@ -690,5 +695,5 @@ input[type=radio]:checked + div {
 
 
 .joueur main > .retournee.crane  {
-    content : "\002620";
+    background-image: url(../images/recto_skull.png);
 }*/
