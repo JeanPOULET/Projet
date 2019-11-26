@@ -1,9 +1,5 @@
 ***************
-* Commandes à faire à la racine du projet
-*  --Projet 
-*       |--public
-*       |--index.js
-*       
+* Commandes à faire à la racine du projet  
 npm init
 npm install express --save
 npm install socket.io --save
