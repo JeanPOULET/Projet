@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*** Liste des "bugs" trouvés ***
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
-     * Si un gars est dans la fenêtre d'invitations et reçoit une invitation id_partie à 0
-     * la défausse cassée
+     *
     */
 
     /*** ToDo
@@ -52,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     //tableau pour avoir dans chaque partie l'indice pour le sélecteur sur la main du joueur
     var indices = null;
     //nombre de cartes choisis lors de la selection des cartes dans les piles
-    var nbCartesChoisis =0;
+    var nbCartesChoisis =null;
     //nombre maximum actuel de cartes dans les piles
-    var maxNbPile=0;
+    var maxNbPile=null;
 
     var partieAquitter=-1;
 
@@ -99,10 +98,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     sock.on("invitation", function (invit) {
         if (currentUser) {
             console.log("invitationneur : ", invit.from);
+            console.log("partieInvite actualisé : "+invit.partie);
             partieInvite = invit.partie;
             fromInvit = currentUser;
             if (invit.from != null) {
                 fromInvit = invit.from;
+
             }
         }
 
@@ -186,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }else{
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes !";
         }
-        nbCartesChoisis=0;
+        nbCartesChoisis[reset.partieLancee]=0;
 
         if(!reset.victoireTotale) {
             document.getElementById("miseGenerale"+reset.partieLancee).innerHTML ="Mise actuelle : 0";
@@ -579,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function annulerInvit() {
         document.getElementById("fenetreInvit").style.display = "none";
-        partieInvite--;
+        //partieInvite--;
     }
 
     /*
@@ -592,7 +593,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         let nouvelOnglet = document.createElement("h2");
-        let nbPartieInvite = partieInvite; // +2 car les boutons radios vont jusqu'à 2 de base dans le chat (login et main)
+        let nbPartieInvite = partieInvite;
         let id = "Partie " + partieInvite;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
@@ -747,8 +748,22 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if(miseAutorise ==null){
             miseAutorise=[];
         }
+        if(mon_tour ==null){
+            mon_tour=[];
+        }
+        if(nbCartesChoisis ==null){
+            nbCartesChoisis=[];
+        }
+
+        if(nbCartesChoisis[num_partie]===undefined){
+            nbCartesChoisis[num_partie]=0;
+        }
+
         if(miseAutorise[num_partie]===undefined){
             miseAutorise[num_partie]=false;
+        }
+        if(mon_tour[num_partie]===undefined){
+            mon_tour[num_partie]=false;
         }
 
     }
@@ -822,20 +837,22 @@ document.addEventListener("DOMContentLoaded", function(_e) {
              let partie = this.id;
              let reg = new RegExp(/[^\d]/g);
              let nb = partie;
-             nb = nb.replace(reg, "");
-             res = parseInt(nb, 10);
-             res=getIdInt(partie);
-             console.log("id quitterGame : "+res);
-             obj={
-                 joueur:currentUser,
-                 cartes: getIDsCartesMain(res),
-                 partieEnCours:res,
-                 monTour:mon_tour[res]
-             };
-             partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-             document.getElementById("content").removeChild(document.getElementById(partie));
-             partie = partie.replace(/Partie .*/, "gameScreen" + (res ));
-             document.querySelector("body").removeChild(document.getElementById(partie));
+             if(nb!==undefined) {
+                nb = nb.replace(reg, "");
+                 res = parseInt(nb, 10);
+                 res = getIdInt(partie);
+                 console.log("id quitterGame : " + res);
+                 obj = {
+                     joueur: currentUser,
+                     cartes: getIDsCartesMain(res),
+                     partieEnCours: res,
+                     monTour: mon_tour[res]
+                 };
+                 partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
+                 document.getElementById("content").removeChild(document.getElementById(partie));
+                 partie = partie.replace(/Partie .*/, "gameScreen" + (res));
+                 document.querySelector("body").removeChild(document.getElementById(partie));
+             }
 
          }
 
@@ -845,6 +862,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                  delete liste_joueurs[i];
                  delete indices[i];
                  delete miseAutorise[i];
+                 delete nbCartesChoisis[i];
                  break;
              }
          }
@@ -1210,9 +1228,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             return;
         }
 
-        console.log("nbCartesChoisis : "+nbCartesChoisis);
-        if(nbCartesChoisis>=maxNbPile  || pileDeJoueur === currentUser) {
-            nbCartesChoisis++;
+        console.log("nbCartesChoisis : "+nbCartesChoisis[partieEnCours]);
+        if(nbCartesChoisis[partieEnCours]>=maxNbPile  || pileDeJoueur === currentUser) {
+            nbCartesChoisis[partieEnCours]++;
             while (!elt.classList.contains("carte")) {
                 elt = elt.parentElement;
             }
@@ -1223,7 +1241,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             }
 
             console.log("getNbCartesDef = "+getMiseGenerale(partieEnCours));
-            if(!perdu && nbCartesChoisis===getMiseGenerale(partieEnCours)){
+            if(!perdu && nbCartesChoisis[partieEnCours]===getMiseGenerale(partieEnCours)){
                 gagne =true;
                 mon_tour[partieEnCours]=false;
 

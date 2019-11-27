@@ -28,7 +28,8 @@ var ias = [[]];
 var scores = [[]];
 var isCouche = [[]];
 var partie=1; //indice de la partie qu'on peut crée
-
+var dispos=[];
+var last=0;
 // Quand un client se connecte, on le note dans la console
 io.on('connection', function (socket) {
     
@@ -50,10 +51,12 @@ io.on('connection', function (socket) {
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
         socket.emit("bienvenue", id);
+
         // envoi aux autres clients 
         socket.broadcast.emit("message", { from: null, to: null, text: currentID + " a rejoint la discussion", date: Date.now(),id_partie:0 } );
         // envoi de la nouvelle liste à tous les clients connectés
         io.sockets.emit("liste", Object.keys(clients));
+        socket.emit("invitation",{partie:partie,from:null});
     });
 
     /**
@@ -63,20 +66,44 @@ io.on('connection', function (socket) {
      */
 
     socket.on("invitation",function(invit){
+        let partieF;
+        let shifted=false;
+
+        console.log(dispos);
+        if(dispos.length===0){
+            if(last===partie){
+                partie++;
+            }
+            partieF=partie;
+        }else{
+            partieF=dispos[0];
+            last=dispos[0];
+            shifted=true;
+        }
+
+
+
         if(invit===null){
-            io.sockets.emit("invitation",{partie:partie,from:null});
+            io.sockets.emit("invitation",{partie:partieF,from:null});
 
         }else {
+
             let inv = {
-                partie: partie,
+                partie: partieF,
                 from: invit.from
             };
-            console.log("Invitation envoyé par " + inv.from + " partie num = " + partie);
+            console.log("Invitation envoyé par " + inv.from + " partie num = " + partieF);
             socket.emit("invitation", inv);
             for (let i in invit.to) {
                 clients[invit.to[i]].emit("invitation", inv);
             }
-            partie++;
+            if(!shifted){
+                partie++;
+            }else{
+                dispos.shift();
+            }
+
+
         }
 
     });
@@ -394,7 +421,7 @@ io.on('connection', function (socket) {
     });
 
     function quitGame(game,cartes){
-
+        console.log("quitGame ==> "+game);
         if(cartes!=null) {
             let ia = {
                 joueur: currentID,
@@ -405,7 +432,7 @@ io.on('connection', function (socket) {
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
 
 
-        if((joueurs[game].length + ias[game].length) ===1){
+        if(joueurs[game].length  ===1 ){
             clients[joueurs[game][0]].emit("resetManche",
                 {
                     joueur:joueurs[game][0],
@@ -423,11 +450,16 @@ io.on('connection', function (socket) {
             delete ias[game];
             delete scores[game];
             delete isCouche[game];
-            partie--;
-            if(partie===0){
-                partie=1;
+            dispos.push(game);
+
+            if(game===(partie-1)){
+                partie--;
+                if(partie===0){
+                    partie=1;
+                }
             }
-            io.sockets.emit("invitation",{partie:partie,from:null});
+
+            io.sockets.emit("invitation",{partie:game,from:null});
 
         }else {
             let liste = {
@@ -471,7 +503,7 @@ io.on('connection', function (socket) {
         if (currentID) {
             console.log("current :"+currentID);
             console.log(" avant filtrage==> "+joueurs);
-            for(let i in joueurs) {
+            for(let i=1;i<joueurs.length;i++) {
                 quitGame(i);
             }
             console.log(" après filtrage==> "+joueurs);
