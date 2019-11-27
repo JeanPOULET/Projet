@@ -1007,28 +1007,25 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     
                     carte.classList.add("retournee");
                 }
-                
-                let divCarte = document.createElement("div");
-                divCarte.classList.add("divCarte");
 
                 switch(i){
                     case 0:
-                        carte.classList.add("smiley1");  
+                        carte.classList.add("communiste");  
                         break;
                     case 1 :  
-                        carte.classList.add("smiley2");
+                        carte.classList.add("templier");
                         break;
                     case 2:
-                        carte.classList.add("smiley3");
+                        carte.classList.add("scientifique");
                         break;
                     case 3:
-                        carte.classList.add("smiley4");
+                        carte.classList.add("musulman");
                         break;
                     case 4:
-                        carte.classList.add("smiley5");
+                        carte.classList.add("japonais");
                         break;
                     case 5:
-                        carte.classList.add("smiley6");
+                        carte.classList.add("hufflenien");
                         break;
                 }
 

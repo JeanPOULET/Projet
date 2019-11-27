@@ -482,24 +482,8 @@ input[type=radio]:checked + div {
     display: inline-block;
     font-size:80px;
 }
-/*
-.divCarte{
-    position: relative;
-    top:-20%;
-    left: 6%;
-    font-size: 70px;
-}
 
-.class0Rose::before{
-    content: "⚜";
-}
-
-.class0Crane::before{
-    content: "☠";
-}
-*/
-
-.smiley1::before{
+.communiste::before{
     content:"☭";
     color: red;
     border-radius: 40px;
@@ -508,7 +492,7 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
-.smiley2::before{
+.templier::before{
     content: "✠";
     color: turquoise;
     border-radius: 40px;
@@ -517,7 +501,7 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
-.smiley3::before{
+.scientifique::before{
     content:"⚛";
     color: purple;
     border-radius: 40px;
@@ -526,7 +510,7 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
-.smiley4::before{
+.musulman::before{
     content: "☪";
     color:yellowgreen;
     border-radius: 40px;
@@ -535,7 +519,7 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
-.smiley5::before{
+.japonais::before{
     content:"☢";
     color: green;
     border-radius: 40px;
@@ -544,7 +528,7 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
-.smiley6::before{
+.hufflenien::before{
     content: "♪";
     color: blue;
     border-radius: 40px;
