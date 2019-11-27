@@ -482,32 +482,25 @@ input[type=radio]:checked + div {
     display: inline-block;
 }
 
-.amazons{
-    background-image: url(../images/amazons.png);
+.divCarte{
+    position: relative;
+    top:-20%;
+    left: 6%;
+    font-size: 70px;
 }
 
-.carnivorous{
-    background-image: url(../images/carnivorous.png);
+.class0Rose::before{
+    content: "⚜";
 }
 
-.cyborgs{
-    background-image: url(../images/cyborgs.png);
-}
-
-.indians{
-    background-image: url(../images/indians.png);
-}
-
-.jokers{
-    background-image: url(../images/jokers.png);
-}
-
-.swallows{
-    background-image: url(../images/swallows.png);
+.class0Crane::before{
+    content: "☠";
 }
 
 .joueur{
     position: absolute;
+    width: 320px;
+    height: 180px;
 }
 
 .gameMain .joueur:nth-of-type(1){
@@ -553,7 +546,7 @@ input[type=radio]:checked + div {
 .pile{
     position: relative;
     left: 35%;
-    top: -150%;
+    top: -10px;
     width: 100px;
     height: 100px;
     background-size: contain;
@@ -570,8 +563,8 @@ input[type=radio]:checked + div {
 
 .pseudo{
     position: absolute;
-    left: 300px;
-    top: 20%;
+    left: 250px;
+    top: 15%;
     width: 100px;
     text-align: center;
     overflow: auto;
@@ -632,6 +625,7 @@ input[type=radio]:checked + div {
     background:#000000;
 }
 
+
 .divMise input[type=text] {
     font-family: "Open Sans", sans-serif;
     border: 0.1em solid #ccc;
@@ -658,15 +652,31 @@ input[type=radio]:checked + div {
     position:absolute;
     top:50%;
     left:40%;
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ed3330;
+    padding: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
 }
 
+.gameMain .btnLancer:hover{
+    background: #434343;
+    letter-spacing: 1px;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+    transition: all 0.4s ease 0s;
+}
 .gameMain .defausse{
     position:absolute;
     top:35%;
     left:40%;
-
 }
-
+/*
 .defausse >  .selectionne.rose  {
     background-image: url(../images/recto_roses.png);
 }
@@ -686,4 +696,4 @@ input[type=radio]:checked + div {
 
 .joueur main > .retournee.crane  {
     background-image: url(../images/recto_skull.png);
-}
+}*/

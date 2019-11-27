@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
 
     /*** ToFerBO
-     * style bouton unable
      * mettre des fleurs
      * style chat
      * style acceuil
@@ -995,33 +994,106 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 carte.setAttribute("class","carte");
                 carte.setAttribute("id","c_"+j+"_"+joueur+"_"+partieEnCours);
                 console.log("Cranes[i] = ",cranes[i]);
+
+                //let iconeCarte = document.createElement("p");
                 if(cranes[i] ===j){
+                    
                     carte.classList.add("crane");
                 }else{
+                    
                     carte.classList.add("rose");
                 }
                 if(joueur === currentUser){
+                    
                     carte.classList.add("retournee");
                 }
+                
+                let divCarte = document.createElement("div");
+                divCarte.classList.add("divCarte");
 
                 switch(i){
                     case 0:
-                        carte.classList.add("amazons");
+                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
+                            divCarte.classList.add("class0Crane");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
+                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
+                            divCarte.classList.add("class0Rose");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
+                        }else{
+                            carte.innerHTML = "&#128540;";
+                            carte.style="font-size: 80px;";
+                        }
+                        carte.appendChild(divCarte);
                         break;
                     case 1 :
-                        carte.classList.add("carnivorous");
+                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
+                            divCarte.classList.add("class0Crane");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
+                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
+                            divCarte.classList.add("class0Rose");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
+                        }else{
+                            carte.innerHTML = "&#128520;";
+                            carte.style="font-size: 80px;";
+                        }
+                        carte.appendChild(divCarte);
+                       
                         break;
                     case 2:
-                        carte.classList.add("cyborgs");
+                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
+                            divCarte.classList.add("class0Crane");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
+                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
+                            divCarte.classList.add("class0Rose");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
+                        }else{
+                            carte.innerHTML = "&#128513;";
+                            carte.style="font-size: 80px;";
+                        }
+                        carte.appendChild(divCarte);
+                           
+                        
                         break;
                     case 3:
-                        carte.classList.add("indians");
+                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
+                            divCarte.classList.add("class0Crane");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
+                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
+                            divCarte.classList.add("class0Rose");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
+                        }else{
+                            carte.innerHTML = "&#128519;";
+                            carte.style="font-size: 80px;";
+                        }
+                        carte.appendChild(divCarte);
+                        
                         break;
                     case 4:
-                        carte.classList.add("jokers");
+                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
+                            divCarte.classList.add("class0Crane");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
+                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
+                            divCarte.classList.add("class0Rose");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
+                        }else{
+                            carte.innerHTML = "&#128526;";
+                            carte.style="font-size: 80px;";
+                        }
+                        carte.appendChild(divCarte);
+                        
                         break;
                     case 5:
-                        carte.classList.add("swallows");
+                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
+                            divCarte.classList.add("class0Crane");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
+                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
+                            divCarte.classList.add("class0Rose");
+                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
+                        }else{
+                            carte.innerHTML = "&#128567;";
+                            carte.style="font-size: 80px;";
+                        }
+                        carte.appendChild(divCarte);
                         break;
                 }
 
@@ -1041,8 +1113,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         }
         creaMiseGenerale(partieEnCours,0);
-
-
     }
 
     function getNombreCartesPlateau(partieEnCours){
