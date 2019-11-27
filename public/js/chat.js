@@ -698,22 +698,22 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 let tdNameText;
                 switch(i){
                     case 0:
-                        tdNameText = document.createTextNode("amazons");
+                        tdNameText = document.createTextNode("Communiste ☭");
                         break;
                     case 1 :
-                        tdNameText = document.createTextNode("carnivorous");
+                        tdNameText = document.createTextNode("Templier ✠");
                         break;
                     case 2:
-                        tdNameText = document.createTextNode("cyborgs");
+                        tdNameText = document.createTextNode("Scientifique ⚛");
                         break;
                     case 3:
-                        tdNameText = document.createTextNode("indians");
+                        tdNameText = document.createTextNode("Musulman ☪");
                         break;
                     case 4:
-                        tdNameText = document.createTextNode("jokers");
+                        tdNameText = document.createTextNode("Japonais ☢");
                         break;
                     case 5:
-                        tdNameText = document.createTextNode("swallows");
+                        tdNameText = document.createTextNode("Hufflenien ♪");
                         break;
                 }
                 tdName.appendChild(tdNameText);
@@ -995,87 +995,22 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
                 switch(i){
                     case 0:
-                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
-                            divCarte.classList.add("class0Crane");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
-                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
-                            divCarte.classList.add("class0Rose");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
-                        }else{
-                            carte.innerHTML = "&#128540;";
-                            carte.style="font-size: 80px;";
-                        }
-                        carte.appendChild(divCarte);
+                        carte.classList.add("smiley1");  
                         break;
-                    case 1 :
-                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
-                            divCarte.classList.add("class0Crane");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
-                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
-                            divCarte.classList.add("class0Rose");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
-                        }else{
-                            carte.innerHTML = "&#128520;";
-                            carte.style="font-size: 80px;";
-                        }
-                        carte.appendChild(divCarte);
-                       
+                    case 1 :  
+                        carte.classList.add("smiley2");
                         break;
                     case 2:
-                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
-                            divCarte.classList.add("class0Crane");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
-                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
-                            divCarte.classList.add("class0Rose");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
-                        }else{
-                            carte.innerHTML = "&#128513;";
-                            carte.style="font-size: 80px;";
-                        }
-                        carte.appendChild(divCarte);
-                           
-                        
+                        carte.classList.add("smiley3");
                         break;
                     case 3:
-                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
-                            divCarte.classList.add("class0Crane");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
-                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
-                            divCarte.classList.add("class0Rose");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
-                        }else{
-                            carte.innerHTML = "&#128519;";
-                            carte.style="font-size: 80px;";
-                        }
-                        carte.appendChild(divCarte);
-                        
+                        carte.classList.add("smiley4");
                         break;
                     case 4:
-                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
-                            divCarte.classList.add("class0Crane");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
-                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
-                            divCarte.classList.add("class0Rose");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
-                        }else{
-                            carte.innerHTML = "&#128526;";
-                            carte.style="font-size: 80px;";
-                        }
-                        carte.appendChild(divCarte);
-                        
+                        carte.classList.add("smiley5");
                         break;
                     case 5:
-                        if(carte.classList.contains("retournee") && carte.classList.contains("crane")){
-                            divCarte.classList.add("class0Crane");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #9b9b9a";
-                        }else if(carte.classList.contains("retournee") && carte.classList.contains("rose")){
-                            divCarte.classList.add("class0Rose");
-                            carte.style= "border-radius:50%; border:2px solid #000000; background: #b10505";
-                        }else{
-                            carte.innerHTML = "&#128567;";
-                            carte.style="font-size: 80px;";
-                        }
-                        carte.appendChild(divCarte);
+                        carte.classList.add("smiley6");
                         break;
                 }
 

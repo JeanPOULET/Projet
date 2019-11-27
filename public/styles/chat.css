@@ -436,7 +436,7 @@ input[type=radio]:checked + div {
     position: absolute;
     display: inline-block;
     background-color: inherit;
-    left: 5%;
+    left: 3%;
     top: 85%;
 }
 
@@ -452,9 +452,9 @@ input[type=radio]:checked + div {
 }
 
 .gameScreen td{
-    max-width: 100px;
+    max-width: 111px;
     overflow: hidden;
-    width: 100px;
+    width: 111px;
 }
 
 .gameMain .message {
@@ -480,8 +480,9 @@ input[type=radio]:checked + div {
     background-size: contain;
     background-repeat: no-repeat;
     display: inline-block;
+    font-size:80px;
 }
-
+/*
 .divCarte{
     position: relative;
     top:-20%;
@@ -495,6 +496,61 @@ input[type=radio]:checked + div {
 
 .class0Crane::before{
     content: "☠";
+}
+*/
+
+.smiley1::before{
+    content:"☭";
+    color: red;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
+}
+
+.smiley2::before{
+    content: "✠";
+    color: turquoise;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
+}
+
+.smiley3::before{
+    content:"⚛";
+    color: purple;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
+}
+
+.smiley4::before{
+    content: "☪";
+    color:yellowgreen;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
+}
+
+.smiley5::before{
+    content:"☢";
+    color: green;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
+}
+
+.smiley6::before{
+    content: "♪";
+    color: blue;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
 .joueur{
@@ -533,7 +589,7 @@ input[type=radio]:checked + div {
 
 .gameMain .joueur:nth-of-type(6){
     top:40vh;
-    right: -3vw;
+    right: -2vw;
     transform: rotate(-90deg);
 }
 
@@ -551,7 +607,10 @@ input[type=radio]:checked + div {
     height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-image: url(../images/carre_skull.png);
+    /*content: "☠";
+    color: #000000;
+    font-size: 80px;*/
+    background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
 }
 
 .pile .carte{ 
@@ -674,26 +733,40 @@ input[type=radio]:checked + div {
 .gameMain .defausse{
     position:absolute;
     top:35%;
-    left:40%;
-}
-/*
-.defausse >  .selectionne.rose  {
-    background-image: url(../images/recto_roses.png);
+    left:35%;
 }
 
-.defausse > .selectionne.crane {
-    background-image: url(../images/recto_skull.png);
+.defausse >  .selectionne.rose::before  {
+    content: "⚜";
+    color: black;
+    border-radius: 40px;
+    background: #970b0b;
 }
 
-.joueur main > .retournee.rose  {
-    background-image: url(../images/recto_roses.png);
+.defausse > .selectionne.crane::before {
+    content: "☠";
+    color: black;
+    border-radius: 40px;
+    background: #696868;
+}
+
+.joueur main > .retournee.rose::before  {
+    content: "⚜";
+    color: black;
+    border-radius: 40px;
+    background: #970b0b;
 }
 
 .pile.retournee{
-    background-image: url(../images/carre_roses.png);
+    /*content: "⚘";
+    font-size: 80px;
+    color: #a33807;*/
+    background-image: linear-gradient(to right, #434343 0%, black 100%);
 }
 
-
-.joueur main > .retournee.crane  {
-    background-image: url(../images/recto_skull.png);
-}*/
+.joueur main > .retournee.crane::before {
+    content: "☠";
+    color: black;
+    border-radius: 40px;
+    background: #696868;
+}
