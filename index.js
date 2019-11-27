@@ -432,7 +432,7 @@ io.on('connection', function (socket) {
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
 
 
-        if(joueurs[game].length  ===1 && ){
+        if(joueurs[game].length  ===1 ){
             clients[joueurs[game][0]].emit("resetManche",
                 {
                     joueur:joueurs[game][0],
