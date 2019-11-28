@@ -29,6 +29,7 @@ var scores = [[]];
 var isCouche = [[]];
 var partie=1; //indice de la partie qu'on peut crée
 var dispos=[];
+var launched=[true];
 var last=0;
 // Quand un client se connecte, on le note dans la console
 io.on('connection', function (socket) {
@@ -126,6 +127,8 @@ io.on('connection', function (socket) {
             ias[invit.partie] = [];
         }
 
+
+        launched.push(false);
         joueurs[invit.partie].push(invit.joiner);
         scores[invit.partie].push(0);
         isCouche[invit.partie].push(false);
@@ -157,7 +160,7 @@ io.on('connection', function (socket) {
         console.log("Reçu message");
         // si jamais la date n'existe pas, on la rajoute
         msg.date = Date.now();
-        // si message privé, envoi seulement au destinataire
+
         if(msg.id_partie===0) {
             if (msg.to != null && clients[msg.to] !== undefined) {
                 console.log(" --> message privé");
@@ -170,13 +173,13 @@ io.on('connection', function (socket) {
                 io.sockets.emit("message", msg);
             }
         }else{
-            if (msg.to != null && joueurs[msg.id_partie][msg.to] !== undefined) {
+            if (msg.to != null && existInJoueurs(msg.id_partie, msg.to)) {
                 console.log(" --> message privé partie n° "+msg.id_partie);
-                clients[joueurs[msg.id_partie][msg.to]].emit("message", msg);
+                clients[msg.to].emit("message", msg);
                 if (msg.from !== msg.to) {
                     socket.emit("message", msg);
                 }
-            } else if(joueurs[msg.id_partie][msg.to] === undefined){
+            } else{
                 console.log(" --> broadcast partie n° "+msg.id_partie);
                 for(let i in joueurs[msg.id_partie]){
                     clients[joueurs[msg.id_partie][i]].emit("message", msg);
@@ -185,6 +188,15 @@ io.on('connection', function (socket) {
             }
         }
     });
+
+    function existInJoueurs(partieEnCours, joueur){
+        for(let i =0; i < joueurs[partieEnCours].length;i++){
+            if(joueurs[partieEnCours][i]===joueur){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Gérer les parties
@@ -202,6 +214,7 @@ io.on('connection', function (socket) {
             clients[joueurs[partieLancee][i]].emit("iniPartie",{partieLancee:partieLancee, cranes:cranes});
         }
         jouer(partieLancee);
+        launched[partieLancee]=true;
 
 
     });
@@ -432,7 +445,7 @@ io.on('connection', function (socket) {
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
 
 
-        if(joueurs[game].length  ===1 ){
+        if(joueurs[game].length  ===1 && launched[game]){
             clients[joueurs[game][0]].emit("resetManche",
                 {
                     joueur:joueurs[game][0],
@@ -450,6 +463,7 @@ io.on('connection', function (socket) {
             delete ias[game];
             delete scores[game];
             delete isCouche[game];
+            delete launched[game];
             dispos.push(game);
 
             if(game===(partie-1)){
@@ -497,14 +511,30 @@ io.on('connection', function (socket) {
         }
     });
 
+    function getPartiesJoueur(joueur){
+        let games =[];
+        for(let i=1;i<joueurs.length;i++){
+            if(joueurs[i]!==undefined) {
+                for (let j = 0; j < joueurs[i].length; j++) {
+                    if (joueur === joueurs[i][j]) {
+                        games.push(i);
+                    }
+                }
+            }
+        }
+        return games;
+    }
+
     // déconnexion de la socket
     socket.on("disconnect", function(reason) {
         // si client était identifié
         if (currentID) {
             console.log("current :"+currentID);
             console.log(" avant filtrage==> "+joueurs);
-            for(let i=1;i<joueurs.length;i++) {
-                quitGame(i);
+            let games = getPartiesJoueur(currentID);
+            console.log("games de current : "+currentID);
+            for(let i=0;i<games.length;i++) {
+                quitGame(games[i]);
             }
             console.log(" après filtrage==> "+joueurs);
             // envoi de l'information de déconnexion

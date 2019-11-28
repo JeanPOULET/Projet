@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Pseudo avec espace pour invit
-     * mp chat jeu
      * 
     */
 
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * style acceuil
      * 
      */
-
+    document.getElementById("radio-1").checked = true;
     // socket ouverte vers le client
     var sock = io.connect();
 
@@ -113,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("suppressionInvitation", function (num_partie) {
-        console.log("je dois delete la partie : "+num_partie);
+        console.log("je dois delete la partie pour les invitations : "+num_partie);
         removeIDpartie(num_partie);
     });
 
@@ -136,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("mise",function(mise){
-        document.getElementById("message"+mise.partieLancee).innerHTML ="C'est à "+mise.prochainJoueur+" de jouer !";
+        document.getElementById("message"+mise.partieLancee).innerHTML ="C'est à "+mise.prochainJoueur+" de miser !";
         miseAutorise[mise.partieLancee] =true;
         actualiserTabTour(mise.partieLancee,mise.prochainJoueur);
         updateMiseGenerale(mise.partieLancee,mise.mise);
@@ -145,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("joueurSeCouche",function(couche){
-        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ! C'est à "+couche.prochainJoueur+" de joueur !";
+        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ! C'est à "+couche.prochainJoueur+" de jouer !";
         actualiserTabTour(couche.partieLancee,couche.prochainJoueur);
     });
 
@@ -386,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let nb = id_btn;
         nb = nb.replace(reg, "");
         const res = parseInt(nb, 10);
-        console.log("res = " + res);
+
         let msg = document.getElementById("monMessage_p_" + res).value.trim();
         if (!msg) return;
 
@@ -397,6 +396,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             to = msg.substring(1, i);
             msg = msg.substring(i);
         }
+        console.log("to game : "+to);
+        console.log("id_partie to Game"+ res);
         // envoi
         sock.emit("message", {from: currentUser, to: to, text: msg, id_partie: res});
 
@@ -817,83 +818,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         return cartes;
     }
 
-    function quitterGame(id) {
-        console.log("id quitterGame : "+id);
-        if(partieAquitter>0){
-            id=partieAquitter;
-        }
 
-        document.getElementById("radio0").checked = true;
-        document.getElementById("listePartie").style.display = "block";
-         let res;
-         let obj;
-         if(id>=1) {
-             res=id;
-             obj={
-                 joueur:currentUser,
-                 cartes: getIDsCartesMain(res),
-                 partieEnCours:res,
-                 monTour:mon_tour[res]
-             };
-             console.log("id quitterGame if : "+res);
-             document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
-             document.getElementById("listePartie").removeChild(document.getElementById("Partie "+res));
-
-         }else{
-             let partie = this.id;
-             let reg = new RegExp(/[^\d]/g);
-             let nb = partie;
-             if(nb!==undefined) {
-                nb = nb.replace(reg, "");
-                 res = parseInt(nb, 10);
-                 res = getIdInt(partie);
-                 console.log("id quitterGame : " + res);
-                 obj = {
-                     joueur: currentUser,
-                     cartes: getIDsCartesMain(res),
-                     partieEnCours: res,
-                     monTour: mon_tour[res]
-                 };
-                 partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-                 document.getElementById("listePartie").removeChild(document.getElementById(partie));
-                 partie = partie.replace(/Partie .*/, "gameScreen" + (res));
-                 document.querySelector("body").removeChild(document.getElementById(partie));
-             }
-
-         }
-
-         for(let i=0; i< tabPartie.length;++i){
-             if(tabPartie[i]===res){
-                 delete tabPartie[i];
-                 delete liste_joueurs[i];
-                 delete indices[i];
-                 delete miseAutorise[i];
-                 delete nbCartesChoisis[i];
-                 break;
-             }
-         }
-
-
-         document.getElementById("radio"+(res)).remove();
-         sock.emit("quitGame",obj);
-         partieAquitter=-1;
-     }
     /**
      *  Quitter le chat et revenir à la page d'accueil.
      */
-    function quitter() {
-        if(tabPartie!=null) {
-            for (let i = 0; i < tabPartie.length; i++) {
-                quitterGame(tabPartie[i]);
-            }
-        }
-        currentUser = null;
 
-        sock.emit("logout");
-
-        document.getElementById("radio-1").checked = true;
-        document.getElementById("listePartie").style.display = "none";
-    }
 
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
@@ -1418,6 +1347,80 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
+    function quitterGame(id) {
+        console.log("id quitterGame : "+id);
+        if(partieAquitter>0){
+            id=partieAquitter;
+        }
+
+        document.getElementById("radio0").checked = true;
+        let res;
+        let obj;
+        if(id>=1) {
+            res=id;
+            obj={
+                joueur:currentUser,
+                cartes: getIDsCartesMain(res),
+                partieEnCours:res,
+                monTour:mon_tour[res]
+            };
+            console.log("id quitterGame if : "+res);
+            document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
+            document.getElementById("listePartie").removeChild(document.getElementById("Partie "+res));
+
+        }else{
+            let partie = this.id;
+            let reg = new RegExp(/[^\d]/g);
+            let nb = partie;
+            if(nb!==undefined) {
+                nb = nb.replace(reg, "");
+                res = parseInt(nb, 10);
+                res = getIdInt(partie);
+                console.log("id quitterGame : " + res);
+                obj = {
+                    joueur: currentUser,
+                    cartes: getIDsCartesMain(res),
+                    partieEnCours: res,
+                    monTour: mon_tour[res]
+                };
+                partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
+                document.getElementById("listePartie").removeChild(document.getElementById(partie));
+                partie = partie.replace(/Partie .*/, "gameScreen" + (res));
+                document.querySelector("body").removeChild(document.getElementById(partie));
+            }
+
+        }
+
+        for(let i=0; i< tabPartie.length;++i){
+            if(tabPartie[i]===res){
+                delete tabPartie[i];
+                delete liste_joueurs[i];
+                delete indices[i];
+                delete miseAutorise[i];
+                delete nbCartesChoisis[i];
+                break;
+            }
+        }
+
+
+        document.getElementById("radio"+(res)).remove();
+        sock.emit("quitGame",obj);
+        partieAquitter=-1;
+    }
+
+    function quitter() {
+        if(tabPartie!=null && tabPartie.length>0) {
+            for (let i = 0; i < tabPartie.length; i++) {
+                quitterGame(tabPartie[i]);
+            }
+        }
+        currentUser = null;
+
+        sock.emit("logout");
+
+        document.getElementById("radio-1").checked = true;
+    }
+
     /**
      *  Mapping des boutons de l'interface avec des fonctions du client.
      */
@@ -1448,6 +1451,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
     document.getElementById("btnJouer").addEventListener("click", fenetreInvitation);
     // force l'affichage de l'écran de connexion
-    quitter();
+    //quitter();
 
 });
