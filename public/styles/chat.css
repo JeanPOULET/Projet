@@ -112,7 +112,20 @@ body > div {
     line-height: 1;
     font-size: 14px;
     overflow: auto;
+}
 
+#partieListe {
+    width: 160px;
+    margin: 0px;
+    padding: 5px;
+    height: 448px;
+    background-color: red;
+    line-height: 1;
+    font-size: 14px;
+    overflow: auto;
+    position: absolute;
+    top: 12vh;
+    left: 57vh;
 }
 
 /** 
@@ -164,7 +177,7 @@ input[type=radio]:checked + div {
     
         
 #logScreen {
-    background: rgba(200, 200, 200, 0.8);
+    background-image: url("../images/fondJeu.png");
     position: absolute; 
     top: 0;
     left: 0;
@@ -459,9 +472,9 @@ input[type=radio]:checked + div {
 
 .gameMain .message {
     position: absolute;
-    max-width: 700px;
+    max-width: 600px;
     top: 48%;
-    left: 33%;
+    left: 22%;
     text-shadow:0 0 2px #FF0000,0 0 30px #FF0000,5px 9px 5px #333, 0 0 150px #FF0000;
     color:#FF0000;
     background-color:#262626;
@@ -555,7 +568,7 @@ input[type=radio]:checked + div {
 
 .gameMain .joueur:nth-of-type(3){
     top: 40vh;
-    left: -3vw;
+    left: -2vw;
     transform: rotate(90deg);
 }
 
@@ -591,10 +604,6 @@ input[type=radio]:checked + div {
     height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
-<<<<<<< HEAD
-    background-image: url(../images/carre_skull.png) ;
-    
-=======
     /*content: "☠";
     color: #000000;
     font-size: 80px;*/
@@ -604,7 +613,7 @@ input[type=radio]:checked + div {
 .pile .carte{ 
     display: inherit;
     position: absolute;
-    top: 7px;
+    top: 5px;
     left: 7px;
 }
 
@@ -617,7 +626,6 @@ input[type=radio]:checked + div {
     overflow: auto;
     text-shadow:   -1px -1px 0 #fff,  1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 1px 1px 10px #141414;color:#333;
     background-color:#EDFFF6;
->>>>>>> 3b968c84c79e1191dec6b3f5d5e455491836f1c2
 }
 
 .gameMain .joueur:nth-of-type(3) p{
