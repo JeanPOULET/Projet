@@ -1406,9 +1406,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function quitter() {
+
+        console.log("tabPartie = "+tabPartie);
         if(tabPartie!=null && tabPartie.length>0) {
             for (let i = 0; i < tabPartie.length; i++) {
-                quitterGame(tabPartie[i]);
+                if(tabPartie[i]!==undefined){
+                    quitterGame(tabPartie[i]);
+                }
+
             }
         }
         currentUser = null;
