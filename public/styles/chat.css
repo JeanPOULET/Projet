@@ -111,6 +111,8 @@ body > div {
     background-color: white;
     line-height: 1;
     font-size: 14px;
+    overflow: auto;
+
 }
 
 /** 
@@ -387,6 +389,7 @@ input[type=radio]:checked + div {
     background-color: white;
     line-height: 1;
     font-size: 14px;
+    overflow: auto;
 }
 
 /*
@@ -421,11 +424,6 @@ input[type=radio]:checked + div {
     width: 60%
 }
 
-.gameMain input{
-    position: absolute;
-    top: 50%;
-    left: 45%;
-}
 
 #imageTitre{
     position: absolute;
@@ -438,7 +436,7 @@ input[type=radio]:checked + div {
     position: absolute;
     display: inline-block;
     background-color: inherit;
-    left: 5%;
+    left: 3%;
     top: 85%;
 }
 
@@ -454,17 +452,21 @@ input[type=radio]:checked + div {
 }
 
 .gameScreen td{
-    width: 100px;
-}
-
-.gameScreen table thead tr th{
-    width: 600px;
+    max-width: 111px;
+    overflow: hidden;
+    width: 111px;
 }
 
 .gameMain .message {
     position: absolute;
-    top: 50%;
-    left: 45%;
+    max-width: 700px;
+    top: 48%;
+    left: 33%;
+    text-shadow:0 0 2px #FF0000,0 0 30px #FF0000,5px 9px 5px #333, 0 0 150px #FF0000;
+    color:#FF0000;
+    background-color:#262626;
+    font-size: 22px;
+
 }
 
 .gameMain .joueur .sPage{
@@ -478,34 +480,67 @@ input[type=radio]:checked + div {
     background-size: contain;
     background-repeat: no-repeat;
     display: inline-block;
+    font-size:80px;
 }
 
-.amazons{
-    background-image: url(../images/amazons.png);
+.communiste::before{
+    content:"☭";
+    color: red;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
-.carnivorous{
-    background-image: url(../images/carnivorous.png);
+.templier::before{
+    content: "✠";
+    color: turquoise;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
-.cyborgs{
-    background-image: url(../images/cyborgs.png);
+.scientifique::before{
+    content:"⚛";
+    color: purple;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
-.indians{
-    background-image: url(../images/indians.png);
+.musulman::before{
+    content: "☪";
+    color:yellowgreen;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
-.jokers{
-    background-image: url(../images/jokers.png);
+.japonais::before{
+    content:"☢";
+    color: green;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
-.swallows{
-    background-image: url(../images/swallows.png);
+.hufflenien::before{
+    content: "♪";
+    color: blue;
+    border-radius: 40px;
+    background-size: contain;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898; 
+    background-blend-mode: multiply,multiply;
 }
 
 .joueur{
     position: absolute;
+    width: 320px;
+    height: 180px;
 }
 
 .gameMain .joueur:nth-of-type(1){
@@ -519,8 +554,8 @@ input[type=radio]:checked + div {
 }
 
 .gameMain .joueur:nth-of-type(3){
-    top: 45vh;
-    left: -5vw;
+    top: 40vh;
+    left: -3vw;
     transform: rotate(90deg);
 }
 
@@ -537,21 +572,190 @@ input[type=radio]:checked + div {
 }
 
 .gameMain .joueur:nth-of-type(6){
-    top:45vh;
-    right: -5vw;
+    top:40vh;
+    right: -2vw;
     transform: rotate(-90deg);
 }
 
+.nbCartePile{
+    position: absolute;
+    left: 70%;
+    top: 15%;
+}
+
 .pile{
+    position: relative;
+    left: 35%;
+    top: -10px;
     width: 100px;
     height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
+<<<<<<< HEAD
     background-image: url(../images/carre_skull.png) ;
     
+=======
+    /*content: "☠";
+    color: #000000;
+    font-size: 80px;*/
+    background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
+}
+
+.pile .carte{ 
+    display: inherit;
+    position: absolute;
+    top: 7px;
+    left: 7px;
+}
+
+.pseudo{
+    position: absolute;
+    left: 250px;
+    top: 15%;
+    width: 100px;
+    text-align: center;
+    overflow: auto;
+    text-shadow:   -1px -1px 0 #fff,  1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 1px 1px 10px #141414;color:#333;
+    background-color:#EDFFF6;
+>>>>>>> 3b968c84c79e1191dec6b3f5d5e455491836f1c2
+}
+
+.gameMain .joueur:nth-of-type(3) p{
+    transform: rotate(-90deg);
+}
+
+.gameMain .joueur:nth-of-type(4) p{
+    transform: rotate(180deg);
+}
+
+.gameMain .joueur:nth-of-type(5) p{
+    transform: rotate(180deg);
+}
+
+.gameMain .joueur:nth-of-type(6) p{
+    transform: rotate(90deg);
+}
+
+.divMise{
+    position: absolute;
+    top :55%;
+    left :40%;
+    text-align: center;
+}
+
+.divMise .txtMiser{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.divMise input[type="button"]{
+    margin-right: 3px;
+    border:none;
+	padding:6px 3px 6px 3px;
+	border-radius:8px;
+	background:#d34836;
+	font:bold 13px Arial;
+    color:#fff;
+}
+
+.divMise input[type="button"]:disabled, .divMise input[type="button"][disabled]{
+    background:#9e8b88;
+}
+
+.divMise input[type="button"]:disabled:hover, .divMise input[type="button"][disabled]:hover{
+    background:#9e8b88;
+}
+
+.divMise input[type="button"]:hover{
+    background:#000000;
 }
 
 
+.divMise input[type=text] {
+    font-family: "Open Sans", sans-serif;
+    border: 0.1em solid #ccc;
+    border-radius: 0.2em;
+    background-color: #f9f9f9;
+    padding: 0em 1em;
+    font-size: 12px;
+    border: 5px solid white; 
+    -webkit-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    -moz-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    padding: 8px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 0 10px 0;
+}
 
+.gameMain .btnLancer{
+    position:absolute;
+    top:50%;
+    left:40%;
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ed3330;
+    padding: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
+}
 
+.gameMain .btnLancer:hover{
+    background: #434343;
+    letter-spacing: 1px;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+    transition: all 0.4s ease 0s;
+}
+.gameMain .defausse{
+    position:absolute;
+    top:35%;
+    left:35%;
+}
 
+.defausse >  .selectionne.rose::before  {
+    content: "⚜";
+    color: black;
+    border-radius: 40px;
+    background: #970b0b;
+}
+
+.defausse > .selectionne.crane::before {
+    content: "☠";
+    color: black;
+    border-radius: 40px;
+    background: #696868;
+}
+
+.joueur main > .retournee.rose::before  {
+    content: "⚜";
+    color: black;
+    border-radius: 40px;
+    background: #970b0b;
+}
+
+.pile.retournee{
+    /*content: "⚘";
+    font-size: 80px;
+    color: #a33807;*/
+    background-image: linear-gradient(to right, #434343 0%, black 100%);
+}
+
+.joueur main > .retournee.crane::before {
+    content: "☠";
+    color: black;
+    border-radius: 40px;
+    background: #696868;
+}
