@@ -433,6 +433,8 @@ io.on('connection', function (socket) {
         }
     });
 
+
+
     function quitGame(game,cartes){
         console.log("quitGame ==> "+game);
         if(cartes!=null) {
@@ -442,7 +444,9 @@ io.on('connection', function (socket) {
             };
             ias[game].push(ia);
         }
+        isCouche[game][getIndiceScoreJoueur(currentID,game)]=true;
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
+
 
 
         if(joueurs[game].length  ===1 && launched[game]){
@@ -456,7 +460,7 @@ io.on('connection', function (socket) {
                 });
         }
         console.log(joueurs);
-        console.log(ias);
+
         if(joueurs[game].length ===0){
             io.sockets.emit("suppressionInvitation",game);
             delete joueurs[game];
