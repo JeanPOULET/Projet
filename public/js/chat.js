@@ -824,8 +824,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
-        document.getElementById("gameMain_p_"+partieLancee).removeChild(document.getElementById("btnLancer_p_"+partieLancee));
-        sock.emit("initialiserPartie",partieLancee);
+        if(liste_joueurs[partieLancee].length>2) {
+
+
+            document.getElementById("gameMain_p_" + partieLancee).removeChild(document.getElementById("btnLancer_p_" + partieLancee));
+            sock.emit("initialiserPartie", partieLancee);
+        }
     }
 
     function setBtnMiserListener(partieEnCours) {
