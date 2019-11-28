@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(_e) {
 
     /*** Liste des "bugs" trouvés ***
-     * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Pseudo avec espace pour invit
      * 
@@ -10,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*** ToDo
      * les ia...
      * chiffre pour les piles
-     * message mise
      */
 
     /*** ToFerBO
