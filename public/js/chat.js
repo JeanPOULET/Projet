@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("monMessage").value = "";
             document.getElementById("login").innerHTML = id;
             document.getElementById("radio0").checked = true;
+            document.getElementById("listePartie").style.display = "block";
             currentUser = id;
             fromInvit = currentUser;
         }
@@ -269,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         // recupération du pseudo
         var user = document.getElementById("pseudo").value.trim();
         if (!user) return;
-        document.getElementById("radio0").check = true;
+        document.getElementById("radio0").checked = true;
         currentUser = user;
         sock.emit("login", user);
     }
@@ -601,13 +602,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         nouvelOnglet.setAttribute("id", id);
         nouvelOnglet.style.cursor = "pointer";
         let taille = 0;
-        for (let i = 0; i < document.getElementById("content").children.length; i++) {
+        /*for (let i = 0; i < document.getElementById("content").children.length; i++) {
             if (document.getElementById("content").children[i].tagName == "H2") {
                 taille += document.getElementById("content").children[i].offsetWidth;
             }
-        }
+        }*/
         nouvelOnglet.style.left = "" + taille + "px";
-        document.getElementById("content").insertBefore(nouvelOnglet, document.querySelector("h3"));
+        //document.getElementById("content").insertBefore(nouvelOnglet, document.querySelector("h3"));
+        document.getElementById("listePartie").appendChild(nouvelOnglet);
         let input = document.createElement("input");
         input.setAttribute("type", "radio");
         input.setAttribute("name", "btnScreen");
@@ -678,6 +680,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function () {
             document.getElementById("radio0").checked = true;
+            document.getElementById("listePartie").style.display = "block";
         });
 
         document.getElementById("btnEnvoyer_p_" + nbPartieInvite).addEventListener("click", envoyerMsgGame);
@@ -821,6 +824,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         document.getElementById("radio0").checked = true;
+        document.getElementById("listePartie").style.display = "block";
          let res;
          let obj;
          if(id>=1) {
@@ -833,7 +837,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
              };
              console.log("id quitterGame if : "+res);
              document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
-             document.getElementById("content").removeChild(document.getElementById("Partie "+res));
+             document.getElementById("listePartie").removeChild(document.getElementById("Partie "+res));
 
          }else{
              let partie = this.id;
@@ -851,7 +855,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                      monTour: mon_tour[res]
                  };
                  partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-                 document.getElementById("content").removeChild(document.getElementById(partie));
+                 document.getElementById("listePartie").removeChild(document.getElementById(partie));
                  partie = partie.replace(/Partie .*/, "gameScreen" + (res));
                  document.querySelector("body").removeChild(document.getElementById(partie));
              }
@@ -888,6 +892,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         sock.emit("logout");
 
         document.getElementById("radio-1").checked = true;
+        document.getElementById("listePartie").style.display = "none";
     }
 
     function initialiserPartie(){

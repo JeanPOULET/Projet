@@ -11,6 +11,103 @@ body > div {
     border: solid 1px #A0A0A0;
 }
 
+#listePartie{
+    display: none;
+    width: 160px;
+    margin: 0px;
+    padding: 5px;
+    height: 448px;
+    line-height: 1;
+    font-size: 14px;
+    overflow: auto;
+    position: absolute;
+    top: 25vh;
+    left: 40vh;
+    background-color:rgb(177, 118, 63);
+}
+
+#listePartie h1{
+    font-size: 25px;
+    /*text-shadow: -1px -1px #fb6, 1px 1px #d60, -3px 0 4px #000;
+    font-family:"Segoe print", Arial, Helvetica, sans-serif;
+    color: #FF9933; 
+    padding:8px;
+    font-weight:lighter;
+    -moz-box-shadow: 2px 2px 6px #888;  
+    -webkit-box-shadow: 2px 2px 6px #888;  
+    box-shadow:2px 2px 6px #888;  
+    text-align:center;
+    display:inline;
+    position: relative;
+    top: 20px;
+    background: burlywood;*/
+    background: url(http://ecard.enter-media.org/upload/iblock/cf4/cf401a38b3c0190e91e68729a24795b6.jpg) repeat;
+-webkit-text-fill-color: transparent;
+-webkit-background-clip: text;
+background-position: 50% 50%;
+position: relative;
+line-height:normal;
+background-color:rgb(36, 31, 31);
+}
+
+#listePartie h1:after {
+    content: attr(data-text);
+    position: absolute;
+    text-shadow:4px 4px 0px #FFF, 
+    7px 7px 0px #877667;left: 0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+    z-index: -1;
+    line-height:normal;
+    font-size:12rem;
+    background-color:rgb(20, 19, 19);
+     
+    }
+
+#listePartie h2{
+    position: relative;
+    top: 30px;
+    color: #8a0b0b;
+  /*font-size: 30px;
+  font-weight: bold;
+  font-family: Helvetica;
+  text-shadow: 
+    0 1px 0 #ccc, 
+    0 2px 0 #c9c9c9, 
+    0 3px 0 #bbb, 
+    0 4px 0 #b9b9b9, 
+    0 5px 0 #aaa, 
+    0 6px 1px rgba(0,0,0,.1), 
+    0 0 5px rgba(0,0,0,.1), 
+    0 1px 3px rgba(0,0,0,.3), 
+    0 3px 5px rgba(0,0,0,.2), 
+    0 5px 10px rgba(0,0,0,.25), 
+    0 10px 10px rgba(0,0,0,.2), 
+
+    0 20px 20px rgba(0,0,0,.15);*/
+    text-shadow:  white 0.006em 0.006em 0.007em,
+    #9c9c9c 1px 1px 1px,
+    #9c9c9c 1px 2px 1px,
+    #9c9c9c 1px 3px 1px,
+    #9c9c9c 1px 4px 1px,
+    #9c9c9c 1px 5px 1px,
+    #9c9c9c 1px 6px 1px,
+    #9c9c9c 1px 7px 1px,
+    #9c9c9c 1px 8px 1px,
+    #9c9c9c 1px 9px 1px,
+    #9c9c9c 1px 10px 1px,
+    #9c9c9c 1px 11px 1px,
+    #9c9c9c 1px 12px 1px,
+    rgba(16, 16, 16, 0.4) 1px 18px 6px,
+    rgba(16, 16, 16, 0.2) 1px 22px 10px,
+    rgba(16, 16, 16, 0.2) 1px 26px 35px,
+    rgba(16, 16, 16, 0.4) 1px 30px 65px,
+    white -0.15em -0.1em 100px;color:#fff;
+
+}
+
+
 #content {
     position: absolute;
     top: 50%;
@@ -112,20 +209,6 @@ body > div {
     line-height: 1;
     font-size: 14px;
     overflow: auto;
-}
-
-#partieListe {
-    width: 160px;
-    margin: 0px;
-    padding: 5px;
-    height: 448px;
-    background-color: red;
-    line-height: 1;
-    font-size: 14px;
-    overflow: auto;
-    position: absolute;
-    top: 12vh;
-    left: 57vh;
 }
 
 /** 
