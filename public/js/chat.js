@@ -3,16 +3,18 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     /*** Liste des "bugs" trouvés ***
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
-     *
+     * Pseudo avec espace pour invit
+     * mp chat jeu
+     * 
     */
 
     /*** ToDo
      * les ia...
-     *
+     * chiffre pour les piles
+     * message mise
      */
 
     /*** ToFerBO
-     * mettre des fleurs
      * style chat
      * style acceuil
      * 
@@ -626,9 +628,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "</main>" +
                 "<footer>" +
                     "<input type=\"text\" class =\"monMessageGame\" id=\"monMessage_p_"+(nbPartieInvite)+"\">" +
-                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+(nbPartieInvite)+"\">" +
                     "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame\" id=\"btnEnvoyer_p_"+(nbPartieInvite)+"\">" +
                     "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+(nbPartieInvite)+"\">" +
                     "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+(nbPartieInvite)+"\">" +
                 "</footer>" +
                 "<div class =\"bcImageGame\" id=\"bcImage"+nbPartieInvite+"\" style=\"display: none;\">" +
@@ -895,7 +897,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function setBtnMiserListener(partieEnCours) {
-        document.getElementById("btnMiser" + partieEnCours).addEventListener("click", function () {
+        document.getElementById("btnMiser" + partieEnCours).addEventListener("click", function (e) {
             let id = getIdInt(this.id);
             if (document.getElementById("pile_" + currentUser + "_" + id).childElementCount < 1) {
                 return;
