@@ -160,9 +160,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         if(defaite.doitEnleverCarte === currentUser && defaite.perdant !==currentUser) {
-
+            mon_tour[defaite.partieLancee]=false;
             retirerCarte(defaite.partieLancee,defaite.perdant);
         }else if (defaite.perdant === defaite.doitEnleverCarte && defaite.perdant===currentUser){
+            mon_tour[defaite.partieLancee]=false;
             retirerCarteRandom(defaite.partieLancee);
 
         }
@@ -283,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         // affichage des nouveaux messages
-        var bcMessages;
+        let bcMessages;
         console.log("id_partie : " + data.id_partie);
         if (data.id_partie === 0) {
             bcMessages = document.querySelector("#content main");
@@ -291,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             bcMessages = document.querySelector("#contentGame" + data.id_partie + " main");
         }
 
-        var classe = "";
+        let classe = "";
 
         if (data.from === currentUser) {
             classe = "moi";
@@ -816,11 +817,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         return cartes;
     }
 
-
     /**
      *  Quitter le chat et revenir à la page d'accueil.
      */
-
 
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
@@ -1027,7 +1026,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             mise:getMiseGenerale(partieEnCours)
         };
 
-
         sock.emit("seCouche",couche);
     }
 
@@ -1086,11 +1084,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             carte: elt.id
 
         };
-
         if(!mon_tour[partieEnCours]){
             return;
         }
-
         sock.emit("carteSelectionnee",obj);
         mon_tour[partieEnCours] = false;
         console.log(elt.id);
@@ -1126,7 +1122,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function actualiserTableau(partieEnCours, vainqueur,points){
         let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
         tab.innerHTML = points;
-
         let pile = document.getElementById("pile_"+vainqueur+"_"+partieEnCours);
         pile.classList.add("retournee");
 
@@ -1199,8 +1194,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             }*/
 
             sock.emit("carteSelectionneePile", obj);
-
-
         }
     }
 
@@ -1240,6 +1233,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         };
 
         sock.emit("carteARetirer",obj);
+        mon_tour[partieEnCours]=true;
     }
 
     function retirerCartePlateau(partieEnCours,joueur,carte){
@@ -1275,6 +1269,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             carte:id
         };
         sock.emit("carteARetirer",obj);
+        mon_tour[num_partie]=true;
         let query = document.querySelector("#"+pseudo+"_"+num_partie+" main");
         query.removeEventListener("click",retirerCarteListener);
 
