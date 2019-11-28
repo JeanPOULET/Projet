@@ -444,7 +444,7 @@ io.on('connection', function (socket) {
             };
             ias[game].push(ia);
         }
-        isCouche[game][getIndiceScoreJoueur(currentID,game)]=true;
+        isCouche[game].splice(getIndiceScoreJoueur(currentID,game),1);
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
 
 

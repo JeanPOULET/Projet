@@ -1037,7 +1037,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function enableListenerMain(partieEnCours){
-        document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indices[partieEnCours]+") > main").addEventListener("click", listenerMain);
+        //document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indices[partieEnCours]+") > main").addEventListener("click", listenerMain);
+        document.querySelector("#gameMain_p_"+partieEnCours+" #"+currentUser+"_"+partieEnCours+" > main").addEventListener("click", listenerMain);
 
     }
 
