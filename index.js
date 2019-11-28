@@ -336,16 +336,17 @@ io.on('connection', function (socket) {
         }
         console.log("reset_manche joueur : "+choixJoueur(partieEnCours,joueur));
         for(let i=0; i<joueurs[partieEnCours].length;i++){
-            clients[joueurs[partieEnCours][i]].emit("perdManche",
-                {perdant:joueur,
-                    partieLancee:partieEnCours,
-                    doitEnleverCarte:doitEnleverCarte});
+
             clients[joueurs[partieEnCours][i]].emit("resetManche",
                 {partieLancee:partieEnCours,
                     joueur:joueur,
                     victoire:false,
                     victoireTotale:false,
                     prochainJoueur:doitEnleverCarte});
+            clients[joueurs[partieEnCours][i]].emit("perdManche",
+                {perdant:joueur,
+                    partieLancee:partieEnCours,
+                    doitEnleverCarte:doitEnleverCarte});
         }
     }
 
