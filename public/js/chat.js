@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Bug graphique quand suppression partie
      * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Pseudo avec espace pour invit
-     * mp chat jeu
      * 
     */
 
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * style acceuil
      * 
      */
-
+    document.getElementById("radio-1").checked = true;
     // socket ouverte vers le client
     var sock = io.connect();
 
@@ -135,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("mise",function(mise){
-        document.getElementById("message"+mise.partieLancee).innerHTML ="C'est à "+mise.prochainJoueur+" de jouer !";
+        document.getElementById("message"+mise.partieLancee).innerHTML ="C'est à "+mise.prochainJoueur+" de miser !";
         miseAutorise[mise.partieLancee] =true;
         actualiserTabTour(mise.partieLancee,mise.prochainJoueur);
         updateMiseGenerale(mise.partieLancee,mise.mise);
@@ -144,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("joueurSeCouche",function(couche){
-        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ! C'est à "+couche.prochainJoueur+" de joueur !";
+        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ! C'est à "+couche.prochainJoueur+" de jouer !";
         actualiserTabTour(couche.partieLancee,couche.prochainJoueur);
     });
 
@@ -385,7 +384,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let nb = id_btn;
         nb = nb.replace(reg, "");
         const res = parseInt(nb, 10);
-        console.log("res = " + res);
+
         let msg = document.getElementById("monMessage_p_" + res).value.trim();
         if (!msg) return;
 
@@ -396,6 +395,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             to = msg.substring(1, i);
             msg = msg.substring(i);
         }
+        console.log("to game : "+to);
+        console.log("id_partie to Game"+ res);
         // envoi
         sock.emit("message", {from: currentUser, to: to, text: msg, id_partie: res});
 
@@ -1443,6 +1444,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
     document.getElementById("btnJouer").addEventListener("click", fenetreInvitation);
     // force l'affichage de l'écran de connexion
-    quitter();
+    //quitter();
 
 });

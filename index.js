@@ -157,7 +157,7 @@ io.on('connection', function (socket) {
         console.log("Reçu message");
         // si jamais la date n'existe pas, on la rajoute
         msg.date = Date.now();
-        // si message privé, envoi seulement au destinataire
+
         if(msg.id_partie===0) {
             if (msg.to != null && clients[msg.to] !== undefined) {
                 console.log(" --> message privé");
@@ -170,13 +170,13 @@ io.on('connection', function (socket) {
                 io.sockets.emit("message", msg);
             }
         }else{
-            if (msg.to != null && joueurs[msg.id_partie][msg.to] !== undefined) {
+            if (msg.to != null && existInJoueurs(msg.id_partie, msg.to)) {
                 console.log(" --> message privé partie n° "+msg.id_partie);
-                clients[joueurs[msg.id_partie][msg.to]].emit("message", msg);
+                clients[msg.to].emit("message", msg);
                 if (msg.from !== msg.to) {
                     socket.emit("message", msg);
                 }
-            } else if(joueurs[msg.id_partie][msg.to] === undefined){
+            } else{
                 console.log(" --> broadcast partie n° "+msg.id_partie);
                 for(let i in joueurs[msg.id_partie]){
                     clients[joueurs[msg.id_partie][i]].emit("message", msg);
@@ -185,6 +185,15 @@ io.on('connection', function (socket) {
             }
         }
     });
+
+    function existInJoueurs(partieEnCours, joueur){
+        for(let i =0; i < joueurs[partieEnCours].length;i++){
+            if(joueurs[partieEnCours][i]===joueur){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Gérer les parties
