@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(_e) {
 
     /*** Liste des "bugs" trouvés ***
-     * Lien d'invitation bugué quand plusieurs reçus d'affilés
      * Pseudo avec espace pour invit
      * 
     */
@@ -101,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     sock.on("invitation", function (invit) {
         if (currentUser) {
-            console.log("invitationneur : ", invit.from);
+            console.log("invitationneur : ",  (invit.from==null)?"serveurActualisé":invit.from);
             console.log("partieInvite actualisé : "+invit.partie);
             partieInvite = invit.partie;
             fromInvit = currentUser;
@@ -234,8 +233,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     function messageDAmourNegatif(){
-        var rand = Math.floor(Math.random() * 7);
-        var message;
+        let rand = Math.floor(Math.random() * 7);
+        let message;
         switch(rand){
             case 0:
                 message = "Minable ...";
@@ -263,8 +262,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
     
     function messageDAmourPositif(){
-        var rand = Math.floor(Math.random() * 5);
-        var message;
+        let rand = Math.floor(Math.random() * 5);
+        let message;
         switch(rand){
             case 0:
                 message = "Mouais, pas mal";
@@ -321,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function connect() {
 
         // recupération du pseudo
-        var user = document.getElementById("pseudo").value.trim();
+        let user = document.getElementById("pseudo").value.trim();
         if (!user) return;
         document.getElementById("radio0").checked = true;
         currentUser = user;
@@ -848,9 +847,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         partiesInvites.splice(ind,1);
         console.log("p_" + id);
         removeIDpartie(id);
-       /* document.getElementById("p_" + id).classList.remove("lienActif");
-        document.getElementById("p_" + id).removeEventListener("click", rejoindrePartie);
-        document.getElementById("p_" + id).removeAttribute("id");*/
         creationOnglet(id);
         fromInvit=currentUser;
     }
@@ -1093,7 +1089,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             joueur:currentUser,
             mise:getMiseGenerale(partieEnCours)
         };
-
+        console.log("seCoucher partieEnCours = "+partieEnCours);
+        mon_tour[partieEnCours]=false;
         sock.emit("seCouche",couche);
     }
 
