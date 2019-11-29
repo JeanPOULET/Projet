@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("joueurSeCouche",function(couche){
-        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ! C'est à "+couche.prochainJoueur+" de jouer !";
+        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ,fillette ! C'est à "+couche.prochainJoueur+" de jouer !";
         actualiserTabTour(couche.partieLancee,couche.prochainJoueur);
     });
 
@@ -179,16 +179,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     sock.on("resetManche",function(reset){
         let msg=reset.joueur;
         if(reset.victoire && !reset.victoireTotale){
-            msg +=" a gagné la manche ! "
+            msg +=" a gagné la manche ! Contre ces nuls encore heureux !"
         }else if(!reset.victoire && !reset.victoireTotale){
-            msg +=" a perdu la manche ! "+reset.prochainJoueur+ " doit lui enlever une carte !";
+            msg +=" a perdu la manche ! "+reset.prochainJoueur+ " doit enlever une carte à ce nullos !";
         }else{
             msg +=" a gagné la partie !"
         }
         if(!reset.victoireTotale) {
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + "  C'est à " + reset.prochainJoueur + " de jouer !";
         }else{
-            document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes !";
+            document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes ! Tchao les nazes";
         }
         nbCartesChoisis[reset.partieLancee]=0;
 
@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("joueurElimine",function(obj){
-        document.getElementById("message"+obj.partieLancee).innerHTML =obj.joueur+" est eliminé !";
+        document.getElementById("message"+obj.partieLancee).innerHTML =obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !";
         if(obj.joueur===currentUser){
             quitterGame(obj.partieLancee);
         }
