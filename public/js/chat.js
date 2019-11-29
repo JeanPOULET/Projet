@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
 
     /*** ToFerBO
-     * pile carte
+     * pile carte ombre/contour
      * style acceuil
      * 
      */
@@ -266,10 +266,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let message;
         switch(rand){
             case 0:
-                message = "Mouais, pas mal";
+                message = "Mouais, pas mal.";
             break;
             case 1:
-                message = "C'est un début";
+                message = "C'est un début.";
             break;
             case 2:
                 message = "Enfin !";
@@ -983,9 +983,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             let main = document.createElement("main");
             let pile = document.createElement("div");
 
-
             pile.setAttribute("class","pile");
             pile.setAttribute("id","pile_"+joueur+"_"+partieEnCours);
+
             document.getElementById(joueur+"_"+partieEnCours).appendChild(pile);
             document.getElementById(joueur+"_"+partieEnCours).appendChild(main);
 

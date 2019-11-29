@@ -864,17 +864,31 @@ input[type=radio]:checked + div {
     height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
-    /*content: "☠";
-    color: #000000;
-    font-size: 80px;*/
-    background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
+    background-image: radial-gradient(#eacda3, #e6b980);
+    transform-origin: 50% 50%;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
 }
 
+.pile::before {
+    content: "☠";
+    color: #000000;
+    font-size: 90px;
+    position: absolute;
+    left: 5px;
+    top: -15px;
+}
+
+.pile::after{
+    background: transparent;
+}
 .pile .carte{ 
     display: inherit;
     position: absolute;
     top: 5px;
     left: 7px;
+    
 }
 
 .pseudo{
@@ -1013,12 +1027,59 @@ input[type=radio]:checked + div {
     background: #970b0b;
 }
 
-.pile.retournee{
-    /*content: "⚘";
-    font-size: 80px;
-    color: #a33807;*/
-    background-image: linear-gradient(to right, #434343 0%, black 100%);
+@keyframes rotating {
+    0% { 
+        transform: rotateY(0deg) rotateX(0deg); 
+        background-image: radial-gradient(#eacda3, #e6b980);
+       }
+       25% { 
+        transform: rotateY(-45deg) rotateX(0deg); 
+        background-image: radial-gradient(#eacda3, #e6b980);
+       } 
+      50% { 
+        transform: rotateY(90deg) rotateX(0deg);
+       }
+      75% { 
+        transform: rotateY(-135deg) rotateX(0deg); 
+        background-image: radial-gradient(#434343 , black);
+    }
+      100% { 
+        transform: rotateY(-180deg) rotateX(0deg); 
+       }
 }
+.pile.retournee{
+    position: relative;
+    left: 35%;
+    top: -10px;
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: radial-gradient(#eacda3, #e6b980);
+    transform-origin: 50% 50%;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+}
+
+.pile.retournee::before{
+    animation-name: rotating; 
+    animation-timing-function: linear; 
+    animation-iteration-count: 1; 
+    animation-duration: 2s;
+    transform-style: preserve-3d;
+    background-image: radial-gradient(#434343 , black);
+    content: "⚘";
+    color: #a33807;
+    font-size: 90px;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top:0px;
+    left:0px;
+    text-align: center;
+}
+
 
 .joueur main > .retournee.crane::before {
     content: "☠";
