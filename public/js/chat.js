@@ -54,6 +54,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     //nombre maximum actuel de cartes dans les piles
     var maxNbPile=null;
 
+    var partiesInvites =[];
+
     var partieAquitter=-1;
 
     //
@@ -285,7 +287,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         // affichage des nouveaux messages
         let bcMessages;
-        console.log("id_partie : " + data.id_partie);
         if (data.id_partie === 0) {
             bcMessages = document.querySelector("#content main");
         } else {
@@ -322,18 +323,26 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         console.log("fromInvit : ", fromInvit);
         if (data.id_partie === 0 && fromInvit !== currentUser) {
-            console.log("aff=" + partieInvite);
             alert("Vous êtes invité par "+fromInvit+" pour la partie n°"+partieInvite+" !");
-            document.getElementById("p_" + partieInvite).addEventListener("click", rejoindrePartie);
+            partiesInvites.push(partieInvite);
+            listenerInvitation();
+            //document.getElementById("p_" + partieInvite).addEventListener("click", rejoindrePartie);
         }
         if(fromInvit===currentUser && data.id_partie==0 ){
             removeIDpartie(partieInvite);
         }
     }
 
+    function listenerInvitation(){
+        for(let i=0;i<partiesInvites.length;i++){
+            document.getElementById("p_" + partiesInvites[i]).addEventListener("click", rejoindrePartie);
+        }
+    }
+
+
     // traitement des emojis
     function traiterTexte(txt) {
-        var ind = txt.indexOf("[img:");
+        let ind = txt.indexOf("[img:");
         while (ind >= 0) {
             console.log(txt);
             txt = txt.replace("\[img:", '<img src="');
@@ -506,7 +515,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.getElementById(id).addEventListener("click", function () {
                     if (document.getElementById(id).hasAttribute("checked")) {
                         metoru--;
-                        if(metoru === 0){
+                        if(metoru <1 ){
                             document.getElementById("btnInviter").disabled = true;
                         }
                         document.getElementById("label" + id).style.backgroundColor = "initial";
@@ -574,7 +583,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             sock.emit("joinGame", join);
             nbPartie++;
             host = currentUser;
-            creationOnglet();
+            creationOnglet(partieInvite);
         }
     }
 
@@ -583,21 +592,20 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function annulerInvit() {
         document.getElementById("fenetreInvit").style.display = "none";
-        //partieInvite--;
     }
 
     /*
      * Fait apparaitre l'onglet de la fenetre de jeu
      */
-    function creationOnglet() {
-        console.log("p_"+partieInvite);
-        if(document.getElementById("p_"+partieInvite) !== null){
-            document.getElementById("p_"+partieInvite).removeAttribute("id");
+    function creationOnglet(partieEnCours) {
+        console.log("creationOnglet_"+partieEnCours);
+        if(document.getElementById("p_"+partieEnCours) !== null){
+            document.getElementById("p_"+partieEnCours).removeAttribute("id");
         }
 
         let nouvelOnglet = document.createElement("h2");
-        let nbPartieInvite = partieInvite;
-        let id = "Partie " + partieInvite;
+        let nbPartieInvite = partieEnCours;
+        let id = "Partie " + partieEnCours;
         nouvelOnglet.innerHTML = id;
         nouvelOnglet.setAttribute("id", id);
         nouvelOnglet.style.cursor = "pointer";
@@ -774,24 +782,29 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     function rejoindrePartie() {
+        let id = getIdInt(this.id);
+        console.log("Join game num° "+id);
         let join = {
             joiner: currentUser,
-            partie: partieInvite
+            partie: id
         };
         sock.emit("joinGame", join);
-        iniTabs(partieInvite);
-        tabPartie.push(partieInvite);
-
-        console.log("p_" + partieInvite);
-        document.getElementById("p_" + partieInvite).removeEventListener("click", rejoindrePartie);
-        document.getElementById("p_" + partieInvite).removeAttribute("id");
+        iniTabs(id);
+        tabPartie.push(id);
+        let ind = partiesInvites.indexOf(id);
+        partiesInvites.splice(ind,1);
+        console.log("p_" + id);
+        document.getElementById("p_" + id).removeEventListener("click", rejoindrePartie);
+        document.getElementById("p_" + id).removeAttribute("id");
         //removeIDpartie();
-        creationOnglet();
+        creationOnglet(id);
         fromInvit=currentUser;
     }
 
     function removeIDpartie(num_partie) {
         if (document.getElementById("p_" + num_partie) !== null) {
+            let ind = partiesInvites.indexOf(num_partie);
+            partiesInvites.splice(ind,1);
             document.getElementById("p_" + num_partie).removeEventListener("click", rejoindrePartie);
             document.getElementById("p_" + num_partie).removeAttribute("id");
         }

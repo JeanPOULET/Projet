@@ -78,7 +78,10 @@ io.on('connection', function (socket) {
             partieF=partie;
         }else{
             partieF=dispos[0];
-            last=dispos[0];
+            if(last<dispos[0]){
+                last=dispos[0];
+            }
+
             shifted=true;
         }
 
@@ -98,6 +101,7 @@ io.on('connection', function (socket) {
             for (let i in invit.to) {
                 clients[invit.to[i]].emit("invitation", inv);
             }
+            launched[partieF]=false;
             if(!shifted){
                 partie++;
             }else{
@@ -128,7 +132,7 @@ io.on('connection', function (socket) {
         }
 
 
-        launched.push(false);
+
         joueurs[invit.partie].push(invit.joiner);
         scores[invit.partie].push(0);
         isCouche[invit.partie].push(false);
@@ -478,7 +482,7 @@ io.on('connection', function (socket) {
                 }
             }
 
-            io.sockets.emit("invitation",{partie:game,from:null});
+            //io.sockets.emit("invitation",{partie:game,from:null});
 
         }else {
             let liste = {
