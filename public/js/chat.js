@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
 
     /*** ToFerBO
-     * style chat
+     * pile carte
      * style acceuil
      * 
      */
@@ -566,7 +566,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             if (id !== currentUser) {
                 let btn = document.createElement("div");
 
-                btn.innerHTML = "<input type='checkbox' name=\"" + id + "\" id=" + id + "><label class=\"effetSurli labelStyle\" id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
+                btn.innerHTML = "<input type='checkbox' class=\"inputStyle\" name=\"" + id + "\" id=" + id + "><label class=\"effetSurli labelStyle\" id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
                 document.querySelector('#invitations').appendChild(btn);
                 document.getElementById(id).addEventListener("click", function () {
                     if (document.getElementById(id).hasAttribute("checked")) {
@@ -574,18 +574,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                         if(metoru <1 ){
                             document.getElementById("btnInviter").disabled = true;
                         }
-                        document.getElementById("label" + id).style.backgroundColor = "initial";
                         document.getElementById(id).removeAttribute("checked");
                         players[nbPartie].splice(players[nbPartie].indexOf(id), 1);
                     } else {
                         if (metoru >= 5) {
                             alert("Pas plus de 5 à la fois guignol");
                             document.getElementById(id).removeAttribute("checked");
-                            document.getElementById("label" + id).style.backgroundColor = "initial";
                         } else {
                             document.getElementById(id).setAttribute("checked", "checked");
-                            document.getElementById("label" + id).style.backgroundColor = "#f0db1f";
-                            document.getElementById("label" + id).style.transitionDuration = "0.1s";
+                            
                             metoru++;
                             if(metoru > 1){
                                 document.getElementById("btnInviter").removeAttribute("disabled");
