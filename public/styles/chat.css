@@ -265,11 +265,16 @@ input{
                                       rgba(0, 0, 0, 0));
     box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
                 inset -2px -2px 3px rgba(0, 0, 0, .6);
+    margin-left:2px;
 }
 
 input[type="button"]:disabled{
     color: #434343;
     animation: none;
+}
+
+.muteOn{
+    background : #4e4d4d;
 }
 
 .btnStyle:hover {
@@ -855,7 +860,7 @@ input[type=radio]:checked + div {
 .nbCartePile{
     position: absolute;
     left: 70%;
-    top: 15%;
+    top: 25%;
 }
 
 .pile{

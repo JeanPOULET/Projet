@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     /*** ToDo
      * les ia...
-     * chiffre pour les piles
      */
 
     /*** ToFerBO
@@ -59,7 +58,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     var partieAquitter=-1;
 
     //
-    //var nbPoints=null;
+    //var mute on off
+    var mute = 0;
 
     // on attache les événements que si le client est connecté.
     sock.on("bienvenue", function (id) {
@@ -171,6 +171,66 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
     });
+/********************************************************* 
+var synth = window.speechSynthesis;
+var voices = []
+
+function appel(text){
+    var msg = new SpeechSynthesisUtterance();
+    msg.voice = voices[document.querySelector('#voices').value];
+    msg.rate = 5/10;
+    msg.pitch = 100;
+    msg.text = text;
+
+    synth.speak(msg);
+}
+    function PARLE(){
+        if(typeof speechSynthesis === 'undefined') {
+            return;
+        }
+        var selectedVoice = document.querySelector("#voices");
+        voices = speechSynthesis.getVoices().sort(function (a, b) {
+            const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+            if ( aname < bname ) return -1;
+            else if ( aname == bname ) return 0;
+            else return +1;
+        });
+        var selectedIndex = selectedVoice.selectedIndex < 0 ? 0 : selectedVoice.selectedIndex;
+        selectedVoice.innerHTML = '';
+        for(i = 0; i < voices.length ; i++) {
+            var option = document.createElement('option');
+            option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+            
+            if(voices[i].default) {
+                option.textContent += ' -- DEFAULT';
+            }
+
+            option.setAttribute('data-lang', voices[i].lang);
+            option.setAttribute('data-name', voices[i].name);
+            selectedVoice.appendChild(option);
+        }
+        selectedVoice.selectedIndex = selectedIndex;
+    }
+    PARLE();
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = PARLE;
+    }
+
+  ******************************************* */
+
+    function textToSpeack(text, partie){
+        var synth = window.speechSynthesis;
+
+        if(mute == 0){
+            var utterThis = new SpeechSynthesisUtterance(text);   
+            utterThis.lang = 'fr';
+            synth.speak(utterThis);
+        }else{
+            synth.cancel();
+        }
+    }
+
+
 
     sock.on("joueurPart",function(aurevoir){
         deleteJoueur(aurevoir.joueur,aurevoir.id_partie);
@@ -187,13 +247,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
         if(!reset.victoireTotale) {
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + "  C'est à " + reset.prochainJoueur + " de jouer !";
+            textToSpeack(msg + "  C'est à " + reset.prochainJoueur + " de jouer !", reset.partieLancee);
         }else{
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes ! Tchao les nazes";
+            textToSpeack("Fin de la partie dans 10 secondes ! Tchao les nazes", reset.partieLancee);
         }
         nbCartesChoisis[reset.partieLancee]=0;
 
         if(!reset.victoireTotale) {
             document.getElementById("miseGenerale"+reset.partieLancee).innerHTML ="Mise actuelle : 0";
+            
             disableListenerMain(reset.partieLancee);
             disableListenerPile(reset.partieLancee);
             resetAffichage(reset.partieLancee);
@@ -210,6 +273,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     sock.on("revelation",function(revel){
         document.getElementById("message"+revel.partieLancee).innerHTML =revel.joueur+" tire les cartes !";
+        textToSpeack(revel.joueur+" tire les cartes !", revel.partieLancee);
         miseAutorise[revel.partieLancee] =false;
         if(revel.joueur === currentUser){
             document.getElementById("btnMiser"+revel.partieLancee).disabled = true;
@@ -226,6 +290,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     sock.on("joueurElimine",function(obj){
         document.getElementById("message"+obj.partieLancee).innerHTML =obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !";
+        textToSpeack(obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !", obj.partieLancee);
         if(obj.joueur===currentUser){
             quitterGame(obj.partieLancee);
         }
@@ -680,6 +745,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         div.innerHTML =
             "<img id=\"imageTitre\" src=\"../images/titre.png\">"+
+            
             "<div class = \"contentGame contentStyle\" id=\"contentGame"+(nbPartieInvite)+"\">" +
                 "<h2>Chat partie "+partieInvite +" - <span id=\"login_p_"+(nbPartieInvite)+"\">"+currentUser+"</span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
@@ -689,6 +755,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "</main>" +
                 "<footer>" +
                     "<input type=\"text\" class =\"monMessageGame textStyle\" id=\"monMessage_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" id =\"textToSpeech"+(nbPartieInvite)+"\" value=\"🎤\" class=\"btnStyle\">"+
                     "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame btnStyle\" id=\"btnEnvoyer_p_"+(nbPartieInvite)+"\">" +
                     "<input type=\"button\" value=\"Image\" class =\"btnImageGame btnStyle\" id=\"btnImage_p_"+(nbPartieInvite)+"\">" +
                     "<input type=\"button\" value=\"Chat\" class =\"btnChat btnStyle\" id=\"btnChat_p_"+(nbPartieInvite)+"\">" +
@@ -742,6 +809,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("listePartie").style.display = "block";
         });
 
+        document.getElementById("textToSpeech" + nbPartieInvite).addEventListener("click", function(){
+            if(mute==0){
+                mute++;
+                document.getElementById("textToSpeech" + nbPartieInvite).classList.add("muteOn");
+            }else{
+                mute--;
+                document.getElementById("textToSpeech" + nbPartieInvite).classList.remove("muteOn");
+            }
+        });
         document.getElementById("btnEnvoyer_p_" + nbPartieInvite).addEventListener("click", envoyerMsgGame);
         document.getElementById("btnImage_p_" + nbPartieInvite).addEventListener("click", toggleImage);
         document.getElementById("btnFermer_p_" + nbPartieInvite).addEventListener("click", toggleImage);
@@ -981,11 +1057,17 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             gameMain.insertBefore(toDom, document.getElementById("message"+partieEnCours));
             let main = document.createElement("main");
             let pile = document.createElement("div");
+            let nbCartePile = document.createElement("div");
 
             pile.setAttribute("class","pile");
             pile.setAttribute("id","pile_"+joueur+"_"+partieEnCours);
-
+            
+            nbCartePile.setAttribute("class","nbCartePile");
+            nbCartePile.setAttribute("id","nbCartePile_"+joueur+"_"+partieEnCours);
+            nbCartePile.innerHTML="0";
+            
             document.getElementById(joueur+"_"+partieEnCours).appendChild(pile);
+            document.getElementById(joueur+"_"+partieEnCours).appendChild(nbCartePile);
             document.getElementById(joueur+"_"+partieEnCours).appendChild(main);
 
 
@@ -1170,6 +1252,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
         document.querySelector(query).removeChild(carte_a_remove);
         pile.appendChild(carte_a_remove);
+        console.log(pile.childElementCount);
+
+        document.querySelector("#nbCartePile_"+joueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
+
 
     }
     function actualiserDefausse(partieEnCours,pileDeJoueur,carte){
@@ -1179,6 +1265,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let carte_a_remove = document.getElementById(carte);
 
         pile.removeChild(carte_a_remove);
+        document.querySelector("#nbCartePile_"+pileDeJoueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
         carte_a_remove.classList.add("selectionne");
         defausse.appendChild(carte_a_remove);
     }
@@ -1518,6 +1605,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     });
     document.getElementById("btnJouer").addEventListener("click", fenetreInvitation);
+
     // force l'affichage de l'écran de connexion
     //quitter();
 
