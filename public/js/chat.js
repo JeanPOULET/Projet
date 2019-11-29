@@ -375,15 +375,17 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
         console.log("fromInvit : ", fromInvit);
+        if(fromInvit===currentUser && data.id_partie===0 ){
+            removeIDpartie(partieInvite);
+        }
         if (data.id_partie === 0 && fromInvit !== currentUser) {
             alert("Vous êtes invité par "+fromInvit+" pour la partie n°"+partieInvite+" !");
             partiesInvites.push(partieInvite);
             listenerInvitation();
+            fromInvit=currentUser;
             //document.getElementById("p_" + partieInvite).addEventListener("click", rejoindrePartie);
         }
-        if(fromInvit===currentUser && data.id_partie==0 ){
-            removeIDpartie(partieInvite);
-        }
+
     }
 
     function listenerInvitation(){
@@ -848,10 +850,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let ind = partiesInvites.indexOf(id);
         partiesInvites.splice(ind,1);
         console.log("p_" + id);
-        document.getElementById("p_" + id).classList.remove("lienActif");
+        removeIDpartie(id);
+       /* document.getElementById("p_" + id).classList.remove("lienActif");
         document.getElementById("p_" + id).removeEventListener("click", rejoindrePartie);
-        document.getElementById("p_" + id).removeAttribute("id");
-        //removeIDpartie();
+        document.getElementById("p_" + id).removeAttribute("id");*/
         creationOnglet(id);
         fromInvit=currentUser;
     }
