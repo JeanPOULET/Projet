@@ -570,7 +570,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 document.getElementById(id).addEventListener("click", function () {
                     if (document.getElementById(id).hasAttribute("checked")) {
                         metoru--;
-                        if(metoru <1 ){
+                        if(metoru <=1 ){
                             document.getElementById("btnInviter").disabled = true;
                         }
                         document.getElementById(id).removeAttribute("checked");
