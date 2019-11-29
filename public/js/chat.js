@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     function messageDAmourNegatif(){
-        var rand = Math.floor(Math.random() * 7)
+        var rand = Math.floor(Math.random() * 7);
         var message;
         switch(rand){
             case 0:
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
     
     function messageDAmourPositif(){
-        var rand = Math.floor(Math.random() * 5)
+        var rand = Math.floor(Math.random() * 5);
         var message;
         switch(rand){
             case 0:
@@ -389,6 +389,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function listenerInvitation(){
         for(let i=0;i<partiesInvites.length;i++){
             document.getElementById("p_" + partiesInvites[i]).addEventListener("click", rejoindrePartie);
+            document.getElementById("p_" + partiesInvites[i]).classList.add("lienActif");
         }
     }
 
@@ -584,7 +585,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                             document.getElementById("label" + id).style.backgroundColor = "#f0db1f";
                             document.getElementById("label" + id).style.transitionDuration = "0.1s";
                             metoru++;
-                            if(metoru > 0){
+                            if(metoru > 1){
                                 document.getElementById("btnInviter").removeAttribute("disabled");
                             }
                             if (players[nbPartie] === undefined) {
@@ -656,7 +657,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("p_"+partieEnCours).removeAttribute("id");
         }
 
-        let nouvelOnglet = document.createElement("h2");
+        let nouvelOnglet = document.createElement("li");
         let nbPartieInvite = partieEnCours;
         let id = "Partie " + partieEnCours;
         nouvelOnglet.innerHTML = id;
@@ -847,6 +848,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         let ind = partiesInvites.indexOf(id);
         partiesInvites.splice(ind,1);
         console.log("p_" + id);
+        document.getElementById("p_" + id).classList.remove("lienActif");
         document.getElementById("p_" + id).removeEventListener("click", rejoindrePartie);
         document.getElementById("p_" + id).removeAttribute("id");
         //removeIDpartie();
@@ -858,6 +860,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if (document.getElementById("p_" + num_partie) !== null) {
             let ind = partiesInvites.indexOf(num_partie);
             partiesInvites.splice(ind,1);
+            document.getElementById("p_" + num_partie).classList.remove("lienActif");
             document.getElementById("p_" + num_partie).removeEventListener("click", rejoindrePartie);
             document.getElementById("p_" + num_partie).removeAttribute("id");
         }

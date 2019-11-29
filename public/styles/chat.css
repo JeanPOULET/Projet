@@ -89,7 +89,7 @@ background-color:rgb(36, 31, 31);*/
   }
   
 #menuPartie:checked ~ul {
-    height: 0%;
+    height: 10%;
 }
   
 #listePartie ul {
@@ -321,6 +321,11 @@ input{
     box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
                 inset -2px -2px 3px rgba(0, 0, 0, .6);
 }
+input[type="button"]:disabled{
+    color: #434343;
+    animation: none;
+
+}
 
 .btnStyle:hover {
     background-image: url('http://scottyzen.com/cp/button.png');
@@ -334,6 +339,7 @@ input{
 .btnStyle:active {
     transform: translateY(4px);
 }
+
 
 .textStyle{
     border-radius: 10px;
@@ -589,12 +595,9 @@ input[type=radio]:checked + div {
     visibility: hidden; 
 }
 
-#content main p a{
-    text-decoration: underline blue;
-}
-#content main p a:hover {
+#content main p a:hover.lienActif{
     background-color:yellow;
-    transition-duration: 2s;
+    transition-duration: 1s;
 }
 
 /*
@@ -1067,4 +1070,10 @@ input[type=radio]:checked + div {
     background: #696868;
 }
 
+
+
+#content main .lienActif{
+    background-color:lightskyblue;
+    text-decoration: underline blue;
+}
 
