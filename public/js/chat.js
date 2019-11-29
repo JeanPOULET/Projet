@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
 
     /*** ToFerBO
-     * pile carte ombre/contour
      * style acceuil
      * 
      */
