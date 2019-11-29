@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("joueurSeCouche",function(couche){
-        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche ,fillette ! C'est à "+couche.prochainJoueur+" de jouer !";
+        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche. "+messageDAmourNegatif()+" C'est à "+couche.prochainJoueur+" de jouer !";
         actualiserTabTour(couche.partieLancee,couche.prochainJoueur);
     });
 
@@ -179,11 +179,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     sock.on("resetManche",function(reset){
         let msg=reset.joueur;
         if(reset.victoire && !reset.victoireTotale){
-            msg +=" a gagné la manche ! Contre ces nuls encore heureux !"
+            msg +=" a gagné la manche ! "+messageDAmourPositif();
         }else if(!reset.victoire && !reset.victoireTotale){
-            msg +=" a perdu la manche ! "+reset.prochainJoueur+ " doit enlever une carte à ce nullos !";
+            msg +=" a perdu la manche ! "+messageDAmourNegatif()+" "+reset.prochainJoueur+ " doit enlever une carte à ce nullos ! ";
         }else{
-            msg +=" a gagné la partie !"
+            msg +=" a gagné la partie ! " + messageDAmourPositif();
         }
         if(!reset.victoireTotale) {
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + "  C'est à " + reset.prochainJoueur + " de jouer !";
@@ -231,6 +231,57 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     });
 
+    function messageDAmourNegatif(){
+        var rand = Math.floor(Math.random() * 7)
+        var message;
+        switch(rand){
+            case 0:
+                message = "Minable ...";
+            break;
+            case 1:
+                message = "Nul ! Nul ! Nul !";
+            break;
+            case 2:
+                message = "Mais c'était sûr en fait !";
+            break;
+            case 3:
+                message = "Pitoyable...";
+            break;
+            case 4:
+                message = "Tu le fais exprès ?";
+            break;
+            case 5:
+                message = "Ma grand-mère joue mieux que ça !";
+            break;
+            case 6:
+                message = "Vraiment ? Contre eux ?";
+            break;
+        }
+        return message;
+    }
+    
+    function messageDAmourPositif(){
+        var rand = Math.floor(Math.random() * 5)
+        var message;
+        switch(rand){
+            case 0:
+                message = "Mouais, pas mal";
+            break;
+            case 1:
+                message = "C'est un début";
+            break;
+            case 2:
+                message = "Enfin !";
+            break;
+            case 3:
+                message = "C'est bien, tu veux un cookie ?";
+            break;
+            case 4:
+                message = "Wow si fort !";
+            break;           
+        }
+        return message
+    }
 
     function actualiserTabTour(num_partie, joueur){
         if(miseAutorise ==null){
