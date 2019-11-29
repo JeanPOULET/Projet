@@ -733,13 +733,15 @@ input[type=radio]:checked + div {
 
 .gameMain .message {
     position: absolute;
-    max-width: 600px;
+    width:600px;
+    padding: 3px;
     top: 48%;
     left: 22%;
     text-shadow:0 0 2px #FF0000,0 0 30px #FF0000,5px 9px 5px #333, 0 0 150px #FF0000;
     color:#FF0000;
     background-color:#262626;
     font-size: 22px;
+    text-align:center
 }
 
 .gameMain .joueur .sPage{
