@@ -1092,7 +1092,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             joueur:currentUser,
             mise:getMiseGenerale(partieEnCours)
         };
-
+        console.log("seCoucher partieEnCours = "+partieEnCours);
+        mon_tour[partieEnCours]=false;
         sock.emit("seCouche",couche);
     }
 

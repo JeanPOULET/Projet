@@ -242,7 +242,7 @@ io.on('connection', function (socket) {
             clients[joueurs[partieLancee][i]].emit("pileVersDefausse",{partieLancee:partieLancee, joueur:obj.joueur, pileDeJoueur:obj.pileDeJoueur, carte:obj.carte });
         }
         if(obj.gagne){
-            let indiceScoreJoueur = getIndiceScoreJoueur(obj.joueur,partieLancee);
+            let indiceScoreJoueur = getIndiceJoueurTab(obj.joueur,partieLancee);
             console.log("indiceDeScore : "+indiceScoreJoueur);
             let scoreJoueur = (scores[partieLancee][indiceScoreJoueur])+1;
             console.log("Score de joueur : "+scoreJoueur);
@@ -282,7 +282,7 @@ io.on('connection', function (socket) {
 
         let partieLancee = obj.partieEnCours;
         let prochainJoueur="";
-        let indice = getIndiceScoreJoueur(obj.joueur,partieLancee);
+        let indice = getIndiceJoueurTab(obj.joueur,partieLancee);
         isCouche[partieLancee][indice]=true;
         let cpt=0;
         let indice_joueur_debout=0;
@@ -295,6 +295,14 @@ io.on('connection', function (socket) {
         console.log("cpt = "+cpt);
         console.log(isCouche[partieLancee]);
         if(cpt===1){
+            prochainJoueur = choixJoueur(partieLancee, obj.joueur);
+            for (let i = 0; i < joueurs[partieLancee].length; ++i) {
+                clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
+                    partieLancee: partieLancee,
+                    joueur: obj.joueur,
+                    prochainJoueur: prochainJoueur
+                });
+            }
             for(let i=0; i<joueurs[partieLancee].length;i++){
                 clients[joueurs[partieLancee][i]].emit("revelation",{
                     partieLancee:partieLancee,
@@ -403,7 +411,7 @@ io.on('connection', function (socket) {
         }
     }
 
-    function getIndiceScoreJoueur(nomJoueur, partieEnCours) {
+    function getIndiceJoueurTab(nomJoueur, partieEnCours) {
         for (let i = 0; i < joueurs[partieEnCours].length; i++) {
             if (nomJoueur === joueurs[partieEnCours][i]) {
                 return i;
@@ -449,7 +457,9 @@ io.on('connection', function (socket) {
             };
             ias[game].push(ia);
         }
-        isCouche[game].splice(getIndiceScoreJoueur(currentID,game),1);
+        let index_joueur = getIndiceJoueurTab(currentID,game);
+        isCouche[game].splice(index_joueur,1);
+        scores[game].splice(index_joueur,1);
         joueurs[game] = joueurs[game].filter(function(el){return el !==currentID });
 
 
