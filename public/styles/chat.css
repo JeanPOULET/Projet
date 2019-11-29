@@ -89,7 +89,7 @@ background-color:rgb(36, 31, 31);*/
   }
   
 #menuPartie:checked ~ul {
-    height: 10%;
+    height: 0%;
 }
   
 #listePartie ul {
