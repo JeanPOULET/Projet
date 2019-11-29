@@ -494,7 +494,7 @@ io.on('connection', function (socket) {
                 id_partie:game
             };
 
-            for(let i in joueurs[game]){
+            for(let i=0;i<joueurs[game].length;i++){
 
                 clients[joueurs[game][i]].emit("listeGame",liste);
                 clients[joueurs[game][i]].emit("joueurPart",aurevoir);
