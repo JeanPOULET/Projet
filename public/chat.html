@@ -20,7 +20,7 @@
         </div>
     </div>
     <input type="radio" name="btnScreen" id="radio0">
-    <div id="content">
+    <div id="content" class="contentStyle">
         <h2>Chat des L3 - <span id="login"></span></h2>
         <h3>Clients connectés</h3>
         <aside>
@@ -28,32 +28,35 @@
         <main>
         </main>
         <footer>
-            <input type="text" id="monMessage">
-            <input type="button" value="Jouer" id="btnJouer"> 
-            <input type="button" value="Envoyer" id="btnEnvoyer">
-            <input type="button" value="Image" id="btnImage">
-            <input type="button" value="Quitter" id="btnQuitter">
+            <input type="text" class="textStyle" id="monMessage" placeholder="Entrez votre message" >
+            <input type="button" class="btnStyle" value="Jouer" id="btnJouer"> 
+            <input type="button" class="btnStyle" value="Envoyer" id="btnEnvoyer">
+            <input type="button" class="btnStyle" value="Image" id="btnImage">
+            <input type="button" class="btnStyle" value="Quitter" id="btnQuitter">
         </footer>
         <div id="bcImage" style="display: none;">
             <header>
-                <input type="text" id="recherche" placeholder="Tapez ici le texte de votre recherche">
-                <input type="button" value="Recherche" id="btnRechercher">
+                <input type="text" class="textStyle" id="recherche" placeholder="Tapez ici le texte de votre recherche">
+                <input type="button" class="btnStyle" value="Recherche" id="btnRechercher">
             </header>
             <div id="bcResults"></div>
-            <footer><input type="button" value="Fermer" id="btnFermer"></footer>
+            <footer><input type="button" class="btnStyle" value="Fermer" id="btnFermer"></footer>
         </div>
         <div id="fenetreInvit" style="display: none;">
             <div id="invitations">
                 
             </div> 
             <footer>
-                <input type="button" value="Inviter" id="btnInviter">
-                <input type="button" value="Annuler" id="btnAnnulerInvit">
+                <input type="button" class="btnStyle" value="Inviter" id="btnInviter">
+                <input type="button" class="btnStyle" value="Annuler" id="btnAnnulerInvit">
             </footer>
         </div>
     </div>
     <div id="listePartie">
         <h1><span></span>Partie :</h1>
+        <input id="menuPartie" type="checkbox" checked>
+        <ul>
+        </ul>
     </div>
     
 </body>
