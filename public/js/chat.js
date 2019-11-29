@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * 
      */
     document.getElementById("radio-1").checked = true;
+    document.getElementById("listePartie").style.display = "none";
+
     // socket ouverte vers le client
     var sock = io.connect();
 
@@ -501,7 +503,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             if (id !== currentUser) {
                 let btn = document.createElement("div");
 
-                btn.innerHTML = "<input type='checkbox' name=\"" + id + "\" id=" + id + "><label id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
+                btn.innerHTML = "<input type='checkbox' name=\"" + id + "\" id=" + id + "><label class=\"effetSurli labelStyle\" id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
                 document.querySelector('#invitations').appendChild(btn);
                 document.getElementById(id).addEventListener("click", function () {
                     if (document.getElementById(id).hasAttribute("checked")) {
@@ -519,8 +521,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                             document.getElementById("label" + id).style.backgroundColor = "initial";
                         } else {
                             document.getElementById(id).setAttribute("checked", "checked");
-                            document.getElementById("label" + id).style.backgroundColor = "yellow";
-                            document.getElementById("label" + id).style.transitionDuration = "0.5s";
+                            document.getElementById("label" + id).style.backgroundColor = "#f0db1f";
+                            document.getElementById("label" + id).style.transitionDuration = "0.1s";
                             metoru++;
                             if(metoru > 0){
                                 document.getElementById("btnInviter").removeAttribute("disabled");
@@ -595,7 +597,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("p_"+partieInvite).removeAttribute("id");
         }
 
-        let nouvelOnglet = document.createElement("h2");
+        let nouvelOnglet = document.createElement("li");
         let nbPartieInvite = partieInvite;
         let id = "Partie " + partieInvite;
         nouvelOnglet.innerHTML = id;
@@ -609,7 +611,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }*/
         nouvelOnglet.style.left = "" + taille + "px";
         //document.getElementById("content").insertBefore(nouvelOnglet, document.querySelector("h3"));
-        document.getElementById("listePartie").appendChild(nouvelOnglet);
+        document.querySelector("#listePartie ul").appendChild(nouvelOnglet);
         let input = document.createElement("input");
         input.setAttribute("type", "radio");
         input.setAttribute("name", "btnScreen");
@@ -621,7 +623,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         div.innerHTML =
             "<img id=\"imageTitre\" src=\"../images/titre.png\">"+
-            "<div class = \"contentGame\" id=\"contentGame"+(nbPartieInvite)+"\">" +
+            "<div class = \"contentGame contentStyle\" id=\"contentGame"+(nbPartieInvite)+"\">" +
                 "<h2>Chat partie "+partieInvite +" - <span id=\"login_p_"+(nbPartieInvite)+"\">"+currentUser+"</span></h2>" +
                 "<h3>Joueurs connectés</h3>" +
                 "<aside>" +
@@ -629,19 +631,19 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 "<main>" +
                 "</main>" +
                 "<footer>" +
-                    "<input type=\"text\" class =\"monMessageGame\" id=\"monMessage_p_"+(nbPartieInvite)+"\">" +
-                    "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame\" id=\"btnEnvoyer_p_"+(nbPartieInvite)+"\">" +
-                    "<input type=\"button\" value=\"Image\" class =\"btnImageGame\" id=\"btnImage_p_"+(nbPartieInvite)+"\">" +
-                    "<input type=\"button\" value=\"Chat\" class =\"btnChat\" id=\"btnChat_p_"+(nbPartieInvite)+"\">" +
-                    "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter\" id=\"btnQuitterGame_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"text\" class =\"monMessageGame textStyle\" id=\"monMessage_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Envoyer\" class =\"btnJouerGame btnStyle\" id=\"btnEnvoyer_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Image\" class =\"btnImageGame btnStyle\" id=\"btnImage_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Chat\" class =\"btnChat btnStyle\" id=\"btnChat_p_"+(nbPartieInvite)+"\">" +
+                    "<input type=\"button\" value=\"Quitter\" class =\"btnQuitter btnStyle\" id=\"btnQuitterGame_p_"+(nbPartieInvite)+"\">" +
                 "</footer>" +
                 "<div class =\"bcImageGame\" id=\"bcImage"+nbPartieInvite+"\" style=\"display: none;\">" +
                     "<header>" +
-                        "<input type=\"text\" class=\"rechercheGame\" id=\"recherche"+(nbPartieInvite)+"\" placeholder=\"Tapez ici le texte de votre recherche\">" +
-                        "<input type=\"button\" value=\"Recherche\" class=\"btnRechercherGame\" id=\"btnRechercher_p_"+(nbPartieInvite)+"\">" +
+                        "<input type=\"text\" class=\"rechercheGame textStyle \" id=\"recherche"+(nbPartieInvite)+"\" placeholder=\"Tapez ici le texte de votre recherche\">" +
+                        "<input type=\"button\" value=\"Recherche \" class=\"btnRechercherGame btnStyle\" id=\"btnRechercher_p_"+(nbPartieInvite)+"\">" +
                     "</header>" +
                     "<div class =\"bcResultsGame\" id=\"bcResults"+nbPartieInvite+"\"></div>" +
-                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer\" id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
+                        "<footer><input type=\"button\" value=\"Fermer\" class =\"btnFermer btnStyle\" id=\"btnFermer_p_"+(nbPartieInvite)+"\"></footer>" +
                     "</div>" +
                 "</div>" +
                 "<div class =\"gameMain\" id=\"gameMain_p_"+nbPartieInvite+"\">" +
@@ -1364,7 +1366,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             };
             console.log("id quitterGame if : "+res);
             document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
-            document.getElementById("listePartie").removeChild(document.getElementById("Partie "+res));
+            document.querySelector("#listePartie ul").removeChild(document.getElementById("Partie "+res));
 
         }else{
             let partie = this.id;
@@ -1382,7 +1384,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                     monTour: mon_tour[res]
                 };
                 partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
-                document.getElementById("listePartie").removeChild(document.getElementById(partie));
+                document.querySelector("#listePartie ul").removeChild(document.getElementById(partie));
                 partie = partie.replace(/Partie .*/, "gameScreen" + (res));
                 document.querySelector("body").removeChild(document.getElementById(partie));
             }
@@ -1422,6 +1424,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         sock.emit("logout");
 
         document.getElementById("radio-1").checked = true;
+        document.getElementById("listePartie").style.display = "none";
     }
 
     /**

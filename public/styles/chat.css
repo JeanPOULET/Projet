@@ -6,14 +6,14 @@ body {
 * {
     box-sizing: border-box;   
 }
-body > div {
+body > #content {
     box-shadow: -10px 10px 20px #A0A0A0;
     border: solid 1px #A0A0A0;
 }
 
 #listePartie{
     display: none;
-    width: 160px;
+    width: 250px;
     margin: 0px;
     padding: 5px;
     height: 448px;
@@ -22,32 +22,43 @@ body > div {
     overflow: auto;
     position: absolute;
     top: 25vh;
-    left: 40vh;
-    background-color:rgb(177, 118, 63);
+    left: 30vh;
+    /*background-color:rgb(177, 118, 63);*/
 }
 
 #listePartie h1{
-    font-size: 25px;
-    /*text-shadow: -1px -1px #fb6, 1px 1px #d60, -3px 0 4px #000;
-    font-family:"Segoe print", Arial, Helvetica, sans-serif;
-    color: #FF9933; 
-    padding:8px;
-    font-weight:lighter;
-    -moz-box-shadow: 2px 2px 6px #888;  
-    -webkit-box-shadow: 2px 2px 6px #888;  
-    box-shadow:2px 2px 6px #888;  
-    text-align:center;
-    display:inline;
-    position: relative;
-    top: 20px;
-    background: burlywood;*/
+    /*font-size: 25px;
+    
     background: url(http://ecard.enter-media.org/upload/iblock/cf4/cf401a38b3c0190e91e68729a24795b6.jpg) repeat;
 -webkit-text-fill-color: transparent;
 -webkit-background-clip: text;
 background-position: 50% 50%;
 position: relative;
 line-height:normal;
-background-color:rgb(36, 31, 31);
+background-color:rgb(36, 31, 31);*/
+    border-radius: 2px;
+  position: relative;
+  background: tomato;
+  height: 40px;
+  text-transform: uppercase;
+  color: ivory;
+  font-weight: 200;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 4px 4px 20px -2px rgba(0,0,0,.35);
+  transition: all .4s;
+}
+
+#listPartie:hover h1{
+    transform: translateY(-2px);
+    box-shadow: 2px 2px 5px -1px rgba(0,0,0,.35);
+}
+
+#listePartie:hover:active h1{
+    transform: translateY(10px);
+    box-shadow: 0px -1px 2px 0px rgba(0,0,0,.35);
 }
 
 #listePartie h1:after {
@@ -65,27 +76,104 @@ background-color:rgb(36, 31, 31);
      
     }
 
-#listePartie h2{
+    /******************************************************************/
+#menuPartie {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 90%;
+    z-index: 1;
+    opacity: 0;
+    cursor: pointer;
+    height: 40px;
+  }
+  
+#menuPartie:checked ~ul {
+    height: 0%;
+}
+  
+#listePartie ul {
+    padding-left: 0;
+    padding-top: 0;
+    margin-top: 0;
+    list-style: none;
+    overflow: hidden;
+    text-align: right;
+    margin-bottom: 22px;
+    text-align: center;
+    transition: all .4s ease-out;
+    height: auto;
+    
+}
+
+#listePartie ul li {
+    border-radius: 2px;
+    position: relative;
+    display: inline-block;
+    margin-left: 35px;
+    line-height: 1.5;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 5px;
+    /*background: tomato;*/
+    /*background: #c52c2c;*/
+    transition: background 3s;
+    box-shadow: 2px 2px 10px -2px rgba(0,0,0,.35);
+}
+  
+#listePartie ul li:hover {
+    /*background: mediumorchid;*/
+    background: #3a19ad;
+    transition: background .45s;
+    animation: spring 300ms ease-out;
+}
+  
+#listePartie ul a {
+    display: block;
+    color: ivory;
+    text-transform: lowercase;
+    font-size: 18px;
+    font-weight: 200;
+    text-decoration: none;
+    transition: color .3s;
+}
+  /******************************************************************/
+/*#listePartie h2{
     position: relative;
     top: 30px;
     color: #8a0b0b;
-  /*font-size: 30px;
-  font-weight: bold;
-  font-family: Helvetica;
-  text-shadow: 
-    0 1px 0 #ccc, 
-    0 2px 0 #c9c9c9, 
-    0 3px 0 #bbb, 
-    0 4px 0 #b9b9b9, 
-    0 5px 0 #aaa, 
-    0 6px 1px rgba(0,0,0,.1), 
-    0 0 5px rgba(0,0,0,.1), 
-    0 1px 3px rgba(0,0,0,.3), 
-    0 3px 5px rgba(0,0,0,.2), 
-    0 5px 10px rgba(0,0,0,.25), 
-    0 10px 10px rgba(0,0,0,.2), 
+}
+#listePartie h2:hover {
+    background-image: url('http://scottyzen.com/cp/button.png');
+    background-size: 100% 100%;
+    color: #27262c;
+    animation: spring 300ms ease-out;
+    text-shadow: 0 -1px 0 #ef816c;
+        font-weight: bold;
+}
+#listePartie h2:active {
+    transform: translateY(4px);
+}*/
 
-    0 20px 20px rgba(0,0,0,.15);*/
+@keyframes spring {
+    15% {
+      -webkit-transform-origin: center center;
+      -webkit-transform: scale(1.2, 1.1);
+    }
+    40% {
+      -webkit-transform-origin: center center;
+      -webkit-transform: scale(0.95, 0.95);
+    }
+    75% {
+      -webkit-transform-origin: center center;
+      -webkit-transform: scale(1.05, 1);
+    }
+    100% {
+      -webkit-transform-origin: center center;
+      -webkit-transform: scale(1, 1);
+    }
+  }
+ /*
     text-shadow:  white 0.006em 0.006em 0.007em,
     #9c9c9c 1px 1px 1px,
     #9c9c9c 1px 2px 1px,
@@ -103,14 +191,14 @@ background-color:rgb(36, 31, 31);
     rgba(16, 16, 16, 0.2) 1px 22px 10px,
     rgba(16, 16, 16, 0.2) 1px 26px 35px,
     rgba(16, 16, 16, 0.4) 1px 30px 65px,
-    white -0.15em -0.1em 100px;color:#fff;
+    white -0.15em -0.1em 100px;color:#fff;*/
 
-}
+
 
 body{
     width:100%;
     height: 100%;
-    background-image: url("../images/oui2.jpg");
+    background-image: url("../images/oui.jpg");
     background-repeat:no-repeat;
     background-size: cover;
 }
@@ -124,13 +212,15 @@ body{
     -ms-transform: translateX(-50%) translateY(-50%);
     height: 500px;
     width: 700px;
-    background-color: beige;
+    background-color: #1E1F25;
     padding: 10px;
+    border-radius: 20px;
 }
 #content h2, #content h3{
     position: absolute;
     display: inline-block;
     background-color: inherit;
+    color: white;
     height: 22px;
     padding: 5px;
     line-height: 16px;
@@ -144,22 +234,28 @@ body{
 
 #content h2 {
     top: -35px;
-    left: -1px;
+    left: 15px;
 }
 
 #content h3 {
     right: -11px;
-    top: -28px;
+    top: -10px;
     transform-origin: left center;
     transform: translateX(100%) rotate(90deg);
 }
+
+
+
 #content main {
     position: relative;
     height: calc(100% - 30px);
     width: calc(100% - 170px);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.74);
     overflow-y: scroll;
     line-height: 1.2;
+    scrollbar-color: #000 rgba(0,0,0,.15);
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
 }
 #content main p {
     line-height: 1;
@@ -194,9 +290,16 @@ body{
     height: 30px;
     background-color: inherit;
 }
+
 #content footer input {
     height: 22px;
     font-size: 15px;
+    border: 0;
+    text-align: center;
+}
+
+input{
+    text-align: center;
 }
 #content > footer input:first-child {
     width: calc(100% - 330px);
@@ -205,14 +308,45 @@ body{
 #content > footer input:last-child {
     float: right;
 }
-        
+
+.btnStyle{
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: #921919;
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .2),
+                                      rgba(0, 0, 0, .2) 30%,
+                                      rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+                inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+
+.btnStyle:hover {
+    background-image: url('http://scottyzen.com/cp/button.png');
+    background-size: 100% 100%;
+    color: #27262c;
+    animation: spring 300ms ease-out;
+    text-shadow: 0 -1px 0 #ef816c;
+    font-weight: bold;
+}
+
+.btnStyle:active {
+    transform: translateY(4px);
+}
+
+.textStyle{
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.74);
+}
+
 #content aside {
     width: 160px;
     float: right;
     margin: 0px;
     padding: 5px;
     height: calc(100% - 30px);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.74);
     line-height: 1;
     font-size: 14px;
     overflow: auto;
@@ -308,6 +442,7 @@ input[type=radio]:checked + div {
     box-shadow: 10px 10px 10px #000;
     border-radius: 5px;
 }
+
 #bcImage input[type=text], .bcImageGame input[type=text] {
     margin: 10px;
     width: calc(100% - 120px);
@@ -348,12 +483,19 @@ input[type=radio]:checked + div {
     justify-content: space-evenly;
 }
 
+#bcResults, .bcResultsGame{
+    scrollbar-color: #000 rgba(0,0,0,.15);
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+}
+
 #bcResults img, .bcResultsGame img {
     width: 190px;
     margin: 2px;
     height: auto;
     cursor: pointer;
     align-self: center;
+    
 }
 
 #fenetreInvit{
@@ -376,10 +518,71 @@ input[type=radio]:checked + div {
     width: calc(100% - 20px);
     height: 30px;
     background-color: inherit;
+    text-align: center;
 }
-
+/*
 #fenetreInvit #invitations label{
     cursor:pointer;
+}*/
+
+.labelStyle {      
+    position: relative; 
+    top: 3px;
+    color: #000000;
+    transition: all 200ms cubic-bezier(0.77, 0, 0.175, 1);  
+    cursor: pointer;
+    user-select: none;
+    margin-top: 7px;
+    padding-right: 5px;
+}
+
+.labelStyle:before, .labelStyle:after {
+    content: '';
+    position: absolute; 
+    transition: inherit;
+    z-index: -1;
+}
+
+.labelStyle:hover {
+    color: #000000;
+    transition-delay: .6s;
+}
+
+.labelStyle:hover:before {
+    transition-delay: 0s;
+}
+
+.labelStyle:hover:after {
+    background: #f0db1f;
+    transition-delay: .4s;
+}
+
+.effetSurli:before {
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 0;
+    border: 1px solid #f0db1f;
+    border-left: 0;
+    border-right: 0;
+}
+
+.effetSurli:after {
+    bottom: 0;
+    left: 0;
+    height: 0;
+    width: 100%;
+    background: #f0db1f;
+}
+
+.effetSurli:hover:before {
+    left: 0;
+    width: 100%;
+}
+
+.effetSurli:hover:after {
+    top: 0;
+    height: 100%;
 }
 
 #fenetreInvit input[type=checkbox]{
@@ -392,7 +595,6 @@ input[type=radio]:checked + div {
 #content main p a:hover {
     background-color:yellow;
     transition-duration: 2s;
-
 }
 
 /*
@@ -410,14 +612,16 @@ input[type=radio]:checked + div {
     -ms-transform: translateX(-50%) translateY(-50%);
     height: 500px;
     width: 700px;
-    background-color: beige;
+    background-color: #1E1F25;
     padding: 10px;
+    border-radius: 20px;
 }
 .contentGame h2, .contentGame h3 {
     position: absolute;
     background-color: inherit;
     height: 22px;
     padding: 5px;
+    color: white;
     line-height: 16px;
     font-size: 16px;
     font-weight: bold;
@@ -428,11 +632,11 @@ input[type=radio]:checked + div {
 }
 .contentGame h2 {
     top: -35px;
-    left: -1px;
+    left: 15px;
 }
 .contentGame h3 {
     right: -11px;
-    top: -28px;
+    top: -10px;
     transform-origin: left center;
     transform: translateX(100%) rotate(90deg);
 }
@@ -440,9 +644,12 @@ input[type=radio]:checked + div {
     position: relative;
     height: calc(100% - 30px);
     width: calc(100% - 170px);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.74);
     overflow-y: scroll;
     line-height: 1.2;
+    scrollbar-color: #000 rgba(0,0,0,.15);
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
 }
 .contentGame main p {
     line-height: 1;
@@ -491,7 +698,7 @@ input[type=radio]:checked + div {
     margin: 0px;
     padding: 5px;
     height: calc(100% - 30px);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.74);
     line-height: 1;
     font-size: 14px;
     overflow: auto;
