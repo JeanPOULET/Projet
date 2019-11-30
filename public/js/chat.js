@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     document.getElementById("radio-1").checked = true;
     document.getElementById("listePartie").style.display = "none";
+    document.getElementById("histoPartie").style.display = "none";
 
     // socket ouverte vers le client
     var sock = io.connect();
@@ -69,8 +70,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("login").innerHTML = id;
             document.getElementById("radio0").checked = true;
             document.getElementById("listePartie").style.display = "block";
+            document.getElementById("histoPartie").style.display = "block";
+            actualiserHistorique();
             currentUser = id;
             fromInvit = currentUser;
+            //localStorage.clear();
         }
     });
     sock.on("message", function (msg) {
@@ -217,6 +221,17 @@ function appel(text){
     }
 
   ******************************************* */
+    function actualiserHistorique(){
+        document.querySelector("#histoPartie ul").innerHTML = "";
+        for(let i = 0; i < localStorage.length; ++i){
+            var playerName = localStorage.key(i);
+            var date = localStorage.getItem(playerName);
+
+            var li = document.createElement("li");
+            li.innerHTML = "Victoire de : "+playerName+" le "+date;
+            document.querySelector("#histoPartie ul").appendChild(li);
+        }
+    }
 
     function textToSpeack(text, partie){
         var synth = window.speechSynthesis;
@@ -244,6 +259,9 @@ function appel(text){
             msg +=" a perdu la manche ! "+messageDAmourNegatif()+" "+reset.prochainJoueur+ " doit enlever une carte à ce nullos ! ";
         }else{
             msg +=" a gagné la partie ! " + messageDAmourPositif();
+            var savePseudo = reset.joueur;
+            var date= Date().toString();
+            localStorage.setItem(savePseudo, date);
         }
         if(!reset.victoireTotale) {
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + "  C'est à " + reset.prochainJoueur + " de jouer !";
@@ -807,6 +825,8 @@ function appel(text){
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function () {
             document.getElementById("radio0").checked = true;
             document.getElementById("listePartie").style.display = "block";
+            document.getElementById("histoPartie").style.display = "block";
+            actualiserHistorique();
         });
 
         document.getElementById("textToSpeech" + nbPartieInvite).addEventListener("click", function(){
@@ -1574,6 +1594,7 @@ function appel(text){
 
         document.getElementById("radio-1").checked = true;
         document.getElementById("listePartie").style.display = "none";
+        document.getElementById("histoPartie").style.display = "none";
     }
 
     /**
