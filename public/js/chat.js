@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if(defaite.doitEnleverCarte === currentUser && defaite.perdant !==currentUser) {
             mon_tour[defaite.partieLancee]=false;
             retirerCarte(defaite.partieLancee,defaite.perdant);
-        }else if ((defaite.perdant === defaite.doitEnleverCarte && defaite.perdant===currentUser)){
+        }else if ((defaite.perdant === defaite.doitEnleverCarte && defaite.perdant===currentUser)  ||defaite.doitEnleverCarte===null){
             mon_tour[defaite.partieLancee]=false;
             retirerCarteRandom(defaite.partieLancee);
 
@@ -1483,18 +1483,22 @@ function appel(text){
 
     function retirerCartePlateau(partieEnCours,joueur,carte){
         let nb_cartes_restantes = getNombreCarteMain(partieEnCours);
-
-        let main = document.querySelector("#"+joueur+"_"+partieEnCours+" main");
-        console.log("la carte : "+carte);
-        let carte_a_remove = document.getElementById(carte);
-        main.removeChild(carte_a_remove);
-
         let obj ={
             joueur:currentUser,
             partieEnCours:partieEnCours,
             elimine:true
 
         };
+        if(joueur === currentUser && nb_cartes_restantes===0){
+            sock.emit("joueurElimine", obj);
+            return;
+        }
+        let main = document.querySelector("#"+joueur+"_"+partieEnCours+" main");
+        console.log("la carte : "+carte);
+        let carte_a_remove = document.getElementById(carte);
+        main.removeChild(carte_a_remove);
+
+
         if(joueur === currentUser && nb_cartes_restantes===1){
             sock.emit("joueurElimine", obj);
         }

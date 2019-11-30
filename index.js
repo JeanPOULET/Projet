@@ -553,6 +553,11 @@ io.on('connection', function (socket) {
         }else{
             prochainJoueur=doitEnleverCarte;
         }
+
+        if(isIA(partieEnCours,doitEnleverCarte)){
+            doitEnleverCarte=null;
+        }
+
         for(let i=0;i<isCouche[partieEnCours].length;i++){
             isCouche[partieEnCours][i]=false;
         }
