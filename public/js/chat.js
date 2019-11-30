@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     */
 
     /*** ToDo
-     * les ia...
+     * debugger encore un peu
      */
 
     /*** ToFerBO

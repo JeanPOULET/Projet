@@ -278,25 +278,7 @@ io.on('connection', function (socket) {
         while(ias[partieLancee].length>0){
             let joueur = ias[partieLancee].pop().joueur;
             let index_joueur = getIndiceJoueurTab(joueur,partieLancee);
-            /*isCouche[partieLancee].splice(index_joueur,1);
-            scores[partieLancee].splice(index_joueur,1);
-            joueurs[partieLancee] = joueurs[partieLancee].filter(function(el){return el !==joueur });*/
             quitGame(joueur,partieLancee,null,null,null,true);
-            /*let aurevoir ={
-                joueur:joueur,
-                id_partie:partieLancee
-            };
-            let liste = {
-                joueurs: joueurs[partieLancee],
-                id_partie: partieLancee
-            };
-            for(let i=0;i<joueurs[partieLancee].length;i++) {
-                clients[joueurs[partieLancee][i]].emit("listeGame",liste);
-                clients[joueurs[partieLancee][i]].emit("joueurPart",aurevoir);
-                clients[joueurs[partieLancee][i]].emit("message",{from:null, to:null, text: joueur + " a quitté la partie", date:Date.now(),id_partie:partieLancee});
-            }*/
-
-
         }
     }
 
@@ -670,8 +652,6 @@ io.on('connection', function (socket) {
         }
     });
 
-
-
     function quitGame(joueur,game,cartes,cartesPile,cartesDefausse,elimine,mon_tour){
         console.log("quitGame ==> "+game);
         if(joueur===null){
@@ -754,6 +734,7 @@ io.on('connection', function (socket) {
 
 
     }
+
     // fermeture
     socket.on("logout", function() {
         // si client était identifié (devrait toujours être le cas)
