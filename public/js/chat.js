@@ -69,9 +69,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("monMessage").value = "";
             document.getElementById("login").innerHTML = id;
             document.getElementById("radio0").checked = true;
+            actualiserHistorique();
             document.getElementById("listePartie").style.display = "block";
             document.getElementById("histoPartie").style.display = "block";
-            actualiserHistorique();
+            
             currentUser = id;
             fromInvit = currentUser;
             //localStorage.clear();
@@ -226,7 +227,7 @@ function appel(text){
         for(let i = 0; i < localStorage.length; ++i){
             var playerName = localStorage.key(i);
             var date = localStorage.getItem(playerName);
-
+            console.log("pseudo : "+playerName);
             var li = document.createElement("li");
             li.innerHTML = "Victoire de : "+playerName+" le "+date;
             document.querySelector("#histoPartie ul").appendChild(li);
@@ -824,9 +825,10 @@ function appel(text){
 
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function () {
             document.getElementById("radio0").checked = true;
+            actualiserHistorique();
             document.getElementById("listePartie").style.display = "block";
             document.getElementById("histoPartie").style.display = "block";
-            actualiserHistorique();
+            
         });
 
         document.getElementById("textToSpeech" + nbPartieInvite).addEventListener("click", function(){
@@ -1523,6 +1525,7 @@ function appel(text){
         }
 
         document.getElementById("radio0").checked = true;
+        actualiserHistorique();
         let res;
         let obj;
         if(id>=1) {
