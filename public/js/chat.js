@@ -260,16 +260,18 @@ function appel(text){
             msg +=" a perdu la manche ! "+messageDAmourNegatif()+" "+reset.prochainJoueur+ " doit enlever une carte à ce nullos ! ";
         }else{
             msg +=" a gagné la partie ! " + messageDAmourPositif();
-            var savePseudo = reset.joueur;
-            var date= Date().toString();
+            let savePseudo = reset.joueur;
+            let date= Date().toString();
             localStorage.setItem(savePseudo, date);
         }
         if(!reset.victoireTotale) {
             document.getElementById("message" + reset.partieLancee).innerHTML = msg + "  C'est à " + reset.prochainJoueur + " de jouer !";
             textToSpeack(msg + "  C'est à " + reset.prochainJoueur + " de jouer !", reset.partieLancee);
         }else{
-            document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes ! Tchao les nazes";
-            textToSpeack("Fin de la partie dans 10 secondes ! Tchao les nazes", reset.partieLancee);
+            if(tabPartie.indexOf(reset.partieLancee)!==-1) {
+                document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes ! Tchao les nazes";
+                textToSpeack("Fin de la partie dans 10 secondes ! Tchao les nazes", reset.partieLancee);
+            }
         }
         nbCartesChoisis[reset.partieLancee]=0;
 
@@ -424,8 +426,10 @@ function appel(text){
         let bcMessages;
         if (data.id_partie === 0) {
             bcMessages = document.querySelector("#content main");
-        } else {
+        } else if(tabPartie.indexOf(data.id_partie)!==-1) {
             bcMessages = document.querySelector("#contentGame" + data.id_partie + " main");
+        }else{
+            return;
         }
 
         let classe = "";
@@ -452,7 +456,7 @@ function appel(text){
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
         if (data.id_partie === 0) {
             document.querySelector("main > p:last-child").scrollIntoView();
-        } else {
+        } else if(tabPartie.indexOf(data.id_partie)!==-1){
             document.querySelector("#contentGame" + data.id_partie + " main > p:last-child").scrollIntoView();
         }
 
@@ -499,7 +503,7 @@ function appel(text){
         console.log("game : ", game);
         if (game === 0) {
             document.querySelector("#content aside").innerHTML = newList.join("<br>");
-        } else {
+        } else if(tabPartie.indexOf(game) !==-1  ) {
             document.querySelector("#contentGame" + game + " aside").innerHTML = newList.join("<br>");
         }
     }
