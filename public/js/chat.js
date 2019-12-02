@@ -19,13 +19,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
       * listenerMain
       * 
       */
-     
+
     document.getElementById("radio-1").checked = true;
     document.getElementById("listePartie").style.display = "none";
     document.getElementById("histoPartie").style.display = "none";
 
 
 
+
+    
                             /****************************************************
                              *                     VARIABLES                    *
                              ****************************************************/
@@ -119,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Permet d'actualiser la liste des personnes présentes sur le chat générale
      * @param liste Array Tableau des personnes connectées au serveur
      */
-
     sock.on("liste", function (liste) {
         users = liste;
         if (currentUser) {
@@ -131,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Permet d'actualiser la liste des personnes présentes sur une partie donnée
      * @param liste Object Tableau des joueurs sur une partie donnée
      */
-
     sock.on("listeGame", function (liste) {
         if(liste_joueurs[liste.id_partie] === undefined){
             liste_joueurs[liste.id_partie] =[];
@@ -149,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * de plus elle permet de donner le nom de l'hôte de la partie s'il y a eu réellement une invitation
      * @param invit Object Indice de partie, l'hôte (null si aucun)
      */
-
     sock.on("invitation", function (invit) {
         if (currentUser) {
             console.log("invitationneur : ",  (invit.from==null)?"serveurActualisé":invit.from);
@@ -166,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Permet de supprimer le lien d'invitation pour une partie donnée
      * @param num_partie Indice de partie
      */
-
     sock.on("suppressionInvitation", function (num_partie) {
         console.log("je dois delete la partie pour les invitations : "+num_partie);
         removeIDpartie(num_partie);
@@ -176,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Permet d'initialiser une partie donnée en afficher le plateau de jeu (le serveur donne aussi les cartes avec les cranes)
      * @param initialisation Object Indice de partie + les cranes
      */
-
     sock.on("iniPartie",function(initialisation){
         console.log("La partie est lancée n°"+initialisation.partieLancee);
         afficherPlateau(initialisation.partieLancee, initialisation.cranes);
@@ -187,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Utile pour la 1èr manche de la partie
      * @param manche Object Le prochain joueur, indice de partie
      */
-
     sock.on("debutManche",function(manche){
         document.getElementById("message"+manche.num_partie).innerHTML ="C'est à "+manche.joueur+" de jouer !";
         actualiserTabTour(manche.num_partie,manche.joueur);
@@ -199,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Appelle la fonction actualiserPile pour actualiser graphiquement (pour tout le monde) la pile du joueur concerné
      * @param nouvel_manche Object Indice de partie, joueur qui a posé une carte, prochain joueur
      */
-
     sock.on("nouvelManche",function(nouvel_manche){
         if(tabPartie.indexOf(nouvel_manche.partieLancee) >=0){
             document.getElementById("message" + nouvel_manche.partieLancee).innerHTML = "C'est à " + nouvel_manche.prochainJoueur + " de jouer !";
@@ -214,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * On va donc désactiver le listener de la main du joueur courant et actualiser la mise maximum de la manche
      * @param mise Object Indice de partie, joueur qui a misé, prochain joueur, mise du joueur précédent
      */
-
     sock.on("mise",function(mise){
         if(tabPartie.indexOf(mise.partieLancee) >=0) {
             document.getElementById("message" + mise.partieLancee).innerHTML = "C'est à " + mise.prochainJoueur + " de miser !";
@@ -230,7 +224,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Evènement reçu quand un joueur se couche
      * @param couche Object Indice de partie, joueur qui s'est couché, joueur suivant
      */
-
     sock.on("joueurSeCouche",function(couche){
         if(tabPartie.indexOf(couche.partieLancee) >=0) {
             document.getElementById("message" + couche.partieLancee).innerHTML = couche.joueur + " se couche. " + messageDAmourNegatif() + " C'est à " + couche.prochainJoueur + " de jouer !";
@@ -243,7 +236,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * On va alors actualiser pour tout le monde la défausse et la pile du joueur affecté
      * @param pile Object Indice de partie, pile affectée, carte affectée
      */
-
     sock.on("pileVersDefausse",function(pile){
         if(tabPartie.indexOf(pile.partieLancee) >=0) {
             actualiserDefausse(pile.partieLancee, pile.pileDeJoueur, pile.carte);
@@ -255,7 +247,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * On va alors actualiser le tableau des scores
      * @param victoire Object Indice de partie, vainqueur de la manche, nb de points du vainqueur
      */
-
     sock.on("gagneManche",function(victoire){
         if(tabPartie.indexOf(victoire.partieLancee) >=0) {
             actualiserTableau(victoire.partieLancee, victoire.vainqueur, victoire.points);
@@ -267,7 +258,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Le serveur demande si la carte que l'IA a retiré est un crâne ou non
      * @param obj Object Indice de partie, nom de joueur de l'IA
      */
-
     sock.on("carteCrane",function(obj){
        let crane = document.getElementById(obj.carte).classList.contains("crane");
        console.log("Crane? : "+crane );
@@ -287,7 +277,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Le joueur qui a retiré la carte est alors le prochain joueur pour poser une carte cette fois ci
      * @param defaite Object Indice de partie, le perdant, celui qui retire la carte,
      */
-
     sock.on("perdManche",function(defaite){
 
         if(defaite.IA){
@@ -310,7 +299,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * On va alors le supprimmer graphiquement du plateau
      * @param aurevoir Object Indice de partie, joueur qui part
      */
-
     sock.on("joueurPart",function(aurevoir){
         deleteJoueur(aurevoir.joueur,aurevoir.id_partie);
     });
@@ -320,7 +308,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      *  La manche peut être gagné (même la partie) ou perdu par un joueur
      * @param reset Object Indice de la partie, victoireFinale?, prochain joueur, joueur qui a perdu/gagné la manche
      */
-
     sock.on("resetManche",function(reset){
         let msg=reset.joueur;
         if(reset.victoire && !reset.victoireTotale){
@@ -364,7 +351,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Si le joueur courant est celui qui doit révéler les cartes alors il peut choisir les cartes qu'il veut piocher
      * @param revel Object Indice de partie, joueur qui révèle les cartes
      */
-
     sock.on("revelation",function(revel){
         if(tabPartie.indexOf(revel.partieLancee) >=0) {
             document.getElementById("message" + revel.partieLancee).innerHTML = revel.joueur + " tire les cartes !";
@@ -383,7 +369,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Reçu quand une carte doit être retirer du plateau (c'est à dire quand un joueur qui a perdu s'est fait prendre une de ses cartes)
      * @param obj Object Indice de partie, joueur à qui la carte doit partir, carte qui doit partir
      */
-
     sock.on("carteRetiree",function(obj){
        retirerCartePlateau(obj.partieLancee,obj.joueur,obj.carte);
 
@@ -393,7 +378,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * Reçu quand un joueur se fait éliminer (c'est à dire quand il n'a plus de carte)
      * @param obj Object Indice de partie, joueur eliminé,
      */
-
     sock.on("joueurElimine",function(obj){
         document.getElementById("message"+obj.partieLancee).innerHTML =obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !";
         textToSpeack(obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !", obj.partieLancee);
@@ -461,6 +445,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
      ******************************************* */
+    
     /**
      * Permet d'actualiser l'historique présent sur le chat principal à chaque nouvel accès à celui-ci
      */
@@ -1988,7 +1973,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if (e.keyCode === 13) {
             connect();
         }
-
     });
     document.getElementById("btnQuitter").addEventListener("click", quitter);
     document.getElementById("btnFermer").addEventListener("click", toggleImage);
