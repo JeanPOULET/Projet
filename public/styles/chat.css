@@ -20,9 +20,11 @@ body{
     background-size: cover;
 }
 
+
            /****************************************************
             *                CSS CHAT PRINCIPAL                *
             ****************************************************/
+
 #content {
     position: absolute;
     top: 50%;
@@ -96,9 +98,11 @@ body{
     vertical-align: text-top;
 }   
 
+
            /****************************************************
             *                PIED CHAT PRINCIPAL               *
-            ****************************************************/        
+            ****************************************************/  
+
 #content footer {
     position: absolute; 
     bottom: 0;
@@ -128,9 +132,11 @@ input{
     float: right;
 }
 
+
            /****************************************************
             *                    CSS BOUTONS                   *
             ****************************************************/
+
 .btnStyle{
     color: #fff;
     text-shadow: 1px 1px 1px #000;
@@ -172,10 +178,11 @@ input[type="button"]:disabled{
     background : #4e4d4d;
 }
 
+
            /****************************************************
             *                   LISTE JOUEURS                  *
             ****************************************************/
-
+            
 #content aside {
     width: 160px;
     float: right;
@@ -188,9 +195,11 @@ input[type="button"]:disabled{
     overflow: auto;
 }
 
+
            /****************************************************
             *                    EMOTICONES                    *
             ****************************************************/
+
 .emoji {
     display: inline-block;
     width: 18px;
@@ -234,9 +243,11 @@ input[type=radio]:checked + div {
     display: block;   
 }
        
+
            /****************************************************
             *                ECRAN DE CONNEXION                *
             ****************************************************/
+
 #logScreen {
     background-image: url("../images/accueil.png");
     background-repeat:no-repeat;
@@ -269,9 +280,11 @@ input[type=radio]:checked + div {
     margin: 10px;
 }
 
+
            /****************************************************
             *                       GIF                        *
             ****************************************************/
+
 #bcImage, .bcImageGame{
     width: 400px;
     height: 80%;
@@ -333,9 +346,11 @@ input[type=radio]:checked + div {
     align-self: center;
 }
 
+
            /****************************************************
             *               FENETRE D'INVITATION               *
             ****************************************************/
+
 #fenetreInvit{
     width: 400px;
     height: 80%;
@@ -431,9 +446,11 @@ input[type=radio]:checked + div {
     height: 100%;
 }
 
+
            /****************************************************
             *                LIENS D'INVITATION                *
             ****************************************************/
+
 #content main .lienActif{
     background-color:lightskyblue;
     text-decoration: underline blue;
@@ -445,9 +462,11 @@ input[type=radio]:checked + div {
     cursor:pointer;
 }
 
+
            /****************************************************
             *            HISTORIQUE / ONGLETS PARTIE           *
             ****************************************************/
+
  .inputList {
     position: absolute;
     left: 0;
@@ -592,7 +611,6 @@ input[type=radio]:checked + div {
 }
 
 
-
            /****************************************************
             *                   CSS CHAT JEU                   *
             ****************************************************/
@@ -673,8 +691,6 @@ input[type=radio]:checked + div {
     vertical-align: text-top;
 }   
 
-
-
            /****************************************************
             *                  PIED CHAT JEU                   *
             ****************************************************/
@@ -715,7 +731,6 @@ input[type=radio]:checked + div {
 }
 
 
-
            /****************************************************
             *                   CSS JEU                   *
             ****************************************************/
@@ -741,9 +756,11 @@ input[type=radio]:checked + div {
     width: 60%
 }
 
+
            /****************************************************
             *                      TITRE                       *
             ****************************************************/
+
 #imageTitre{
     position: absolute;
     display: inline-block;
@@ -751,9 +768,11 @@ input[type=radio]:checked + div {
     top: 8%;
 }
 
+
            /****************************************************
             *                    FENETRE JEU                   *
             ****************************************************/
+
 .gameScreen{
     position: absolute;
     height: 100%;
@@ -786,9 +805,11 @@ input[type=radio]:checked + div {
     width: 111px;
 }
 
+
            /****************************************************
             *               BOUTON LANCEMENT JEU               *
             ****************************************************/
+
 .gameMain .btnLancer{
     position:absolute;
     top:50%;
@@ -813,9 +834,11 @@ input[type=radio]:checked + div {
     transition: all 0.4s ease 0s;
 }
 
+
            /****************************************************
             *                   MESSAGE JEU                    *
             ****************************************************/
+
 .gameMain .message {
     position: absolute;
     width:600px;
@@ -829,9 +852,11 @@ input[type=radio]:checked + div {
     text-align:center
 }
 
+
            /****************************************************
             *                      JOUEURS                     *
             ****************************************************/
+
 .joueur{
     position: absolute;
     width: 320px;
@@ -900,9 +925,11 @@ input[type=radio]:checked + div {
     transform: rotate(90deg);
 }
 
+
            /****************************************************
             *                     CARTES                       *
             ****************************************************/
+
 .carte{
     width: 80px;
     height: 80px;
@@ -966,9 +993,11 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
+
            /****************************************************
             *              CARTES JOUEUR COURANT               *
             ****************************************************/
+
 .joueur main > .retournee.rose::before  {
     content: "⚜";
     color: black;
@@ -983,9 +1012,11 @@ input[type=radio]:checked + div {
     background: #696868;
 }
 
+
            /****************************************************
             *                      PILES                       *
             ****************************************************/
+
 .pile{
     position: relative;
     left: 35%;
@@ -1027,9 +1058,11 @@ input[type=radio]:checked + div {
     top: 25%;
 }
 
+
            /****************************************************
             *                  ANIMATION PILE                  *
             ****************************************************/
+
 .pile.retournee{
     position: relative;
     left: 35%;
@@ -1081,9 +1114,11 @@ input[type=radio]:checked + div {
        }
 }
 
+
            /****************************************************
             *                       MISE                       *
             ****************************************************/
+
 .divMise{
     position: absolute;
     top :55%;
@@ -1143,9 +1178,11 @@ input[type=radio]:checked + div {
     margin: 0 0 10px 0;
 }
 
+
            /****************************************************
             *                     DEFAUSSE                     *
             ****************************************************/
+
 .gameMain .defausse{
     position:absolute;
     top:35%;
