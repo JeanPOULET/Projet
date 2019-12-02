@@ -180,15 +180,15 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     });
 
-    sock.on("carteCrane?",function(obj){
+    sock.on("carteCrane",function(obj){
        let crane = document.getElementById(obj.carte).classList.contains("crane");
-
+       console.log("Crane? : "+crane );
        let ob ={
            isCrane : crane,
            partieEnCours:obj.partieEnCours,
            joueur:obj.joueur
         };
-       sock.emit("carteCrane?",ob);
+       sock.emit("carteCrane",ob);
 
     });
 
@@ -1709,7 +1709,8 @@ function appel(text){
                 cartesDefausse:getIDsCartesDefausse(res),
                 partieEnCours:res,
                 monTour:mon_tour[res],
-                elimine:elimine
+                elimine:elimine,
+                mise:miseAutorise[res]
             };
             document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
             document.querySelector("#listePartie ul").removeChild(document.getElementById("Partie "+res));
@@ -1730,7 +1731,8 @@ function appel(text){
                     cartesDefausse:getIDsCartesDefausse(res),
                     partieEnCours: res,
                     monTour: mon_tour[res],
-                    elimine:elimine
+                    elimine:elimine,
+                    mise:miseAutorise[res]
                 };
                 partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
                 document.querySelector("#listePartie ul").removeChild(document.getElementById(partie));

@@ -276,9 +276,10 @@ io.on('connection', function (socket) {
 
     function IAdelete(partieLancee){
         while(ias[partieLancee].length>0){
+            console.log("dans iaDELETE lg = "+ias[partieLancee].length);
             let joueur = ias[partieLancee].pop().joueur;
             let index_joueur = getIndiceJoueurTab(joueur,partieLancee);
-            quitGame(joueur,partieLancee,null,null,null,true);
+            quitGame(joueur,partieLancee,null,null,null,true,false,false);
         }
     }
 
@@ -319,8 +320,8 @@ io.on('connection', function (socket) {
 
             if(cpt===1) {
 
-                if (isIA(partieLancee, prochainJoueur)) {
-                    iaRevelation(partieLancee, prochainJoueur);
+                if (isIA(partieLancee, joueurs[partieLancee][indice_joueur_debout])) {
+                    iaRevelation(partieLancee, joueurs[partieLancee][indice_joueur_debout]);
 
                 } else {
                     for (let i = 0; i < joueurs[partieLancee].length; i++) {
@@ -356,11 +357,12 @@ io.on('connection', function (socket) {
         let indiceIa = indiceIA(partieLancee,joueur);
         let carte = ias[partieLancee][indiceIa].cartesPile.shift();
         ias[partieLancee][indiceIa].cartesDefausse.push(carte);
-        let demandeInfo = joueur;
+        let demandeInfo = joueurs[partieLancee][0];
         let i=0;
         while(isIA(partieLancee,demandeInfo)){
+            console.log("pour le crane ==> "+demandeInfo);
             demandeInfo = joueurs[partieLancee][i];
-            i++
+            i++;
         }
         let index = getIndiceJoueurTab(demandeInfo,partieLancee);
         let obj ={
@@ -369,8 +371,11 @@ io.on('connection', function (socket) {
             joueur:joueur
         };
 
-        clients[joueurs[partieLancee][index]].emit("carteCrane?",obj);
-        for(let i=0;i< joueurs[partieLancee].length;++i){
+        clients[joueurs[partieLancee][index]].emit("carteCrane",obj);
+        console.log("L'IA "+joueur+" revele une carte");
+        console.log("obj");
+        console.log(obj);
+        for(let i=0;i< joueurs[partieLancee].length;i++){
             clients[joueurs[partieLancee][i]].emit("pileVersDefausse",{partieLancee:partieLancee, joueur:joueur, pileDeJoueur:joueur, carte:carte });
             clients[joueurs[partieLancee][i]].emit("revelation", {
                 partieLancee: partieLancee,
@@ -382,10 +387,13 @@ io.on('connection', function (socket) {
 
     }
 
-    socket.on("carteCrane?",function(obj){
+    socket.on("carteCrane",function(obj){
+        console.log("joueur dans on.carteCrane "+obj.joueur);
+        console.log("isCrane"+obj.isCrane);
         if(obj.isCrane){
             defaite(obj.partieEnCours,obj.joueur,null);
         }else{
+            console.log("Victoire de l'IA "+obj.joueur);
             let index = getIndiceJoueurTab(obj.joueur,obj.partieEnCours);
             scores[obj.partieEnCours][index]+=1;
             victoire(obj.partieEnCours,obj.joueur,scores[obj.partieEnCours][index]);
@@ -466,19 +474,28 @@ io.on('connection', function (socket) {
         }
         console.log("cpt = "+cpt);
         console.log(isCouche[partieLancee]);
+        console.log("joueurs[game][indice_debout] = "+joueurs[partieLancee][indice_joueur_debout]);
         prochainJoueur = choixJoueur(partieLancee, obj.joueur);
+        for (let i = 0; i < joueurs[partieLancee].length; ++i) {
+            clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
+                partieLancee: partieLancee,
+                joueur: obj.joueur,
+                prochainJoueur: prochainJoueur
+            });
+        }
 
         if(cpt===1) {
-            if (isIA(partieLancee, prochainJoueur)) {
-                iaRevelation(partieLancee, prochainJoueur);
+            /*for (let i = 0; i < joueurs[partieLancee].length; ++i) {
+                clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
+                    partieLancee: partieLancee,
+                    joueur: obj.joueur,
+                    prochainJoueur: prochainJoueur
+                });
+            }*/
+            if (isIA(partieLancee, joueurs[partieLancee][indice_joueur_debout])) {
+                iaRevelation(partieLancee, joueurs[partieLancee][indice_joueur_debout]);
             } else {
-                for (let i = 0; i < joueurs[partieLancee].length; ++i) {
-                    clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
-                        partieLancee: partieLancee,
-                        joueur: obj.joueur,
-                        prochainJoueur: prochainJoueur
-                    });
-                }
+
                 for (let i = 0; i < joueurs[partieLancee].length; i++) {
                     clients[joueurs[partieLancee][i]].emit("revelation", {
                         partieLancee: partieLancee,
@@ -564,6 +581,7 @@ io.on('connection', function (socket) {
     function victoire(partieEnCours,joueur,points){
         let iaWon=joueur;
         if(isIA(partieEnCours,joueur)){
+            console.log("l'IA "+joueur+" gagne la manche");
             IAdelete(partieEnCours);
             iaWon=null;
         }
@@ -644,7 +662,7 @@ io.on('connection', function (socket) {
     socket.on("quitGame",function(game){
         if(currentID){
             console.log("Sortie de la partie "+game.partieEnCours+" par "+currentID);
-            quitGame(null,game.partieEnCours,game.cartes,game.cartesPile,game.cartesDefausse,game.elimine,game.monTour);
+            quitGame(null,game.partieEnCours,game.cartes,game.cartesPile,game.cartesDefausse,game.elimine,game.monTour,game.mise);
             console.log(joueurs);
             if(game.monTour && joueurs[game.partieEnCours]!==undefined && game.cartes===null){
                 jouer(game.partieEnCours);
@@ -652,8 +670,8 @@ io.on('connection', function (socket) {
         }
     });
 
-    function quitGame(joueur,game,cartes,cartesPile,cartesDefausse,elimine,mon_tour){
-        console.log("quitGame ==> "+game);
+    function quitGame(joueur,game,cartes,cartesPile,cartesDefausse,elimine,mon_tour,mise){
+        console.log("quitGame ==> "+game+" par "+joueur);
         if(joueur===null){
             joueur=currentID;
         }
@@ -665,31 +683,39 @@ io.on('connection', function (socket) {
                 cartesDefausse : cartesDefausse
             };
             ias[game].push(ia);
-            if(mon_tour){
+            if(mon_tour && !mise){
                 iaJoue(game,joueur);
+            }else if(mon_tour && mise){
+                iaMise(game,joueur,false,0);
             }
 
         }else{
+            console.log("encule ton chien ==> "+game+" par "+joueur);
             let index_joueur = getIndiceJoueurTab(joueur,game);
             isCouche[game].splice(index_joueur,1);
             scores[game].splice(index_joueur,1);
             joueurs[game] = joueurs[game].filter(function(el){return el !==joueur });
         }
 
-
+        console.log("nique toi ==> "+game+" par "+joueur);
         let victoireTotale=false;
+
         if(joueurs[game].length  ===1 && launched[game]){
+            console.log("nique toi ==> "+game+" par "+joueur);
+            console.log(joueurs);
+            console.log("MAIS "+joueurs[game][0]);
+            console.log(ias);
             victoireTotale=true;
             clients[joueurs[game][0]].emit("resetManche",
                 {
                     joueur:joueurs[game][0],
                     partieLancee: game,
-                    prochainJoueur: choixJoueur(game, joueurs[game][0]),
+                    prochainJoueur: joueurs[game][0],
                     victoire:true,
                     victoireTotale:victoireTotale
                 });
         }
-
+        console.log("stp jpp ==> "+game+" par "+joueur);
         console.log(joueurs);
         console.log(ias);
 
@@ -728,9 +754,9 @@ io.on('connection', function (socket) {
 
         }
 
-        if( joueurs[game]!==undefined && cartes===null){
+        /*if( joueurs[game]!==undefined && cartes===null && ){
             jouer(game);
-        }
+        }*/
 
 
     }
@@ -774,7 +800,7 @@ io.on('connection', function (socket) {
             let games = getPartiesJoueur(currentID);
             console.log("games de current : "+games);
             for(let i=0;i<games.length;i++) {
-                quitGame(null,games[i],null,null,null,true,false);
+                quitGame(null,games[i],null,null,null,true,false,false);
             }
             console.log(" après filtrage==> "+joueurs);
             // envoi de l'information de déconnexion
