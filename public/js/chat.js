@@ -1,18 +1,24 @@
 document.addEventListener("DOMContentLoaded", function(_e) {
 
     /*** Liste des "bugs" trouvés ***
-     * Pseudo avec espace pour invit
      * 
     */
 
     /*** ToDo
-     * debugger encore un peu
      */
 
     /*** ToFerBO
-     * style acceuil
      * 
      */
+
+     /*** ToComment
+      * actualiserTabTour
+      * getIdInt
+      * creationFenetreJeu
+      * getIdDoubleInt
+      * listenerMain
+      * 
+      */
     document.getElementById("radio-1").checked = true;
     document.getElementById("listePartie").style.display = "none";
     document.getElementById("histoPartie").style.display = "none";
@@ -203,6 +209,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
     });
+
+/**
+ * Mise en place d'une liste déroulante permettant de choisir la langue ainsi que 2 boutons afin de règler
+ * le volume et la vitesse de parole -> Inutil sous firefox qui n'accepte que l'anglais
+ */
 /********************************************************* 
 var synth = window.speechSynthesis;
 var voices = []
@@ -249,6 +260,11 @@ function appel(text){
     }
 
   ******************************************* */
+
+  /**
+   * Actualise l'historique sur le chat principal
+   */
+
     function actualiserHistorique(){
         document.querySelector("#histoPartie ul").innerHTML = "";
         for(let i = 0; i < localStorage.length; ++i){
@@ -261,10 +277,13 @@ function appel(text){
         }
     }
 
+    /**
+     * Utilise le synthétiseur vocal pour traduire un texte donné
+     */
     function textToSpeack(text, partie){
         let synth = window.speechSynthesis;
 
-        if(mute == 0){
+        if(mute == 0){  //Vérification activation bouton mute
             let utterThis = new SpeechSynthesisUtterance(text);
             utterThis.lang = 'fr';
             synth.speak(utterThis);
@@ -327,7 +346,7 @@ function appel(text){
             if (revel.joueur === currentUser) {
                 document.getElementById("btnMiser" + revel.partieLancee).disabled = true;
                 document.getElementById("btnCoucher" + revel.partieLancee).disabled = true;
-                revelerCartes(revel.partieLancee);
+                addPileListener(revel.partieLancee);
             }
         }
 
@@ -346,6 +365,9 @@ function appel(text){
         }
     });
 
+    /**
+     * Choisi aléatoirement quel message d'amour dire à un joueur qui est nul
+     */
     function messageDAmourNegatif(){
         let rand = Math.floor(Math.random() * 7);
         let message;
@@ -375,6 +397,9 @@ function appel(text){
         return message;
     }
     
+    /**
+     * Choisi un message aléatoire à écrire quand le joueur fait une bonne action
+     */
     function messageDAmourPositif(){
         let rand = Math.floor(Math.random() * 5);
         let message;
@@ -398,6 +423,7 @@ function appel(text){
         return message
     }
 
+ 
     function actualiserTabTour(num_partie, joueur){
         if(miseAutorise ==null){
             miseAutorise=[];
@@ -493,7 +519,6 @@ function appel(text){
             document.querySelector("#contentGame" + data.id_partie + " main > p:last-child").scrollIntoView();
         }
 
-        console.log("fromInvit : ", fromInvit);
         if(fromInvit===currentUser && data.id_partie===0 ){
             removeIDpartie(partieInvite);
         }
@@ -502,11 +527,14 @@ function appel(text){
             partiesInvites.push(partieInvite);
             listenerInvitation();
             fromInvit=currentUser;
-            //document.getElementById("p_" + partieInvite).addEventListener("click", rejoindrePartie);
         }
 
     }
 
+    /**
+     * Ajoute un listener sur le lien permettant l'invitation dans une partie et lui donne la classe lienActif 
+     * permettant le surlignage tant qu'il n'a pas été utilisé
+     */
     function listenerInvitation(){
         for(let i=0;i<partiesInvites.length;i++){
             document.getElementById("p_" + partiesInvites[i]).addEventListener("click", rejoindrePartie);
@@ -514,7 +542,9 @@ function appel(text){
         }
     }
 
-    // traitement des emojis
+    /**
+     * Traitement des emojis
+     */
     function traiterTexte(txt) {
         let ind = txt.indexOf("[img:");
         while (ind >= 0) {
@@ -531,8 +561,10 @@ function appel(text){
         return txt;
     }
 
+    /**
+     * Affiche les listes de joueur dans les différents chat
+     */
     function afficherListe(newList, game) {
-        console.log("game : ", game);
         if (game === 0) {
             document.querySelector("#content aside").innerHTML = newList.join("<br>");
         } else if(tabPartie.indexOf(game) !==-1  ) {
@@ -561,6 +593,9 @@ function appel(text){
         document.getElementById("monMessage").value = "";
     }
 
+    /**
+     * Envoie un message
+     */
     function envoyerMsgGame() {
         let id_btn = this.id;
         let reg = new RegExp(/[^\d]/g);
@@ -596,7 +631,6 @@ function appel(text){
         if (id > 0) {
             final_id = id;
         }
-        console.log("fid= " + final_id);
         if (document.getElementById("bcImage" + final_id).style.display === "none") {
             document.getElementById("bcImage" + final_id).style.display = "block";
             document.getElementById("recherche" + final_id).focus();
@@ -607,7 +641,9 @@ function appel(text){
         }
     }
 
-    //renvoie en chaine le numéro d'id d'un résultat d'évenèment
+    /**
+     * Renvoie en chaine le numéro d'id d'un résultat d'évenèment
+     */ 
     function getIdString(id) {
         if (id === undefined || id == null) {
             return "";
@@ -659,6 +695,9 @@ function appel(text){
         xhttp.send(null);
     }
 
+    /**
+     * Envoie d'une image sous format [img:url]
+     */
     function choixImage(e) {
         let id = getIdInt(this.id);
         console.log("choixImg : ", id);
@@ -684,6 +723,7 @@ function appel(text){
             if (id !== currentUser) {
                 let btn = document.createElement("div");
 
+                // Créer une checkbox pour chaque joueur afin d'afficher son pseudo et de pouvoir le sélectionner
                 btn.innerHTML = "<input type='checkbox' class=\"inputStyle\" name=\"" + id + "\" id=" + id + "><label class=\"effetSurli labelStyle\" id=\"label" + id + "\" for=" + id + ">" + id + "</label>";
                 document.querySelector('#invitations').appendChild(btn);
                 document.getElementById(id).addEventListener("click", function () {
@@ -696,6 +736,8 @@ function appel(text){
                         players[nbPartie].splice(players[nbPartie].indexOf(id), 1);
                     } else {
                         if (metoru >= 5) {
+
+                            // Vérifie le maximum de joueur possible
                             alert("Pas plus de 5 à la fois guignol");
                             document.getElementById(id).removeAttribute("checked");
                         } else {
@@ -703,6 +745,8 @@ function appel(text){
                             
                             metoru++;
                             if(metoru > 1){
+
+                                // Vérifie le minimum de joueur possible
                                 document.getElementById("btnInviter").removeAttribute("disabled");
                             }
                             if (players[nbPartie] === undefined) {
@@ -713,6 +757,8 @@ function appel(text){
                     }
                 });
             }
+
+            // Affiche la fenetre d'invitation 
             document.getElementById("fenetreInvit").style.display = "block";
         }
         sock.emit("invitation", null);
@@ -742,7 +788,6 @@ function appel(text){
 
                 sock.emit("message", invit);
             }
-            console.log(players);
             let join = {
                 joiner: currentUser,
                 partie: partieInvite
@@ -769,7 +814,6 @@ function appel(text){
      * Fait apparaitre l'onglet de la fenetre de jeu
      */
     function creationOnglet(partieEnCours) {
-        console.log("creationOnglet_"+partieEnCours);
         if(document.getElementById("p_"+partieEnCours) !== null){
             document.getElementById("p_"+partieEnCours).removeAttribute("id");
         }
@@ -781,13 +825,7 @@ function appel(text){
         nouvelOnglet.setAttribute("id", id);
         nouvelOnglet.style.cursor = "pointer";
         let taille = 0;
-        /*for (let i = 0; i < document.getElementById("content").children.length; i++) {
-            if (document.getElementById("content").children[i].tagName == "H2") {
-                taille += document.getElementById("content").children[i].offsetWidth;
-            }
-        }*/
         nouvelOnglet.style.left = "" + taille + "px";
-        //document.getElementById("content").insertBefore(nouvelOnglet, document.querySelector("h3"));
         document.querySelector("#listePartie ul").appendChild(nouvelOnglet);
         let input = document.createElement("input");
         input.setAttribute("type", "radio");
@@ -798,6 +836,7 @@ function appel(text){
         div.setAttribute("class", "gameScreen");
         div.setAttribute("id", "gameScreen" + (nbPartieInvite));
 
+        // Ajoute le code HTML d'une partie
         div.innerHTML =
             "<img id=\"imageTitre\" src=\"../images/titre.png\">"+
             
@@ -848,6 +887,7 @@ function appel(text){
         document.querySelector("body").appendChild(input);
         document.querySelector("body").appendChild(div);
 
+        // Ajoute le bouton pour lancer une partie du côté de l'hote uniquement
         if(host != null){
             let inputGameStart = document.createElement("input");
             inputGameStart.setAttribute("type", "button");
@@ -859,6 +899,7 @@ function appel(text){
         }
         host=null;
 
+        // Ajout d'un bouton pour revenir au chat principal
         document.getElementById("btnChat_p_" + (nbPartieInvite)).addEventListener("click", function () {
             document.getElementById("radio0").checked = true;
             actualiserHistorique();
@@ -867,6 +908,7 @@ function appel(text){
             
         });
 
+        // Ajout d'un bouton mute du synthétiseur vocal
         document.getElementById("textToSpeech" + nbPartieInvite).addEventListener("click", function(){
             if(mute==0){
                 mute++;
@@ -876,6 +918,8 @@ function appel(text){
                 document.getElementById("textToSpeech" + nbPartieInvite).classList.remove("muteOn");
             }
         });
+
+        // Listener des boutons du chat de la partie
         document.getElementById("btnEnvoyer_p_" + nbPartieInvite).addEventListener("click", envoyerMsgGame);
         document.getElementById("btnImage_p_" + nbPartieInvite).addEventListener("click", toggleImage);
         document.getElementById("btnFermer_p_" + nbPartieInvite).addEventListener("click", toggleImage);
@@ -885,6 +929,9 @@ function appel(text){
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
 
+    /**
+     * Créer un tableau de score en fonction du nombre de joueur pour une partie donnée
+     */
     function creationTableauScore(newList, game) {
 
         if (game !== 0){
@@ -895,6 +942,8 @@ function appel(text){
                 let tdName = document.createElement("td");
                 document.querySelector(".gameScreen #table"+game+" tbody tr:nth-of-type(1)").appendChild(tdName);
                 let tdNameText;
+
+                // Ajout des classes
                 switch(i){
                     case 0:
                         tdNameText = document.createTextNode("Communiste ☭");
@@ -926,6 +975,7 @@ function appel(text){
         }
     }
 
+
     function creationFenetreJeu() {
         let partie = this.id;
         let reg = new RegExp(/[^\d]/g);
@@ -936,6 +986,9 @@ function appel(text){
         document.getElementById(partie).checked = true;
     }
 
+    /**
+     * Initialise tous les tableaux nécessaire au déroulement du programme 
+     */
     function iniTabs(num_partie) {
         if(tabPartie===null){
             tabPartie=[];
@@ -970,6 +1023,9 @@ function appel(text){
 
     }
 
+    /**
+     * Permet de rejoindre une partie
+     */
     function rejoindrePartie() {
         let id = getIdInt(this.id);
         console.log("Join game num° "+id);
@@ -988,6 +1044,9 @@ function appel(text){
         fromInvit=currentUser;
     }
 
+    /**
+     * Supprime une partie si elle existe
+     */
     function removeIDpartie(num_partie) {
         if (document.getElementById("p_" + num_partie) !== null) {
             let ind = partiesInvites.indexOf(num_partie);
@@ -998,6 +1057,9 @@ function appel(text){
         }
     }
 
+    /**
+     * Récupère les IDs des cartes de la main d'un joueur dans une partie
+     */
     function getIDsCartesMain(num_partie){
 
         let cartes=[];
@@ -1013,17 +1075,16 @@ function appel(text){
             cartes[i]=main.children[i].id;
         }
 
-
-        console.log(cartes);
         return cartes;
     }
 
+    /**
+     * Récupère les IDs des cartes d'une pile d'un joueur dans une partie
+     */
     function getIDsCartesPile(num_partie){
 
         let cartes=[];
         let pile = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" #pile_"+currentUser+"_"+num_partie);
-        let query = "#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" #pile_"+currentUser+"_"+num_partie;
-        console.log("pile query :: "+query);
         if(pile ===null){
             return cartes;
         }
@@ -1035,10 +1096,12 @@ function appel(text){
             cartes[i]=pile.children[i].id;
         }
 
-        console.log("cartes sur pile : "+cartes);
         return cartes;
     }
 
+    /**
+     * Récupère les IDs des cartes de la défausse dans une partie
+     */
     function getIDsCartesDefausse(num_partie){
 
         let cartes=[];
@@ -1057,20 +1120,23 @@ function appel(text){
 
         }
 
-        console.log("cartes sur defausse : "+cartes);
         return cartes;
     }
 
+    /**
+     * Initialise la partie
+     */
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
         if(liste_joueurs[partieLancee].length>2) {
-
-
             document.getElementById("gameMain_p_" + partieLancee).removeChild(document.getElementById("btnLancer_p_" + partieLancee));
             sock.emit("initialiserPartie", partieLancee);
         }
     }
 
+    /**
+     * Met en place le listener du bouton pour miser
+     */
     function setBtnMiserListener(partieEnCours) {
         document.getElementById("btnMiser" + partieEnCours).addEventListener("click", function (e) {
             let id = getIdInt(this.id);
@@ -1085,18 +1151,14 @@ function appel(text){
             }
 
             let miseFinale = false;
-
             let miseActuel;
             let miseActuelhtml = document.getElementById("miseGenerale" + partieEnCours).innerHTML;
             miseActuel = getIdInt(miseActuelhtml);
-            console.log("mise value = " + parseInt(miseValue) + " & mise actuel = " + miseActuel);
+            // Vérification de la validité de la mise
             if (parseInt(miseValue) <= miseActuel || parseInt(miseValue) === 0) {
                 document.getElementById("txtMiser" + id).value = "";
                 return;
             }
-            /*if(miseActuel === parseInt(miseValue)){
-                miseFinale=true;
-            }*/
 
             let nbCartesSurPlateau = getNombreCartesPlateau(partieEnCours);
 
@@ -1108,7 +1170,7 @@ function appel(text){
                 miseFinale = true;
             }
 
-            console.log("je clique et mise : " + miseValue);
+            // Mise correcte, mise à jour
             let mise = {
                 partieEnCours: partieEnCours,
                 joueur: currentUser,
@@ -1118,13 +1180,16 @@ function appel(text){
             mon_tour[partieEnCours] = false;
             sock.emit("mise", mise);
             document.getElementById("txtMiser" + id).value = "";
-
         });
     }
 
+    /**
+     * Affiche le plateau de jeu, avec les piles, la défausse, les mains et les messages et boutons
+     */
     function afficherPlateau(partieEnCours, cranes){
         let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
 
+        // Mise en place de la mise
         let divMise = document.createElement("div");
         divMise.setAttribute("class","divMise");
         divMise.setAttribute("id","divMise"+partieEnCours);
@@ -1146,11 +1211,10 @@ function appel(text){
         
         setBtnMiserListener(partieEnCours);
 
-        console.log("liste des joueurs : "+liste_joueurs[partieEnCours]);
+        // Affiche les joueurs et leurs piles
         for(let i=0;i<liste_joueurs[partieEnCours].length; i++){
             let toDom="";
             let joueur= liste_joueurs[partieEnCours][i];
-            console.log("i in listeJoueurs : "+joueur);
             toDom = document.createElement("div");
             toDom.setAttribute("class","joueur");
             toDom.setAttribute("id",joueur+"_"+partieEnCours);
@@ -1170,23 +1234,18 @@ function appel(text){
             document.getElementById(joueur+"_"+partieEnCours).appendChild(nbCartePile);
             document.getElementById(joueur+"_"+partieEnCours).appendChild(main);
 
-
+            // Affiche les cartes des joueurs
             for(let j=0;j<4;j++){
                 let carte = document.createElement("div");
                 carte.setAttribute("class","carte");
                 carte.setAttribute("id","c_"+j+"_"+joueur+"_"+partieEnCours);
-                console.log("Cranes[i] = ",cranes[i]);
 
-                //let iconeCarte = document.createElement("p");
                 if(cranes[i] ===j){
-                    
                     carte.classList.add("crane");
                 }else{
-                    
                     carte.classList.add("rose");
                 }
                 if(joueur === currentUser){
-                    
                     carte.classList.add("retournee");
                 }
 
@@ -1214,12 +1273,12 @@ function appel(text){
                 document.querySelector("#"+joueur+"_"+partieEnCours+" main").appendChild(carte);
                 if(joueur === currentUser){
                     let indice = i+1;
-
                     indices[partieEnCours] = indice;
                     enableListenerMain(partieEnCours);
-
                 }
             }
+
+            //Affiche les pseudos
             let pseudo = document.createElement("p");
             pseudo.innerHTML = liste_joueurs[partieEnCours][i];
             pseudo.setAttribute("class","pseudo");
@@ -1229,6 +1288,9 @@ function appel(text){
         creaMiseGenerale(partieEnCours,0);
     }
 
+    /**
+     * Renvoie le nombre de carte présente sur le plateau
+     */
     function getNombreCartesPlateau(partieEnCours){
         let nb_joueurs = liste_joueurs[partieEnCours].length;
         let nb_cartes =0;
@@ -1238,6 +1300,9 @@ function appel(text){
         return nb_cartes;
     }
 
+    /**
+     * Mise en place de la mise générale
+     */
     function creaMiseGenerale(partieEnCours, mise){
 
         let miseGenerale = document.createElement("div");
@@ -1251,17 +1316,16 @@ function appel(text){
         btnCoucher.setAttribute("class","btnCoucher");
         btnCoucher.setAttribute("value","Se coucher");
 
-
         let divMise = document.querySelector("#divMise"+partieEnCours);
-
         divMise.insertBefore(miseGenerale,document.querySelector("#txtMiser"+partieEnCours));
         divMise.appendChild(btnCoucher);
         btnCoucher.addEventListener("click",seCoucher);
         btnCoucher.disabled = true;
-
-
     }
 
+    /**
+     * Fonctionnalité "se coucher"
+     */
     function seCoucher(){
         let partieEnCours = getIdInt(this.id);
         document.getElementById(this.id).disabled=true;
@@ -1270,20 +1334,23 @@ function appel(text){
             joueur:currentUser,
             mise:getMiseGenerale(partieEnCours)
         };
-        console.log("seCoucher partieEnCours = "+partieEnCours);
         mon_tour[partieEnCours]=false;
         sock.emit("seCouche",couche);
     }
 
+    /**
+     * Met à jour la mise générale d'une partie
+     */
     function updateMiseGenerale(partieEnCours,mise){
         let miseGenerale = document.getElementById("miseGenerale"+partieEnCours);
         miseGenerale.innerHTML = "Mise actuelle : "+mise;
     }
 
+    /**
+     * Applique un listener sur la main du joueur courant dans une partie
+     */
     function enableListenerMain(partieEnCours){
-        //document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indices[partieEnCours]+") > main").addEventListener("click", listenerMain);
         document.querySelector("#gameMain_p_"+partieEnCours+" #"+currentUser+"_"+partieEnCours+" > main").addEventListener("click", listenerMain);
-
     }
 
     function getIdDoubleInt(id) {
@@ -1293,21 +1360,17 @@ function appel(text){
         let nb_chiffres =0;
         let res =0;
         for(let i=0;i<id.length;i++){
-
             if(id[i].match(/\d/)){
                 if(nb_chiffres===1){
                    res= parseInt(id[i]);
                 }
-
             }
 
             if(id[i].match(/\d/)){
                 nb_chiffres++;
             }
         }
-       /* let reg = new RegExp(/[^\d]/g);
-        id = id.replace(reg, "");
-        const res = parseInt(id, 10);*/
+
         return res;
     }
 
@@ -1335,13 +1398,11 @@ function appel(text){
         }
         sock.emit("carteSelectionnee",obj);
         mon_tour[partieEnCours] = false;
-        console.log(elt.id);
     }
 
-    function revelerCartes(partieEnCours){
-        addPileListener(partieEnCours);
-    }
-
+    /**
+     * Ajoute une carte à la pile d'un joueur dans une partie et la retire de la main de celui ci
+     */
     function actualiserPile(partieEnCours, joueur, carte){
         let pile = document.getElementById("pile_"+joueur+"_"+partieEnCours);
         let carte_a_remove = document.getElementById(carte);
@@ -1351,11 +1412,13 @@ function appel(text){
         }
         document.querySelector(query).removeChild(carte_a_remove);
         pile.appendChild(carte_a_remove);
-        console.log(pile.childElementCount);
 
         document.querySelector("#nbCartePile_"+joueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
     }
 
+    /**
+     * Ajoute une carte à la défausse et la retire de la pile dans laquelle elle a été tiré
+     */
     function actualiserDefausse(partieEnCours,pileDeJoueur,carte){
         let pile = document.getElementById("pile_"+pileDeJoueur+"_"+partieEnCours);
         let defausse = document.getElementById("defausse"+partieEnCours);
@@ -1368,6 +1431,9 @@ function appel(text){
         defausse.appendChild(carte_a_remove);
     }
 
+    /**
+     * Actualise les points du vainqueur dans le tableau des scores
+     */
     function actualiserTableau(partieEnCours, vainqueur,points){
         let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
         tab.innerHTML = points;
@@ -1377,20 +1443,24 @@ function appel(text){
         }
     }
 
+    /**
+     * Renvoie le pseudo à partir d'un id donc sans _
+     */
     function getPseudo(id){
         let tabz = id.split("_");
-        console.log("tabz : "+tabz);
         return tabz[2];
     }
 
+    /**
+     * Renvoie le nombre de carte présent dans la pile d'un joueur
+     */
     function getNombreCartesPile(id, pseudo){
         return document.getElementById("pile_"+pseudo+"_"+id).childElementCount;
     }
 
-    function getNombreCartesDefausse(id, pseudo){
-        return document.getElementById("defausse"+id).childElementCount;
-    }
-
+    /**
+     * Renvoie la mise générale actuelle pour une partie
+     */
     function getMiseGenerale(partieEnCours){
         let miseActuel;
         let miseActuelhtml = document.getElementById("miseGenerale"+partieEnCours).innerHTML;
@@ -1398,6 +1468,9 @@ function appel(text){
         return miseActuel;
     }
 
+    /**
+     * Permet le retournement des cartes des piles vers la défausse et traite si un crâne est retourné
+     */
     function pileVersDefausse(e){
         let elt = e.target;
         let perdu=false;
@@ -1409,7 +1482,6 @@ function appel(text){
             return;
         }
 
-        console.log("nbCartesChoisis : "+nbCartesChoisis[partieEnCours]);
         if(nbCartesChoisis[partieEnCours]>=maxNbPile  || pileDeJoueur === currentUser) {
             nbCartesChoisis[partieEnCours]++;
             while (!elt.classList.contains("carte")) {
@@ -1421,11 +1493,9 @@ function appel(text){
                 mon_tour[partieEnCours]=false;
             }
 
-            console.log("getNbCartesDef = "+getMiseGenerale(partieEnCours));
             if(!perdu && nbCartesChoisis[partieEnCours]===getMiseGenerale(partieEnCours)){
                 gagne =true;
                 mon_tour[partieEnCours]=false;
-
             }
 
             let obj = {
@@ -1438,25 +1508,28 @@ function appel(text){
 
             };
 
-            console.log("id de carte : " + id);
-            /*if (!mon_tour[partieEnCours]) {
-                return;
-            }*/
-
             sock.emit("carteSelectionneePile", obj);
         }
     }
 
+    /**
+     * Permet de retirer une carte de la main d'un joueur
+     */
     function retirerCarte(partieEnCours, joueurAEnlever){
         let query = document.querySelector("#"+joueurAEnlever+"_"+partieEnCours+" main");
         query.addEventListener("click",retirerCarteListener);
-        console.log("retirer");
     }
 
+    /**
+     * Retourne le nombre de carte dans la main du joueur courant
+     */
     function getNombreCarteMain(partieEnCours){
         return document.querySelector("#"+currentUser+"_"+partieEnCours+" main").childElementCount;
     }
 
+    /**
+     * Retire une carte aléatoirement de la main du joueur courant
+     */
     function retirerCarteRandom(partieEnCours){
         let isDcd =false;
         let nb_cartes_restantes = getNombreCarteMain(partieEnCours);
@@ -1486,49 +1559,54 @@ function appel(text){
         mon_tour[partieEnCours]=true;
     }
 
+    /**
+     * Retire les cartes d'un joueur du plateau quand celui-ci est éliminé
+     */
     function retirerCartePlateau(partieEnCours,joueur,carte){
         let nb_cartes_restantes = getNombreCarteMain(partieEnCours);
         let obj ={
             joueur:currentUser,
             partieEnCours:partieEnCours,
             elimine:true
-
         };
+
         if(joueur === currentUser && nb_cartes_restantes===0){
             sock.emit("joueurElimine", obj);
             return;
         }
+
         let main = document.querySelector("#"+joueur+"_"+partieEnCours+" main");
-        console.log("la carte : "+carte);
         let carte_a_remove = document.getElementById(carte);
         main.removeChild(carte_a_remove);
-
 
         if(joueur === currentUser && nb_cartes_restantes===1){
             sock.emit("joueurElimine", obj);
         }
-
     }
 
+    /**
+     * Enlève les listeners des cartes
+     */
     function retirerCarteListener(e){
         let elt = e.target;
         let id = elt.id;
         let num_partie = getIdDoubleInt(id);
         let pseudo = getPseudo(id);
-        console.log("retirer la carte : "+id);
-        console.log("pseudo retirer : "+pseudo);
-        console.log("num partie retirer : "+num_partie);
         let obj ={
             joueur:pseudo,
             partieEnCours:num_partie,
             carte:id
         };
+
         sock.emit("carteARetirer",obj);
         mon_tour[num_partie]=true;
         let query = document.querySelector("#"+pseudo+"_"+num_partie+" main");
         query.removeEventListener("click",retirerCarteListener);
     }
 
+    /**
+     * Remet en place l'affichage à la fin de chaque manche
+     */
     function resetAffichage(partieEnCours){
         let defausse = document.getElementById("defausse"+partieEnCours);
 
@@ -1540,8 +1618,6 @@ function appel(text){
             if(currentUser===main_id){
                 carte.classList.add("retournee");
             }
-
-            console.log("la carte def ==>"+carte_id);
 
             let main = document.querySelector("#"+main_id+"_"+partieEnCours+" main");
             defausse.removeChild(defausse.firstChild);
@@ -1558,7 +1634,6 @@ function appel(text){
                 while (pile.firstChild) {
                     let carte = pile.firstChild;
                     let carte_id = pile.firstElementChild.id;
-                    console.log("la carte pile ==>" + carte_id);
                     let main_id = getPseudo(carte_id);
                     carte.classList.remove("selectionne");
                     if (currentUser === main_id) {
@@ -1572,6 +1647,9 @@ function appel(text){
         }
     }
 
+    /**
+     * Ajoute les listeners aux piles
+     */
     function addPileListener(partieEnCours){
         maxNbPile= getNombreCartesPile(partieEnCours,currentUser);
         for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
@@ -1579,6 +1657,9 @@ function appel(text){
         }
     }
 
+    /**
+     * Supprime un joueur d'un partie
+     */
     function deleteJoueur(joueur,partieEnCours){
         let joueurToDelete = document.getElementById(joueur+"_"+partieEnCours);
         let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
@@ -1587,14 +1668,19 @@ function appel(text){
         }
     }
 
+    /**
+     * Enlève les listeners de la main d'un joueur
+     */
     function disableListenerMain(partieEnCours){
         let main = document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indices[partieEnCours]+") > main");
         if(main != null){
             main.removeEventListener("click",listenerMain);
         }
-
     }
 
+    /**
+     * Enlève les listeners des piles d'une partie
+     */
     function disableListenerPile(partieEnCours){
         maxNbPile=0;
         for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
@@ -1602,13 +1688,13 @@ function appel(text){
         }
     }
 
+    /**
+     *  Supprime la partie de la partie, renvoie sur le chat principal et actualise l'historique du chat principal
+     */
     function quitterGame(id,elimine=true) {
-        console.log("id quitterGame : "+id);
-        console.log("elimine? : "+elimine);
         if(partieAquitter>0){
             id=partieAquitter;
         }
-
 
         document.getElementById("radio0").checked = true;
         actualiserHistorique();
@@ -1616,7 +1702,6 @@ function appel(text){
         let obj;
         if(id>=1) {
             res=id;
-            console.log("1er if");
             obj={
                 joueur:currentUser,
                 cartes: getIDsCartesMain(res),
@@ -1638,7 +1723,6 @@ function appel(text){
                 nb = nb.replace(reg, "");
                 res = parseInt(nb, 10);
                 res = getIdInt(partie);
-                console.log("id quitterGame : " + res);
                 obj = {
                     joueur: currentUser,
                     cartes: getIDsCartesMain(res),
@@ -1653,7 +1737,6 @@ function appel(text){
                 partie = partie.replace(/Partie .*/, "gameScreen" + (res));
                 document.querySelector("body").removeChild(document.getElementById(partie));
             }
-
         }
 
         for(let i=0; i< tabPartie.length;++i){
@@ -1667,16 +1750,16 @@ function appel(text){
             }
         }
 
-
         document.getElementById("radio"+(res)).remove();
-        console.log("elimine? avant emit : "+elimine);
         sock.emit("quitGame",obj);
         partieAquitter=-1;
     }
 
+    /**
+     * Quitte le chat principal 
+     */
     function quitter() {
 
-        console.log("tabPartie = "+tabPartie);
         if(tabPartie!=null && tabPartie.length>0) {
             for (let i = 0; i < tabPartie.length; i++) {
                 if(tabPartie[i]!==undefined){
@@ -1723,8 +1806,4 @@ function appel(text){
         }
     });
     document.getElementById("btnJouer").addEventListener("click", fenetreInvitation);
-
-    // force l'affichage de l'écran de connexion
-    //quitter();
-
 });
