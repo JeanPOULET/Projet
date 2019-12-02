@@ -24,12 +24,12 @@ var clients = {};       // id -> socket
 /** Gestion des parties et des joueurs **/
 
 var joueurs = [[]]; //[indice_partie][joueurs]
-var ias = [[]];
-var scores = [[]];
-var isCouche = [[]];
-var partie=1; //indice de la partie qu'on peut crée
-var dispos=[];
-var launched=[true];
+var ias = [[]]; //[indice_partie][ias_joueurs]
+var scores = [[]]; //[indice_partie][score_joueur]
+var isCouche = [[]];//[indice_partie][isCouche_joueur]
+var partie=1; //indice de la partie qu'on peut créer
+var dispos=[]; //indice(s) des parties réutilisable
+var launched=[true]; //pour savoir si une partie est lancé ou non
 var last=0;
 // Quand un client se connecte, on le note dans la console
 io.on('connection', function (socket) {
@@ -60,11 +60,7 @@ io.on('connection', function (socket) {
         socket.emit("invitation",{partie:partie,from:null});
     });
 
-    /**
-     * Fonctions pour :
-     *      inviter des personnes
-     *      rejoindre une partie
-     */
+
 
     socket.on("invitation",function(invit){
         let partieF;
@@ -113,6 +109,8 @@ io.on('connection', function (socket) {
 
     });
 
+
+    
     socket.on("joinGame",function(invit){
         console.log("partie rejointe par"+invit.joiner);
         if(joueurs[invit.partie]=== undefined){
@@ -683,9 +681,9 @@ io.on('connection', function (socket) {
                 cartesDefausse : cartesDefausse
             };
             ias[game].push(ia);
-            if(mon_tour && !mise){
+            if(mon_tour && !mise && joueurs[game].length !== ias[game].length){
                 iaJoue(game,joueur);
-            }else if(mon_tour && mise){
+            }else if(mon_tour && mise && joueurs[game].length !== ias[game].length){
                 iaMise(game,joueur,false,0);
             }
 
@@ -719,7 +717,7 @@ io.on('connection', function (socket) {
         console.log(joueurs);
         console.log(ias);
 
-        if(joueurs[game].length ===0){
+        if(joueurs[game].length ===0 || joueurs[game].length === ias[game].length){
             io.sockets.emit("suppressionInvitation",game);
             delete joueurs[game];
             delete ias[game];
