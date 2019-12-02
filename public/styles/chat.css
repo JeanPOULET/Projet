@@ -20,9 +20,9 @@ body{
     background-size: cover;
 }
 
-/**
-  * Css pour le chat principal
-  */
+           /****************************************************
+            *                CSS CHAT PRINCIPAL                *
+            ****************************************************/
 #content {
     position: absolute;
     top: 50%;
@@ -96,9 +96,9 @@ body{
     vertical-align: text-top;
 }   
 
-/** 
-  * Pied de zone de chat
-  */        
+           /****************************************************
+            *                PIED CHAT PRINCIPAL               *
+            ****************************************************/        
 #content footer {
     position: absolute; 
     bottom: 0;
@@ -128,9 +128,9 @@ input{
     float: right;
 }
 
-/** 
-  * Style boutons
-  */
+           /****************************************************
+            *                    CSS BOUTONS                   *
+            ****************************************************/
 .btnStyle{
     color: #fff;
     text-shadow: 1px 1px 1px #000;
@@ -172,9 +172,9 @@ input[type="button"]:disabled{
     background : #4e4d4d;
 }
 
-/** 
-  * Liste des joueurs
-  */
+           /****************************************************
+            *                   LISTE JOUEURS                  *
+            ****************************************************/
 
 #content aside {
     width: 160px;
@@ -188,9 +188,9 @@ input[type="button"]:disabled{
     overflow: auto;
 }
 
-/** 
- * Style pour les émoticones
- */
+           /****************************************************
+            *                    EMOTICONES                    *
+            ****************************************************/
 .emoji {
     display: inline-block;
     width: 18px;
@@ -234,9 +234,9 @@ input[type=radio]:checked + div {
     display: block;   
 }
        
-/**
-  * Ecran de connexion
-  */
+           /****************************************************
+            *                ECRAN DE CONNEXION                *
+            ****************************************************/
 #logScreen {
     background-image: url("../images/accueil.png");
     background-repeat:no-repeat;
@@ -269,9 +269,9 @@ input[type=radio]:checked + div {
     margin: 10px;
 }
 
-/**
-  * Gif chat princpal et chat jeu
-  */
+           /****************************************************
+            *                       GIF                        *
+            ****************************************************/
 #bcImage, .bcImageGame{
     width: 400px;
     height: 80%;
@@ -333,9 +333,9 @@ input[type=radio]:checked + div {
     align-self: center;
 }
 
-/**
-  * Fenetre d'invitation
-  */
+           /****************************************************
+            *               FENETRE D'INVITATION               *
+            ****************************************************/
 #fenetreInvit{
     width: 400px;
     height: 80%;
@@ -431,9 +431,9 @@ input[type=radio]:checked + div {
     height: 100%;
 }
 
-/**
-  * Lien d'invitation
-  */
+           /****************************************************
+            *                LIENS D'INVITATION                *
+            ****************************************************/
 #content main .lienActif{
     background-color:lightskyblue;
     text-decoration: underline blue;
@@ -445,9 +445,9 @@ input[type=radio]:checked + div {
     cursor:pointer;
 }
 
-/**
- * Gestion des listes : historique et gestionnaire de partie 
- */
+           /****************************************************
+            *            HISTORIQUE / ONGLETS PARTIE           *
+            ****************************************************/
  .inputList {
     position: absolute;
     left: 0;
@@ -591,11 +591,11 @@ input[type=radio]:checked + div {
     }
 }
 
-/*
- *
- * Css pour le chat du jeu
- *
- */
+
+
+           /****************************************************
+            *                   CSS CHAT JEU                   *
+            ****************************************************/
 
 .contentGame {
     position: absolute;
@@ -673,9 +673,11 @@ input[type=radio]:checked + div {
     vertical-align: text-top;
 }   
 
-/** 
-  * Pied de zone de chat
-  */        
+
+
+           /****************************************************
+            *                  PIED CHAT JEU                   *
+            ****************************************************/
 
 .contentGame footer {
     position: absolute; 
@@ -712,11 +714,11 @@ input[type=radio]:checked + div {
     overflow: auto;
 }
 
-/*
- *
- * Css pour le jeu
- *
- */
+
+
+           /****************************************************
+            *                   CSS JEU                   *
+            ****************************************************/
 
 .bcImageGame{
     width: 400px;
@@ -739,9 +741,9 @@ input[type=radio]:checked + div {
     width: 60%
 }
 
-/**
-  * Titre
-  */
+           /****************************************************
+            *                      TITRE                       *
+            ****************************************************/
 #imageTitre{
     position: absolute;
     display: inline-block;
@@ -749,9 +751,9 @@ input[type=radio]:checked + div {
     top: 8%;
 }
 
-/**
-  * Fenetre du jeu
-  */
+           /****************************************************
+            *                    FENETRE JEU                   *
+            ****************************************************/
 .gameScreen{
     position: absolute;
     height: 100%;
@@ -784,9 +786,9 @@ input[type=radio]:checked + div {
     width: 111px;
 }
 
-/**
-  * Bouton de lancement du jeu
-  */
+           /****************************************************
+            *               BOUTON LANCEMENT JEU               *
+            ****************************************************/
 .gameMain .btnLancer{
     position:absolute;
     top:50%;
@@ -811,9 +813,9 @@ input[type=radio]:checked + div {
     transition: all 0.4s ease 0s;
 }
 
-/**
-  * Message du jeu
-  */
+           /****************************************************
+            *                   MESSAGE JEU                    *
+            ****************************************************/
 .gameMain .message {
     position: absolute;
     width:600px;
@@ -827,9 +829,9 @@ input[type=radio]:checked + div {
     text-align:center
 }
 
-/**
-  * Joueurs
-  */
+           /****************************************************
+            *                      JOUEURS                     *
+            ****************************************************/
 .joueur{
     position: absolute;
     width: 320px;
@@ -881,7 +883,7 @@ input[type=radio]:checked + div {
     transform: rotate(-90deg);
 }
 
-/* Rotation des joueurs en fonction de leur position */
+        /* Rotation des joueurs en fonction de leur position */
 .gameMain .joueur:nth-of-type(3) p{
     transform: rotate(-90deg);
 }
@@ -898,9 +900,9 @@ input[type=radio]:checked + div {
     transform: rotate(90deg);
 }
 
-/**
-  * Cartes
-  */
+           /****************************************************
+            *                     CARTES                       *
+            ****************************************************/
 .carte{
     width: 80px;
     height: 80px;
@@ -964,9 +966,9 @@ input[type=radio]:checked + div {
     background-blend-mode: multiply,multiply;
 }
 
-/**
-  * Affichage carte joueur courant
-  */
+           /****************************************************
+            *              CARTES JOUEUR COURANT               *
+            ****************************************************/
 .joueur main > .retournee.rose::before  {
     content: "⚜";
     color: black;
@@ -981,9 +983,9 @@ input[type=radio]:checked + div {
     background: #696868;
 }
 
-/**
-  * Piles
-  */
+           /****************************************************
+            *                      PILES                       *
+            ****************************************************/
 .pile{
     position: relative;
     left: 35%;
@@ -1025,9 +1027,9 @@ input[type=radio]:checked + div {
     top: 25%;
 }
 
-/**
-  * Animation retournement pile
-  */
+           /****************************************************
+            *                  ANIMATION PILE                  *
+            ****************************************************/
 .pile.retournee{
     position: relative;
     left: 35%;
@@ -1079,9 +1081,9 @@ input[type=radio]:checked + div {
        }
 }
 
-/**
-  * Mise
-  */
+           /****************************************************
+            *                       MISE                       *
+            ****************************************************/
 .divMise{
     position: absolute;
     top :55%;
@@ -1141,9 +1143,9 @@ input[type=radio]:checked + div {
     margin: 0 0 10px 0;
 }
 
-/**
-  * Défausse
-  */
+           /****************************************************
+            *                     DEFAUSSE                     *
+            ****************************************************/
 .gameMain .defausse{
     position:absolute;
     top:35%;

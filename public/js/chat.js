@@ -19,9 +19,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
       * listenerMain
       * 
       */
+     
     document.getElementById("radio-1").checked = true;
     document.getElementById("listePartie").style.display = "none";
     document.getElementById("histoPartie").style.display = "none";
+
+
+
+                            /****************************************************
+                             *                     VARIABLES                    *
+                             ****************************************************/
 
     // socket ouverte vers le client
     var sock = io.connect();
@@ -38,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //indice de partie du serveur
     var partieInvite =-1;
+
     //représente celui qui a invité l'user courant
     var fromInvit=currentUser;
 
@@ -49,14 +57,19 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     //tableau dans lequel le joueur fait partie
     var tabPartie=null;
+
     //tableau pour savoir dans chaque partie si c'est au tour du currentUser
     var mon_tour=null;
+
     //tableau pour savoir dans chaque partie si la mise générale est créée
     var miseAutorise = null;
+
     //tableau pour avoir dans chaque partie l'indice pour le sélecteur sur la main du joueur
     var indices = null;
+
     //nombre de cartes choisis lors de la selection des cartes dans les piles
     var nbCartesChoisis =null;
+
     //nombre maximum actuel de cartes dans les piles
     var maxNbPile=null;
 
@@ -64,9 +77,16 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     var partieAquitter=-1;
 
-    //
     //var mute on off
     var mute = 0;
+
+
+
+
+
+                            /****************************************************
+                             *                      SOCKETS                     *
+                             ****************************************************/
 
     // on attache les événements que si le client est connecté.
     sock.on("bienvenue", function (id) {
@@ -84,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             //localStorage.clear();
         }
     });
+
     /**
     * Reçoit un évènement socket "message" provenant du serveur
     * @param msg obj le texte, celui qui a envoyé le msg et enventuellement le destinataire (si msg privé)
@@ -381,6 +402,19 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     });
 
+
+
+
+
+                            /****************************************************
+                             *              FONCTIONS DIVERSIFIERS              *
+                             ****************************************************/
+
+    /** 
+     * Mise en place d'une liste déroulante permettant à l'utilisateur de séléctionner la langue du synthétiseur
+     * vocal, ainsi que 2 boutons permettant de régler le volume et la vitesse de parole.
+     * --> Inutil sous Firefox qui n'accepte que l'anglais
+     */ 
     /*********************************************************
      var synth = window.speechSynthesis;
      var voices = []
@@ -427,7 +461,10 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
      ******************************************* */
-    function actualiserHistorique(){
+    /**
+     * Permet d'actualiser l'historique présent sur le chat principal à chaque nouvel accès à celui-ci
+     */
+     function actualiserHistorique(){
         document.querySelector("#histoPartie ul").innerHTML = "";
         for(let i = 0; i < localStorage.length; ++i){
             var playerName = localStorage.key(i);
@@ -439,6 +476,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
+    /**
+     * Permet de faire lire un texte au synthétiseur vocal si le bouton mute n'est pas activé
+     */
     function textToSpeack(text, partie){
         let synth = window.speechSynthesis;
 
@@ -451,6 +491,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
+    /**
+     * Choisi aléatoirement quel message d'amour dire à un joueur qui est nul
+     */
     function messageDAmourNegatif(){
         let rand = Math.floor(Math.random() * 7);
         let message;
@@ -507,35 +550,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
  
-    function actualiserTabTour(num_partie, joueur){
-        if(miseAutorise ==null){
-            miseAutorise=[];
-        }
-        if(miseAutorise[num_partie]===undefined){
-            miseAutorise[num_partie]=false;
-        }
 
-        if(mon_tour == null){
-            mon_tour=[];
-        }
-        if(mon_tour[num_partie] ===undefined){
-            mon_tour[num_partie] = false;
-        }
-        if(joueur === currentUser){
-            mon_tour[num_partie] = true;
-            document.getElementById("btnMiser"+num_partie).removeAttribute("disabled");
-            if(miseAutorise[num_partie]) {
-                document.getElementById("btnCoucher" + num_partie).removeAttribute("disabled");
-            }
 
-        }else{
-            mon_tour[num_partie] = false;
-            document.getElementById("btnMiser"+num_partie).disabled=true;
-            document.getElementById("btnCoucher" + num_partie).disabled = true;
-
-            }
-        console.log("mon_tour : "+mon_tour);
-    }
+    
+                            /****************************************************
+                             *                 FONCTIONS CHATS                  *
+                             ****************************************************/
 
     /**
      *  Connexion de l'utilisateur au chat.
@@ -725,33 +745,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
-     * Renvoie en chaine le numéro d'id d'un résultat d'évenèment
-     */ 
-    function getIdString(id) {
-        if (id === undefined || id == null) {
-            return "";
-        }
-        let reg = new RegExp(/[^\d]/g);
-        id = id.replace(reg, "");
-        const val = parseInt(id, 10);
-        console.log(val);
-        let final_id = "";
-        if (val > 0) {
-            final_id = val;
-        }
-        return final_id;
-    }
-
-    function getIdInt(id) {
-        if (id === undefined || id == null) {
-            return 0;
-        }
-        let reg = new RegExp(/[^\d]/g);
-        id = id.replace(reg, "");
-        return parseInt(id, 10);
-    }
-
-    /**
      *  Recherche d'une image
      */
     function rechercher() {
@@ -790,6 +783,251 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
     }
+
+
+
+
+
+                            /****************************************************
+                             *           FONCTIONS BIZARRES MATMAT              *
+                             ****************************************************/
+
+    /**
+     * Renvoie en chaine le numéro d'id d'un résultat d'évenèment
+     */ 
+    function getIdString(id) {
+        if (id === undefined || id == null) {
+            return "";
+        }
+        let reg = new RegExp(/[^\d]/g);
+        id = id.replace(reg, "");
+        const val = parseInt(id, 10);
+        console.log(val);
+        let final_id = "";
+        if (val > 0) {
+            final_id = val;
+        }
+        return final_id;
+    }
+
+    function getIdInt(id) {
+        if (id === undefined || id == null) {
+            return 0;
+        }
+        let reg = new RegExp(/[^\d]/g);
+        id = id.replace(reg, "");
+        return parseInt(id, 10);
+    }
+
+    function getIdDoubleInt(id) {
+        if (id === undefined || id == null) {
+            return 0;
+        }
+        let nb_chiffres =0;
+        let res =0;
+        for(let i=0;i<id.length;i++){
+            if(id[i].match(/\d/)){
+                if(nb_chiffres===1){
+                   res= parseInt(id[i]);
+                }
+            }
+
+            if(id[i].match(/\d/)){
+                nb_chiffres++;
+            }
+        }
+
+        return res;
+    }
+
+    function actualiserTabTour(num_partie, joueur){
+        if(miseAutorise ==null){
+            miseAutorise=[];
+        }
+        if(miseAutorise[num_partie]===undefined){
+            miseAutorise[num_partie]=false;
+        }
+
+        if(mon_tour == null){
+            mon_tour=[];
+        }
+        if(mon_tour[num_partie] ===undefined){
+            mon_tour[num_partie] = false;
+        }
+        if(joueur === currentUser){
+            mon_tour[num_partie] = true;
+            document.getElementById("btnMiser"+num_partie).removeAttribute("disabled");
+            if(miseAutorise[num_partie]) {
+                document.getElementById("btnCoucher" + num_partie).removeAttribute("disabled");
+            }
+
+        }else{
+            mon_tour[num_partie] = false;
+            document.getElementById("btnMiser"+num_partie).disabled=true;
+            document.getElementById("btnCoucher" + num_partie).disabled = true;
+
+            }
+        console.log("mon_tour : "+mon_tour);
+    }
+
+    /**
+     * Initialise tous les tableaux nécessaire au déroulement du programme 
+     */
+    function iniTabs(num_partie) {
+        if(tabPartie===null){
+            tabPartie=[];
+        }
+        if(indices == null){
+            indices = [];
+        }
+        if(miseAutorise ==null){
+            miseAutorise=[];
+        }
+        if(mon_tour ==null){
+            mon_tour=[];
+        }
+        if(nbCartesChoisis ==null){
+            nbCartesChoisis=[];
+        }
+
+        if(liste_joueurs[num_partie]===undefined){
+            liste_joueurs[num_partie]=[];
+        }
+
+        if(nbCartesChoisis[num_partie]===undefined){
+            nbCartesChoisis[num_partie]=0;
+        }
+
+        if(miseAutorise[num_partie]===undefined){
+            miseAutorise[num_partie]=false;
+        }
+        if(mon_tour[num_partie]===undefined){
+            mon_tour[num_partie]=false;
+        }
+
+    }
+
+
+
+
+
+                            /****************************************************
+                             *                      GETTEURS                    *
+                             ****************************************************/
+
+    /**
+     * Récupère les IDs des cartes de la main d'un joueur dans une partie
+     */
+    function getIDsCartesMain(num_partie){
+        let cartes=[];
+        let main = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" main");
+        if(main ===null){
+            return null;
+        }
+
+        if(main.childElementCount===0){
+            return null;
+        }
+        for(let i=0;i<main.childElementCount;i++){
+            cartes[i]=main.children[i].id;
+        }
+
+        return cartes;
+    }
+
+    /**
+     * Récupère les IDs des cartes d'une pile d'un joueur dans une partie
+     */
+    function getIDsCartesPile(num_partie){
+        let cartes=[];
+        let pile = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" #pile_"+currentUser+"_"+num_partie);
+        if(pile ===null){
+            return cartes;
+        }
+
+        if(pile.childElementCount===0){
+            return cartes;
+        }
+        for(let i=0;i<pile.childElementCount;i++){
+            cartes[i]=pile.children[i].id;
+        }
+
+        return cartes;
+    }
+
+    /**
+     * Récupère les IDs des cartes de la défausse dans une partie
+     */
+    function getIDsCartesDefausse(num_partie){
+        let cartes=[];
+        let defausse = document.querySelector("#gameMain_p_"+num_partie+" #defausse"+num_partie);
+        if(defausse ===null){
+            return cartes;
+        }
+
+        if(defausse.childElementCount===0){
+            return cartes;
+        }
+        for(let i=0;i<defausse.childElementCount;i++){
+            if(getPseudo(defausse.children[i].id) === currentUser){
+                cartes[i]=defausse.children[i].id;
+            }
+        }
+
+        return cartes;
+    }
+
+    /**
+     * Renvoie le nombre de carte présente sur le plateau
+     */
+    function getNombreCartesPlateau(partieEnCours){
+        let nb_joueurs = liste_joueurs[partieEnCours].length;
+        let nb_cartes =0;
+        for(let i=0;i<nb_joueurs;i++){
+            nb_cartes += document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).childElementCount;
+        }
+        return nb_cartes;
+    }
+
+    /**
+     * Renvoie le pseudo à partir d'un id donc sans _
+     */
+    function getPseudo(id){
+        let tabz = id.split("_");
+        return tabz[2];
+    }
+
+    /**
+     * Renvoie le nombre de carte présent dans la pile d'un joueur
+     */
+    function getNombreCartesPile(id, pseudo){
+        return document.getElementById("pile_"+pseudo+"_"+id).childElementCount;
+    }
+
+    /**
+     * Renvoie la mise générale actuelle pour une partie
+     */
+    function getMiseGenerale(partieEnCours){
+        let miseActuel;
+        let miseActuelhtml = document.getElementById("miseGenerale"+partieEnCours).innerHTML;
+        miseActuel = getIdInt(miseActuelhtml);
+        return miseActuel;
+    }
+
+    /**
+     * Retourne le nombre de carte dans la main du joueur courant
+     */
+    function getNombreCarteMain(partieEnCours){
+        return document.querySelector("#"+currentUser+"_"+partieEnCours+" main").childElementCount;
+    }
+
+
+
+
+    
+                            /****************************************************
+                             *              FONCTIONS INVITATIONS               *
+                             ****************************************************/
 
     /**
      * Permet de séléctionné les membres que l'on veut inviter dans une partie
@@ -847,6 +1085,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         sock.emit("invitation", null);
     }
 
+     /*
+     * Quitte la fenetre d'invitation
+     */
+    function annulerInvit() {
+        document.getElementById("fenetreInvit").style.display = "none";
+    }
+
     /**
      * Envoie les invitations aux membres séléctionnés
      */
@@ -884,13 +1129,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             host = currentUser;
             creationOnglet(partieInvite);
         }
-    }
-
-    /*
-     * Quitte la fenetre d'invitation
-     */
-    function annulerInvit() {
-        document.getElementById("fenetreInvit").style.display = "none";
     }
 
     /*
@@ -1012,6 +1250,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
 
+
+
+
+
+                        /****************************************************
+                         *          FONCTIONS CREATION FENETRE JEU          *
+                         ****************************************************/
+
     /**
      * Créer un tableau de score en fonction du nombre de joueur pour une partie donnée
      */
@@ -1058,7 +1304,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
-
     function creationFenetreJeu() {
         let partie = this.id;
         let reg = new RegExp(/[^\d]/g);
@@ -1067,43 +1312,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         const res = parseInt(nb, 10);
         partie = partie.replace(/Partie .*/, "radio" + res);
         document.getElementById(partie).checked = true;
-    }
-
-    /**
-     * Initialise tous les tableaux nécessaire au déroulement du programme 
-     */
-    function iniTabs(num_partie) {
-        if(tabPartie===null){
-            tabPartie=[];
-        }
-        if(indices == null){
-            indices = [];
-        }
-        if(miseAutorise ==null){
-            miseAutorise=[];
-        }
-        if(mon_tour ==null){
-            mon_tour=[];
-        }
-        if(nbCartesChoisis ==null){
-            nbCartesChoisis=[];
-        }
-
-        if(liste_joueurs[num_partie]===undefined){
-            liste_joueurs[num_partie]=[];
-        }
-
-        if(nbCartesChoisis[num_partie]===undefined){
-            nbCartesChoisis[num_partie]=0;
-        }
-
-        if(miseAutorise[num_partie]===undefined){
-            miseAutorise[num_partie]=false;
-        }
-        if(mon_tour[num_partie]===undefined){
-            mon_tour[num_partie]=false;
-        }
-
     }
 
     /**
@@ -1125,85 +1333,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         removeIDpartie(id);
         creationOnglet(id);
         fromInvit=currentUser;
-    }
-
-    /**
-     * Supprime une partie si elle existe
-     */
-    function removeIDpartie(num_partie) {
-        if (document.getElementById("p_" + num_partie) !== null) {
-            let ind = partiesInvites.indexOf(num_partie);
-            partiesInvites.splice(ind,1);
-            document.getElementById("p_" + num_partie).classList.remove("lienActif");
-            document.getElementById("p_" + num_partie).removeEventListener("click", rejoindrePartie);
-            document.getElementById("p_" + num_partie).removeAttribute("id");
-        }
-    }
-
-    /**
-     * Récupère les IDs des cartes de la main d'un joueur dans une partie
-     */
-    function getIDsCartesMain(num_partie){
-
-        let cartes=[];
-        let main = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" main");
-        if(main ===null){
-            return null;
-        }
-
-        if(main.childElementCount===0){
-            return null;
-        }
-        for(let i=0;i<main.childElementCount;i++){
-            cartes[i]=main.children[i].id;
-        }
-
-        return cartes;
-    }
-
-    /**
-     * Récupère les IDs des cartes d'une pile d'un joueur dans une partie
-     */
-    function getIDsCartesPile(num_partie){
-
-        let cartes=[];
-        let pile = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" #pile_"+currentUser+"_"+num_partie);
-        if(pile ===null){
-            return cartes;
-        }
-
-        if(pile.childElementCount===0){
-            return cartes;
-        }
-        for(let i=0;i<pile.childElementCount;i++){
-            cartes[i]=pile.children[i].id;
-        }
-
-        return cartes;
-    }
-
-    /**
-     * Récupère les IDs des cartes de la défausse dans une partie
-     */
-    function getIDsCartesDefausse(num_partie){
-
-        let cartes=[];
-        let defausse = document.querySelector("#gameMain_p_"+num_partie+" #defausse"+num_partie);
-        if(defausse ===null){
-            return cartes;
-        }
-
-        if(defausse.childElementCount===0){
-            return cartes;
-        }
-        for(let i=0;i<defausse.childElementCount;i++){
-            if(getPseudo(defausse.children[i].id) === currentUser){
-                cartes[i]=defausse.children[i].id;
-            }
-
-        }
-
-        return cartes;
     }
 
     /**
@@ -1372,18 +1501,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
-     * Renvoie le nombre de carte présente sur le plateau
-     */
-    function getNombreCartesPlateau(partieEnCours){
-        let nb_joueurs = liste_joueurs[partieEnCours].length;
-        let nb_cartes =0;
-        for(let i=0;i<nb_joueurs;i++){
-            nb_cartes += document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).childElementCount;
-        }
-        return nb_cartes;
-    }
-
-    /**
      * Mise en place de la mise générale
      */
     function creaMiseGenerale(partieEnCours, mise){
@@ -1406,27 +1523,22 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnCoucher.disabled = true;
     }
 
-    /**
-     * Fonctionnalité "se coucher"
-     */
-    function seCoucher(){
-        let partieEnCours = getIdInt(this.id);
-        document.getElementById(this.id).disabled=true;
-        let couche ={
-            partieEnCours:partieEnCours,
-            joueur:currentUser,
-            mise:getMiseGenerale(partieEnCours)
-        };
-        mon_tour[partieEnCours]=false;
-        sock.emit("seCouche",couche);
-    }
+    
+    
+
+
+                            /****************************************************
+                             *                FONCTIONS LISTENERS               *
+                             ****************************************************/
 
     /**
-     * Met à jour la mise générale d'une partie
+     * Ajoute les listeners aux piles
      */
-    function updateMiseGenerale(partieEnCours,mise){
-        let miseGenerale = document.getElementById("miseGenerale"+partieEnCours);
-        miseGenerale.innerHTML = "Mise actuelle : "+mise;
+    function addPileListener(partieEnCours){
+        maxNbPile= getNombreCartesPile(partieEnCours,currentUser);
+        for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
+            document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).addEventListener("click",pileVersDefausse);
+        }
     }
 
     /**
@@ -1434,27 +1546,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
     function enableListenerMain(partieEnCours){
         document.querySelector("#gameMain_p_"+partieEnCours+" #"+currentUser+"_"+partieEnCours+" > main").addEventListener("click", listenerMain);
-    }
-
-    function getIdDoubleInt(id) {
-        if (id === undefined || id == null) {
-            return 0;
-        }
-        let nb_chiffres =0;
-        let res =0;
-        for(let i=0;i<id.length;i++){
-            if(id[i].match(/\d/)){
-                if(nb_chiffres===1){
-                   res= parseInt(id[i]);
-                }
-            }
-
-            if(id[i].match(/\d/)){
-                nb_chiffres++;
-            }
-        }
-
-        return res;
     }
 
     function listenerMain(e){
@@ -1484,72 +1575,32 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
-     * Ajoute une carte à la pile d'un joueur dans une partie et la retire de la main de celui ci
+     * Enlève les listeners de la main d'un joueur
      */
-    function actualiserPile(partieEnCours, joueur, carte){
-        let pile = document.getElementById("pile_"+joueur+"_"+partieEnCours);
-        let carte_a_remove = document.getElementById(carte);
-        let query = "#"+joueur+"_"+partieEnCours+" main";
-        if(joueur===currentUser){
-            carte_a_remove.classList.remove("retournee");
-        }
-        document.querySelector(query).removeChild(carte_a_remove);
-        pile.appendChild(carte_a_remove);
-
-        document.querySelector("#nbCartePile_"+joueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
-    }
-
-    /**
-     * Ajoute une carte à la défausse et la retire de la pile dans laquelle elle a été tiré
-     */
-    function actualiserDefausse(partieEnCours,pileDeJoueur,carte){
-        let pile = document.getElementById("pile_"+pileDeJoueur+"_"+partieEnCours);
-        let defausse = document.getElementById("defausse"+partieEnCours);
-        console.log("la carte : "+carte);
-        let carte_a_remove = document.getElementById(carte);
-
-        pile.removeChild(carte_a_remove);
-        document.querySelector("#nbCartePile_"+pileDeJoueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
-        carte_a_remove.classList.add("selectionne");
-        defausse.appendChild(carte_a_remove);
-    }
-
-    /**
-     * Actualise les points du vainqueur dans le tableau des scores
-     */
-    function actualiserTableau(partieEnCours, vainqueur,points){
-        let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
-        tab.innerHTML = points;
-        let pile = document.getElementById("pile_"+vainqueur+"_"+partieEnCours);
-        if(pile!==null) {
-            pile.classList.add("retournee");
+    function disableListenerMain(partieEnCours){
+        let main = document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indices[partieEnCours]+") > main");
+        if(main != null){
+            main.removeEventListener("click",listenerMain);
         }
     }
 
     /**
-     * Renvoie le pseudo à partir d'un id donc sans _
+     * Enlève les listeners des piles d'une partie
      */
-    function getPseudo(id){
-        let tabz = id.split("_");
-        return tabz[2];
+    function disableListenerPile(partieEnCours){
+        maxNbPile=0;
+        for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
+            document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).removeEventListener("click",pileVersDefausse);
+        }
     }
+    
+    
 
-    /**
-     * Renvoie le nombre de carte présent dans la pile d'un joueur
-     */
-    function getNombreCartesPile(id, pseudo){
-        return document.getElementById("pile_"+pseudo+"_"+id).childElementCount;
-    }
 
-    /**
-     * Renvoie la mise générale actuelle pour une partie
-     */
-    function getMiseGenerale(partieEnCours){
-        let miseActuel;
-        let miseActuelhtml = document.getElementById("miseGenerale"+partieEnCours).innerHTML;
-        miseActuel = getIdInt(miseActuelhtml);
-        return miseActuel;
-    }
+
+                            /****************************************************
+                             *         FONCTIONS D'ACTUALISATION DU JEU         *
+                             ****************************************************/
 
     /**
      * Permet le retournement des cartes des piles vers la défausse et traite si un crâne est retourné
@@ -1596,18 +1647,85 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
+     * Met à jour la mise générale d'une partie
+     */
+    function updateMiseGenerale(partieEnCours,mise){
+        let miseGenerale = document.getElementById("miseGenerale"+partieEnCours);
+        miseGenerale.innerHTML = "Mise actuelle : "+mise;
+    }
+
+    /**
+     * Ajoute une carte à la pile d'un joueur dans une partie et la retire de la main de celui ci
+     */
+    function actualiserPile(partieEnCours, joueur, carte){
+        let pile = document.getElementById("pile_"+joueur+"_"+partieEnCours);
+        let carte_a_remove = document.getElementById(carte);
+        let query = "#"+joueur+"_"+partieEnCours+" main";
+        if(joueur===currentUser){
+            carte_a_remove.classList.remove("retournee");
+        }
+        document.querySelector(query).removeChild(carte_a_remove);
+        pile.appendChild(carte_a_remove);
+
+        document.querySelector("#nbCartePile_"+joueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
+    }
+
+    /**
+     * Ajoute une carte à la défausse et la retire de la pile dans laquelle elle a été tiré
+     */
+    function actualiserDefausse(partieEnCours,pileDeJoueur,carte){
+        let pile = document.getElementById("pile_"+pileDeJoueur+"_"+partieEnCours);
+        let defausse = document.getElementById("defausse"+partieEnCours);
+        console.log("la carte : "+carte);
+        let carte_a_remove = document.getElementById(carte);
+
+        pile.removeChild(carte_a_remove);
+        document.querySelector("#nbCartePile_"+pileDeJoueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
+        carte_a_remove.classList.add("selectionne");
+        defausse.appendChild(carte_a_remove);
+    }
+
+    /**
+     * Actualise les points du vainqueur dans le tableau des scores
+     */
+    function actualiserTableau(partieEnCours, vainqueur,points){
+        let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
+        tab.innerHTML = points;
+        let pile = document.getElementById("pile_"+vainqueur+"_"+partieEnCours);
+        if(pile!==null) {
+            pile.classList.add("retournee");
+        }
+    }
+
+    /**
+     * Fonctionnalité "se coucher"
+     */
+    function seCoucher(){
+        let partieEnCours = getIdInt(this.id);
+        document.getElementById(this.id).disabled=true;
+        let couche ={
+            partieEnCours:partieEnCours,
+            joueur:currentUser,
+            mise:getMiseGenerale(partieEnCours)
+        };
+        mon_tour[partieEnCours]=false;
+        sock.emit("seCouche",couche);
+    }
+
+    
+    
+
+
+                            /****************************************************
+                             *             FONCTIONS DE SUPPRESSION             *
+                             ****************************************************/
+
+    /**
      * Permet de retirer une carte de la main d'un joueur
      */
     function retirerCarte(partieEnCours, joueurAEnlever){
         let query = document.querySelector("#"+joueurAEnlever+"_"+partieEnCours+" main");
         query.addEventListener("click",retirerCarteListener);
-    }
-
-    /**
-     * Retourne le nombre de carte dans la main du joueur courant
-     */
-    function getNombreCarteMain(partieEnCours){
-        return document.querySelector("#"+currentUser+"_"+partieEnCours+" main").childElementCount;
     }
 
     /**
@@ -1731,16 +1849,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
-     * Ajoute les listeners aux piles
-     */
-    function addPileListener(partieEnCours){
-        maxNbPile= getNombreCartesPile(partieEnCours,currentUser);
-        for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
-            document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).addEventListener("click",pileVersDefausse);
-        }
-    }
-
-    /**
      * Supprime un joueur d'un partie
      */
     function deleteJoueur(joueur,partieEnCours){
@@ -1752,24 +1860,25 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
-     * Enlève les listeners de la main d'un joueur
+     * Supprime une partie si elle existe
      */
-    function disableListenerMain(partieEnCours){
-        let main = document.querySelector("#gameMain_p_"+partieEnCours+" .joueur:nth-of-type("+indices[partieEnCours]+") > main");
-        if(main != null){
-            main.removeEventListener("click",listenerMain);
+    function removeIDpartie(num_partie) {
+        if (document.getElementById("p_" + num_partie) !== null) {
+            let ind = partiesInvites.indexOf(num_partie);
+            partiesInvites.splice(ind,1);
+            document.getElementById("p_" + num_partie).classList.remove("lienActif");
+            document.getElementById("p_" + num_partie).removeEventListener("click", rejoindrePartie);
+            document.getElementById("p_" + num_partie).removeAttribute("id");
         }
     }
 
-    /**
-     * Enlève les listeners des piles d'une partie
-     */
-    function disableListenerPile(partieEnCours){
-        maxNbPile=0;
-        for(let i=0;i<liste_joueurs[partieEnCours].length;i++){
-            document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).removeEventListener("click",pileVersDefausse);
-        }
-    }
+    
+    
+
+
+                            /****************************************************
+                             *                 FONCTIONS QUITTER                *
+                             ****************************************************/
 
     /**
      *  Supprime la partie de la partie, renvoie sur le chat principal et actualise l'historique du chat principal
@@ -1862,6 +1971,14 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("listePartie").style.display = "none";
         document.getElementById("histoPartie").style.display = "none";
     }
+
+    
+    
+
+
+                            /****************************************************
+                             *                  EVENT LISTENERS                 *
+                             ****************************************************/
 
     /**
      *  Mapping des boutons de l'interface avec des fonctions du client.
