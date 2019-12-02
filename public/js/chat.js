@@ -434,12 +434,17 @@ function appel(text){
     function connect() {
 
         // recupération du pseudo
-        let user = document.getElementById("pseudo").value.trim();
-        if (!user) return;
-        document.getElementById("radio0").checked = true;
-        currentUser = user;
-        sock.emit("login", user);
-    }
+        let reg = new RegExp(/^[a-zA-Z0-9-\s]+$/g);
+        if(reg.test(pseudo.value)){
+            let user = document.getElementById("pseudo").value.trim();
+            if (!user) return;
+            document.getElementById("radio0").checked = true;
+            currentUser = user;
+            sock.emit("login", user);
+        }else{
+            alert("Votre pseudo doit contenir : \n\t - Des lettres majuscules ou miniscules \n\t - Des chiffres \n\t - Aucun caractère spécial (accent compris) \n\t - Entre 3 et 16 caractères")
+        }
+    }   
 
     /**
      *  Affichage des messages
