@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     */
 
     /*** ToDo
-     * les ia...
+     * debugger encore un peu
      */
 
     /*** ToFerBO
@@ -78,11 +78,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             //localStorage.clear();
         }
     });
+
     sock.on("message", function (msg) {
         if (currentUser) {
             afficherMessage(msg);
         }
     });
+
     sock.on("liste", function (liste) {
         users = liste;
         if (currentUser) {
@@ -134,42 +136,67 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     });
 
     sock.on("nouvelManche",function(nouvel_manche){
-        document.getElementById("message"+nouvel_manche.partieLancee).innerHTML ="C'est à "+nouvel_manche.prochainJoueur+" de jouer !";
-        actualiserTabTour(nouvel_manche.partieLancee,nouvel_manche.prochainJoueur);
-        actualiserPile(nouvel_manche.partieLancee,nouvel_manche.joueur,nouvel_manche.carte);
+        if(tabPartie.indexOf(nouvel_manche.partieLancee) >=0){
+            document.getElementById("message" + nouvel_manche.partieLancee).innerHTML = "C'est à " + nouvel_manche.prochainJoueur + " de jouer !";
+            actualiserTabTour(nouvel_manche.partieLancee, nouvel_manche.prochainJoueur);
+            actualiserPile(nouvel_manche.partieLancee, nouvel_manche.joueur, nouvel_manche.carte);
+        }
+
     });
 
     sock.on("mise",function(mise){
-        document.getElementById("message"+mise.partieLancee).innerHTML ="C'est à "+mise.prochainJoueur+" de miser !";
-        miseAutorise[mise.partieLancee] =true;
-        actualiserTabTour(mise.partieLancee,mise.prochainJoueur);
-        updateMiseGenerale(mise.partieLancee,mise.mise);
-        disableListenerMain(mise.partieLancee);
+        if(tabPartie.indexOf(mise.partieLancee) >=0) {
+            document.getElementById("message" + mise.partieLancee).innerHTML = "C'est à " + mise.prochainJoueur + " de miser !";
+            miseAutorise[mise.partieLancee] = true;
+            actualiserTabTour(mise.partieLancee, mise.prochainJoueur);
+            updateMiseGenerale(mise.partieLancee, mise.mise);
+            disableListenerMain(mise.partieLancee);
+        }
 
     });
 
     sock.on("joueurSeCouche",function(couche){
-        document.getElementById("message"+couche.partieLancee).innerHTML =couche.joueur+" se couche. "+messageDAmourNegatif()+" C'est à "+couche.prochainJoueur+" de jouer !";
-        actualiserTabTour(couche.partieLancee,couche.prochainJoueur);
+        if(tabPartie.indexOf(couche.partieLancee) >=0) {
+            document.getElementById("message" + couche.partieLancee).innerHTML = couche.joueur + " se couche. " + messageDAmourNegatif() + " C'est à " + couche.prochainJoueur + " de jouer !";
+            actualiserTabTour(couche.partieLancee, couche.prochainJoueur);
+        }
     });
 
     sock.on("pileVersDefausse",function(pile){
-        actualiserDefausse(pile.partieLancee,pile.pileDeJoueur,pile.carte);
+        if(tabPartie.indexOf(pile.partieLancee) >=0) {
+            actualiserDefausse(pile.partieLancee, pile.pileDeJoueur, pile.carte);
+        }
     });
 
     sock.on("gagneManche",function(victoire){
-        actualiserTableau(victoire.partieLancee, victoire.vainqueur,victoire.points);
+        if(tabPartie.indexOf(victoire.partieLancee) >=0) {
+            actualiserTableau(victoire.partieLancee, victoire.vainqueur, victoire.points);
+        }
     });
 
+    sock.on("carteCrane?",function(obj){
+       let crane = document.getElementById(obj.carte).classList.contains("crane");
+
+       let ob ={
+           isCrane : crane,
+           partieEnCours:obj.partieEnCours,
+           joueur:obj.joueur
+        };
+       sock.emit("carteCrane?",ob);
+
+    });
+
+
     sock.on("perdManche",function(defaite){
-        if(defaite.perdant){
-            console.log("J'ai perdu la manche !")
+
+        if(defaite.IA){
+            return;
         }
 
         if(defaite.doitEnleverCarte === currentUser && defaite.perdant !==currentUser) {
             mon_tour[defaite.partieLancee]=false;
             retirerCarte(defaite.partieLancee,defaite.perdant);
-        }else if (defaite.perdant === defaite.doitEnleverCarte && defaite.perdant===currentUser){
+        }else if ((defaite.perdant === defaite.doitEnleverCarte && defaite.perdant===currentUser)  ||defaite.doitEnleverCarte===null){
             mon_tour[defaite.partieLancee]=false;
             retirerCarteRandom(defaite.partieLancee);
 
@@ -235,10 +262,10 @@ function appel(text){
     }
 
     function textToSpeack(text, partie){
-        var synth = window.speechSynthesis;
+        let synth = window.speechSynthesis;
 
         if(mute == 0){
-            var utterThis = new SpeechSynthesisUtterance(text);   
+            let utterThis = new SpeechSynthesisUtterance(text);
             utterThis.lang = 'fr';
             synth.speak(utterThis);
         }else{
@@ -269,8 +296,8 @@ function appel(text){
             textToSpeack(msg + "  C'est à " + reset.prochainJoueur + " de jouer !", reset.partieLancee);
         }else{
             if(tabPartie.indexOf(reset.partieLancee)!==-1) {
-                document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 10 secondes ! Tchao les nazes";
-                textToSpeack("Fin de la partie dans 10 secondes ! Tchao les nazes", reset.partieLancee);
+                document.getElementById("message" + reset.partieLancee).innerHTML = msg + " Fin de la partie dans 3 secondes ! Tchao les nazes";
+                textToSpeack("Fin de la partie dans 5 secondes ! Tchao les nazes", reset.partieLancee);
             }
         }
         nbCartesChoisis[reset.partieLancee]=0;
@@ -286,20 +313,22 @@ function appel(text){
         }else{
             partieAquitter=reset.partieLancee;
 
-            setTimeout(quitterGame,4000);
+            setTimeout(quitterGame,5000);
         }
 
 
     });
 
     sock.on("revelation",function(revel){
-        document.getElementById("message"+revel.partieLancee).innerHTML =revel.joueur+" tire les cartes !";
-        textToSpeack(revel.joueur+" tire les cartes !", revel.partieLancee);
-        miseAutorise[revel.partieLancee] =false;
-        if(revel.joueur === currentUser){
-            document.getElementById("btnMiser"+revel.partieLancee).disabled = true;
-            document.getElementById("btnCoucher" + revel.partieLancee).disabled = true;
-            revelerCartes(revel.partieLancee);
+        if(tabPartie.indexOf(revel.partieLancee) >=0) {
+            document.getElementById("message" + revel.partieLancee).innerHTML = revel.joueur + " tire les cartes !";
+            textToSpeack(revel.joueur + " tire les cartes !", revel.partieLancee);
+            miseAutorise[revel.partieLancee] = false;
+            if (revel.joueur === currentUser) {
+                document.getElementById("btnMiser" + revel.partieLancee).disabled = true;
+                document.getElementById("btnCoucher" + revel.partieLancee).disabled = true;
+                revelerCartes(revel.partieLancee);
+            }
         }
 
     });
@@ -313,7 +342,7 @@ function appel(text){
         document.getElementById("message"+obj.partieLancee).innerHTML =obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !";
         textToSpeack(obj.joueur+" est eliminé !\n AHAHAH ! noobi ! Allez dégage !", obj.partieLancee);
         if(obj.joueur===currentUser){
-            quitterGame(obj.partieLancee);
+            quitterGame(obj.partieLancee,obj.elimine);
         }
     });
 
@@ -417,7 +446,6 @@ function appel(text){
         }
     }   
 
-
     /**
      *  Affichage des messages
      */
@@ -485,7 +513,6 @@ function appel(text){
             document.getElementById("p_" + partiesInvites[i]).classList.add("lienActif");
         }
     }
-
 
     // traitement des emojis
     function traiterTexte(txt) {
@@ -926,6 +953,10 @@ function appel(text){
             nbCartesChoisis=[];
         }
 
+        if(liste_joueurs[num_partie]===undefined){
+            liste_joueurs[num_partie]=[];
+        }
+
         if(nbCartesChoisis[num_partie]===undefined){
             nbCartesChoisis[num_partie]=0;
         }
@@ -987,9 +1018,48 @@ function appel(text){
         return cartes;
     }
 
-    /**
-     *  Quitter le chat et revenir à la page d'accueil.
-     */
+    function getIDsCartesPile(num_partie){
+
+        let cartes=[];
+        let pile = document.querySelector("#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" #pile_"+currentUser+"_"+num_partie);
+        let query = "#gameMain_p_"+num_partie+" #"+currentUser+"_"+num_partie+" #pile_"+currentUser+"_"+num_partie;
+        console.log("pile query :: "+query);
+        if(pile ===null){
+            return cartes;
+        }
+
+        if(pile.childElementCount===0){
+            return cartes;
+        }
+        for(let i=0;i<pile.childElementCount;i++){
+            cartes[i]=pile.children[i].id;
+        }
+
+        console.log("cartes sur pile : "+cartes);
+        return cartes;
+    }
+
+    function getIDsCartesDefausse(num_partie){
+
+        let cartes=[];
+        let defausse = document.querySelector("#gameMain_p_"+num_partie+" #defausse"+num_partie);
+        if(defausse ===null){
+            return cartes;
+        }
+
+        if(defausse.childElementCount===0){
+            return cartes;
+        }
+        for(let i=0;i<defausse.childElementCount;i++){
+            if(getPseudo(defausse.children[i].id) === currentUser){
+                cartes[i]=defausse.children[i].id;
+            }
+
+        }
+
+        console.log("cartes sur defausse : "+cartes);
+        return cartes;
+    }
 
     function initialiserPartie(){
         let partieLancee = getIdInt(this.id);
@@ -1051,7 +1121,6 @@ function appel(text){
 
         });
     }
-
 
     function afficherPlateau(partieEnCours, cranes){
         let gameMain = document.getElementById("gameMain_p_"+partieEnCours);
@@ -1208,7 +1277,7 @@ function appel(text){
 
     function updateMiseGenerale(partieEnCours,mise){
         let miseGenerale = document.getElementById("miseGenerale"+partieEnCours);
-        miseGenerale.innerHTML = "Mise actuelle "+mise;
+        miseGenerale.innerHTML = "Mise actuelle : "+mise;
     }
 
     function enableListenerMain(partieEnCours){
@@ -1271,7 +1340,6 @@ function appel(text){
 
     function revelerCartes(partieEnCours){
         addPileListener(partieEnCours);
-
     }
 
     function actualiserPile(partieEnCours, joueur, carte){
@@ -1286,9 +1354,8 @@ function appel(text){
         console.log(pile.childElementCount);
 
         document.querySelector("#nbCartePile_"+joueur+"_"+partieEnCours).innerHTML = pile.childElementCount;
-
-
     }
+
     function actualiserDefausse(partieEnCours,pileDeJoueur,carte){
         let pile = document.getElementById("pile_"+pileDeJoueur+"_"+partieEnCours);
         let defausse = document.getElementById("defausse"+partieEnCours);
@@ -1305,8 +1372,9 @@ function appel(text){
         let tab = document.getElementById("score_"+vainqueur+"_"+partieEnCours);
         tab.innerHTML = points;
         let pile = document.getElementById("pile_"+vainqueur+"_"+partieEnCours);
-        pile.classList.add("retournee");
-
+        if(pile!==null) {
+            pile.classList.add("retournee");
+        }
     }
 
     function getPseudo(id){
@@ -1420,17 +1488,22 @@ function appel(text){
 
     function retirerCartePlateau(partieEnCours,joueur,carte){
         let nb_cartes_restantes = getNombreCarteMain(partieEnCours);
+        let obj ={
+            joueur:currentUser,
+            partieEnCours:partieEnCours,
+            elimine:true
 
+        };
+        if(joueur === currentUser && nb_cartes_restantes===0){
+            sock.emit("joueurElimine", obj);
+            return;
+        }
         let main = document.querySelector("#"+joueur+"_"+partieEnCours+" main");
         console.log("la carte : "+carte);
         let carte_a_remove = document.getElementById(carte);
         main.removeChild(carte_a_remove);
 
-        let obj ={
-            joueur:currentUser,
-            partieEnCours:partieEnCours
 
-        };
         if(joueur === currentUser && nb_cartes_restantes===1){
             sock.emit("joueurElimine", obj);
         }
@@ -1454,8 +1527,6 @@ function appel(text){
         mon_tour[num_partie]=true;
         let query = document.querySelector("#"+pseudo+"_"+num_partie+" main");
         query.removeEventListener("click",retirerCarteListener);
-
-
     }
 
     function resetAffichage(partieEnCours){
@@ -1474,11 +1545,15 @@ function appel(text){
 
             let main = document.querySelector("#"+main_id+"_"+partieEnCours+" main");
             defausse.removeChild(defausse.firstChild);
-            main.appendChild(carte);
+            if(main!==null) {
+                main.appendChild(carte);
+            }
         }
 
         for(let j=0;j<liste_joueurs[partieEnCours].length;j++){
             let pile = document.getElementById("pile_"+liste_joueurs[partieEnCours][j]+"_"+partieEnCours);
+            let pileCompteur =  document.getElementById("nbCartePile_"+liste_joueurs[partieEnCours][j]+"_"+partieEnCours);
+            pileCompteur.innerHTML=0;
             if(pile!=null) {
                 while (pile.firstChild) {
                     let carte = pile.firstChild;
@@ -1527,11 +1602,13 @@ function appel(text){
         }
     }
 
-    function quitterGame(id) {
+    function quitterGame(id,elimine=true) {
         console.log("id quitterGame : "+id);
+        console.log("elimine? : "+elimine);
         if(partieAquitter>0){
             id=partieAquitter;
         }
+
 
         document.getElementById("radio0").checked = true;
         actualiserHistorique();
@@ -1539,13 +1616,16 @@ function appel(text){
         let obj;
         if(id>=1) {
             res=id;
+            console.log("1er if");
             obj={
                 joueur:currentUser,
                 cartes: getIDsCartesMain(res),
+                cartesPile:getIDsCartesPile(res),
+                cartesDefausse:getIDsCartesDefausse(res),
                 partieEnCours:res,
-                monTour:mon_tour[res]
+                monTour:mon_tour[res],
+                elimine:elimine
             };
-            console.log("id quitterGame if : "+res);
             document.querySelector("body").removeChild(document.getElementById("gameScreen"+res));
             document.querySelector("#listePartie ul").removeChild(document.getElementById("Partie "+res));
 
@@ -1553,6 +1633,7 @@ function appel(text){
             let partie = this.id;
             let reg = new RegExp(/[^\d]/g);
             let nb = partie;
+            elimine=false;
             if(nb!==undefined) {
                 nb = nb.replace(reg, "");
                 res = parseInt(nb, 10);
@@ -1561,8 +1642,11 @@ function appel(text){
                 obj = {
                     joueur: currentUser,
                     cartes: getIDsCartesMain(res),
+                    cartesPile:getIDsCartesPile(res),
+                    cartesDefausse:getIDsCartesDefausse(res),
                     partieEnCours: res,
-                    monTour: mon_tour[res]
+                    monTour: mon_tour[res],
+                    elimine:elimine
                 };
                 partie = partie.replace(/btnQuitterGame_p_.*/, "Partie " + res);
                 document.querySelector("#listePartie ul").removeChild(document.getElementById(partie));
@@ -1585,6 +1669,7 @@ function appel(text){
 
 
         document.getElementById("radio"+(res)).remove();
+        console.log("elimine? avant emit : "+elimine);
         sock.emit("quitGame",obj);
         partieAquitter=-1;
     }
@@ -1595,7 +1680,7 @@ function appel(text){
         if(tabPartie!=null && tabPartie.length>0) {
             for (let i = 0; i < tabPartie.length; i++) {
                 if(tabPartie[i]!==undefined){
-                    quitterGame(tabPartie[i]);
+                    quitterGame(tabPartie[i],false);
                 }
 
             }
