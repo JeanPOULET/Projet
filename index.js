@@ -60,101 +60,11 @@ io.on('connection', function (socket) {
         socket.emit("invitation",{partie:partie,from:null});
     });
 
-
-
-    socket.on("invitation",function(invit){
-        let partieF;
-        let shifted=false;
-
-        console.log(dispos);
-        if(dispos.length===0){
-            if(last===partie){
-                partie++;
-            }
-            partieF=partie;
-        }else{
-            partieF=dispos[0];
-            if(last<dispos[0]){
-                last=dispos[0];
-            }
-
-            shifted=true;
-        }
-
-
-
-        if(invit===null){
-            io.sockets.emit("invitation",{partie:partieF,from:null});
-
-        }else {
-
-            let inv = {
-                partie: partieF,
-                from: invit.from
-            };
-            console.log("Invitation envoyé par " + inv.from + " partie num = " + partieF);
-            socket.emit("invitation", inv);
-            for (let i in invit.to) {
-                clients[invit.to[i]].emit("invitation", inv);
-            }
-            launched[partieF]=false;
-            if(!shifted){
-                partie++;
-            }else{
-                dispos.shift();
-            }
-
-
-        }
-
-    });
-
-
-    
-    socket.on("joinGame",function(invit){
-        console.log("partie rejointe par"+invit.joiner);
-        if(joueurs[invit.partie]=== undefined){
-            joueurs[invit.partie]=[];
-        }
-
-        if(scores[invit.partie] === undefined){
-            scores[invit.partie] =[];
-        }
-
-        if(isCouche[invit.partie] === undefined){
-            isCouche[invit.partie] = [];
-        }
-
-        if(ias[invit.partie]  === undefined){
-            ias[invit.partie] = [];
-        }
-
-
-
-        joueurs[invit.partie].push(invit.joiner);
-        scores[invit.partie].push(0);
-        isCouche[invit.partie].push(false);
-
-        let liste ={
-            joueurs:joueurs[invit.partie],
-            id_partie:invit.partie
-        };
-        for(let i in joueurs[invit.partie]){
-            if(joueurs[invit.partie][i]!==undefined && clients[joueurs[invit.partie][i]] != undefined) {
-                clients[joueurs[invit.partie][i]].emit("listeGame", liste);
-                clients[joueurs[invit.partie][i]].emit("message", { from: null, to: null, text: currentID + " a rejoint la partie", date: Date.now(),id_partie:invit.partie });
-            }
-        }
-
-        console.log(joueurs);
-        console.log(scores);
-        console.log(isCouche);
-    });
-
     /**
      *  Réception d'un message et transmission à tous.
      *  @param  msg     Object  le message à transférer à tous
      */
+
     socket.on("message", function(msg) {
         if(msg.id_partie==null || msg.id_partie===undefined){
             msg.id_partie=0;
@@ -191,19 +101,78 @@ io.on('connection', function (socket) {
         }
     });
 
-    function existInJoueurs(partieEnCours, joueur){
-        for(let i =0; i < joueurs[partieEnCours].length;i++){
-            if(joueurs[partieEnCours][i]===joueur){
-                return true;
+    socket.on("invitation",function(invit){
+        let partieF;
+        let shifted=false;
+
+        console.log(dispos);
+        if(dispos.length===0){
+            if(last===partie){
+                partie++;
+            }
+            partieF=partie;
+        }else{
+            partieF=dispos[0];
+            if(last<dispos[0]){
+                last=dispos[0];
+            }
+
+            shifted=true;
+        }
+
+        if(invit===null){
+            io.sockets.emit("invitation",{partie:partieF,from:null});
+
+        }else {
+            let inv = {
+                partie: partieF,
+                from: invit.from
+            };
+            console.log("Invitation envoyé par " + inv.from + " partie num = " + partieF);
+            socket.emit("invitation", inv);
+            for (let i in invit.to) {
+                clients[invit.to[i]].emit("invitation", inv);
+            }
+            launched[partieF]=false;
+            if(!shifted){
+                partie++;
+            }else{
+                dispos.shift();
             }
         }
-        return false;
-    }
+    });
 
-    /**
-     * Gérer les parties
-     *
-     */
+    socket.on("joinGame",function(invit){
+        console.log("partie rejointe par"+invit.joiner);
+        if(joueurs[invit.partie]=== undefined){
+            joueurs[invit.partie]=[];
+        }
+        if(scores[invit.partie] === undefined){
+            scores[invit.partie] =[];
+        }
+        if(isCouche[invit.partie] === undefined){
+            isCouche[invit.partie] = [];
+        }
+        if(ias[invit.partie]  === undefined){
+            ias[invit.partie] = [];
+        }
+
+        joueurs[invit.partie].push(invit.joiner);
+        scores[invit.partie].push(0);
+        isCouche[invit.partie].push(false);
+
+        let liste ={
+            joueurs:joueurs[invit.partie],
+            id_partie:invit.partie
+        };
+        for(let i in joueurs[invit.partie]){
+            if(joueurs[invit.partie][i]!==undefined && clients[joueurs[invit.partie][i]] != undefined) {
+                clients[joueurs[invit.partie][i]].emit("listeGame", liste);
+                clients[joueurs[invit.partie][i]].emit("message", { from: null, to: null, text: currentID + " a rejoint la partie", date: Date.now(),id_partie:invit.partie });
+            }
+        }
+        console.log(joueurs);
+    });
 
     socket.on("initialiserPartie",function(partieLancee){
         io.sockets.emit("suppressionInvitation",partieLancee);
@@ -234,167 +203,6 @@ io.on('connection', function (socket) {
         }
         if(isIA(partieLancee,prochainJoueur)){
             iaJoue(partieLancee,prochainJoueur);
-        }
-
-    });
-    
-    function indiceIA(partieLancee,joueur){
-        for(let i=0;i<ias[partieLancee].length;i++){
-            if(ias[partieLancee][i].joueur === joueur){
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    function iaJoue(partieLancee,joueur){
-        console.log("IA doit poser carte ");
-        if(ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.length ===0){
-            iaMise(partieLancee,joueur,true,1);
-            return;
-        }
-        let rand = Math.floor(Math.random()*ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.length);
-        let carte = ias[partieLancee][indiceIA(partieLancee,joueur)].cartes[rand];
-        let prochainJoueur =choixJoueur(partieLancee,joueur);
-        ias[partieLancee][indiceIA(partieLancee,joueur)].cartesPile.push(carte);
-        ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.splice(rand,1);
-        for (let i in joueurs[partieLancee]) {
-            clients[joueurs[partieLancee][i]].emit("nouvelManche", {
-                partieLancee: partieLancee,
-                joueur: joueur,
-                prochainJoueur: prochainJoueur,
-                carte: carte
-            });
-        }
-        if(isIA(partieLancee,prochainJoueur)){
-            iaJoue(partieLancee,prochainJoueur);
-        }
-
-    }
-
-    function IAdelete(partieLancee){
-        while(ias[partieLancee].length>0){
-            console.log("dans iaDELETE lg = "+ias[partieLancee].length);
-            let joueur = ias[partieLancee].pop().joueur;
-            let index_joueur = getIndiceJoueurTab(joueur,partieLancee);
-            quitGame(joueur,partieLancee,null,null,null,true,false,false);
-        }
-    }
-
-    function isIA(partieLancee, joueur){
-        console.log("ias : "+ias);
-        if(ias[partieLancee]!==undefined) {
-            if (ias[partieLancee].length > 0) {
-                return indiceIA(partieLancee, joueur) !== -1;
-            }
-        }
-        return false;
-    }
-
-    function iaMise(partieLancee,joueur,doitMiser,mise,miseFinale){
-        let index = getIndiceJoueurTab(joueur,partieLancee);
-        let prochainJoueur;
-
-        if(!doitMiser){
-            console.log("l'ia se couche");
-            isCouche[partieLancee][index] = true;
-            prochainJoueur = choixJoueur(partieLancee, joueur);
-            let cpt=0;
-            let indice_joueur_debout=0;
-            for(let i=0;i<isCouche[partieLancee].length;i++){
-                if(!isCouche[partieLancee][i]){
-                    indice_joueur_debout=i;
-                    cpt++;
-                }
-            }
-
-            for (let i = 0; i < joueurs[partieLancee].length; i++) {
-                clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
-                    partieLancee: partieLancee,
-                    joueur: joueur,
-                    prochainJoueur: prochainJoueur
-                });
-            }
-
-            if(cpt===1) {
-
-                if (isIA(partieLancee, joueurs[partieLancee][indice_joueur_debout])) {
-                    iaRevelation(partieLancee, joueurs[partieLancee][indice_joueur_debout]);
-
-                } else {
-                    for (let i = 0; i < joueurs[partieLancee].length; i++) {
-                        clients[joueurs[partieLancee][i]].emit("revelation", {
-                            partieLancee: partieLancee,
-                            joueur: joueurs[partieLancee][indice_joueur_debout],
-                            mise: mise
-                        });
-                    }
-
-                }
-                return;
-            }
-        }else{
-            prochainJoueur = choixJoueur(partieLancee, joueur);
-            console.log("l'ia mise");
-            for (let i = 0; i < joueurs[partieLancee].length; i++) {
-                clients[joueurs[partieLancee][i]].emit("mise", {
-                    partieLancee: partieLancee,
-                    joueur: joueur,
-                    prochainJoueur: prochainJoueur,
-                    mise: 1
-                });
-            }
-        }
-        if(isIA(partieLancee,prochainJoueur)){
-            iaMise(partieLancee,prochainJoueur,false,mise,miseFinale);
-        }
-
-    }
-    
-    function iaRevelation(partieLancee,joueur){
-        let indiceIa = indiceIA(partieLancee,joueur);
-        let carte = ias[partieLancee][indiceIa].cartesPile.shift();
-        ias[partieLancee][indiceIa].cartesDefausse.push(carte);
-        let demandeInfo = joueurs[partieLancee][0];
-        let i=0;
-        while(isIA(partieLancee,demandeInfo)){
-            console.log("pour le crane ==> "+demandeInfo);
-            demandeInfo = joueurs[partieLancee][i];
-            i++;
-        }
-        let index = getIndiceJoueurTab(demandeInfo,partieLancee);
-        let obj ={
-            partieEnCours:partieLancee,
-            carte:carte,
-            joueur:joueur
-        };
-
-        clients[joueurs[partieLancee][index]].emit("carteCrane",obj);
-        console.log("L'IA "+joueur+" revele une carte");
-        console.log("obj");
-        console.log(obj);
-        for(let i=0;i< joueurs[partieLancee].length;i++){
-            clients[joueurs[partieLancee][i]].emit("pileVersDefausse",{partieLancee:partieLancee, joueur:joueur, pileDeJoueur:joueur, carte:carte });
-            clients[joueurs[partieLancee][i]].emit("revelation", {
-                partieLancee: partieLancee,
-                joueur: joueur,
-                mise: 1
-            });
-        }
-
-
-    }
-
-    socket.on("carteCrane",function(obj){
-        console.log("joueur dans on.carteCrane "+obj.joueur);
-        console.log("isCrane"+obj.isCrane);
-        if(obj.isCrane){
-            defaite(obj.partieEnCours,obj.joueur,null);
-        }else{
-            console.log("Victoire de l'IA "+obj.joueur);
-            let index = getIndiceJoueurTab(obj.joueur,obj.partieEnCours);
-            scores[obj.partieEnCours][index]+=1;
-            victoire(obj.partieEnCours,obj.joueur,scores[obj.partieEnCours][index]);
         }
 
     });
@@ -538,6 +346,69 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on("carteCrane",function(obj){
+        console.log("joueur dans on.carteCrane "+obj.joueur);
+        console.log("isCrane"+obj.isCrane);
+        if(obj.isCrane){
+            defaite(obj.partieEnCours,obj.joueur,null);
+        }else{
+            console.log("Victoire de l'IA "+obj.joueur);
+            let index = getIndiceJoueurTab(obj.joueur,obj.partieEnCours);
+            scores[obj.partieEnCours][index]+=1;
+            victoire(obj.partieEnCours,obj.joueur,scores[obj.partieEnCours][index]);
+        }
+
+    });
+
+    function choixJoueur(partie,joueurActuel){
+        let indice=0;
+        if(joueurActuel===null){
+            return joueurs[partie][0];
+        }
+
+        for(let j=0;j<joueurs[partie].length;j++){
+            if(joueurs[partie][j] === joueurActuel){
+                j++;
+                if(j===joueurs[partie].length){
+                    j=0;
+                }
+                while(isCouche[partie][j]){
+                    j++;
+                    if(j===joueurs[partie].length){
+                        j=0;
+                    }
+                }
+                return joueurs[partie][j];
+
+            }
+        }
+    }
+
+    function existInJoueurs(partieEnCours, joueur){
+        for(let i =0; i < joueurs[partieEnCours].length;i++){
+            if(joueurs[partieEnCours][i]===joueur){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function getIndiceJoueurTab(nomJoueur, partieEnCours) {
+        for (let i = 0; i < joueurs[partieEnCours].length; i++) {
+            if (nomJoueur === joueurs[partieEnCours][i]) {
+                return i;
+            }
+        }
+    }
+
+    function jouer(partieLancee){
+        let rand = Math.floor(Math.random()*(joueurs[partieLancee].length-1));
+
+        for(let i=0;i<joueurs[partieLancee].length;i++){
+            clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
+        }
+    }
+
     function defaite(partieEnCours, joueur, doitEnleverCarte){
         let IA = false;
         if(isIA(partieEnCours,joueur)){
@@ -613,48 +484,155 @@ io.on('connection', function (socket) {
         }
     }
 
-    function choixJoueur(partie,joueurActuel){
-        let indice=0;
-        if(joueurActuel===null){
-            return joueurs[partie][0];
-        }
-
-        for(let j=0;j<joueurs[partie].length;j++){
-            if(joueurs[partie][j] === joueurActuel){
-                j++;
-                if(j===joueurs[partie].length){
-                    j=0;
-                }
-                while(isCouche[partie][j]){
-                    j++;
-                    if(j===joueurs[partie].length){
-                        j=0;
-                    }
-                }
-                return joueurs[partie][j];
-
-            }
-        }
-    }
-
-    function getIndiceJoueurTab(nomJoueur, partieEnCours) {
-        for (let i = 0; i < joueurs[partieEnCours].length; i++) {
-            if (nomJoueur === joueurs[partieEnCours][i]) {
+    function indiceIA(partieLancee,joueur){
+        for(let i=0;i<ias[partieLancee].length;i++){
+            if(ias[partieLancee][i].joueur === joueur){
                 return i;
             }
         }
+        return -1;
     }
 
-    function jouer(partieLancee){
-        let rand = Math.floor(Math.random()*(joueurs[partieLancee].length-1));
+    function iaJoue(partieLancee,joueur){
+        console.log("IA doit poser carte ");
+        if(ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.length ===0){
+            iaMise(partieLancee,joueur,true,1);
+            return;
+        }
+        let rand = Math.floor(Math.random()*ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.length);
+        let carte = ias[partieLancee][indiceIA(partieLancee,joueur)].cartes[rand];
+        let prochainJoueur =choixJoueur(partieLancee,joueur);
+        ias[partieLancee][indiceIA(partieLancee,joueur)].cartesPile.push(carte);
+        ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.splice(rand,1);
+        for (let i in joueurs[partieLancee]) {
+            clients[joueurs[partieLancee][i]].emit("nouvelManche", {
+                partieLancee: partieLancee,
+                joueur: joueur,
+                prochainJoueur: prochainJoueur,
+                carte: carte
+            });
+        }
+        if(isIA(partieLancee,prochainJoueur)){
+            iaJoue(partieLancee,prochainJoueur);
+        }
 
-        for(let i=0;i<joueurs[partieLancee].length;i++){
-            clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
-         }
+    }
+
+    function IAdelete(partieLancee){
+        while(ias[partieLancee].length>0){
+            console.log("dans iaDELETE lg = "+ias[partieLancee].length);
+            let joueur = ias[partieLancee].pop().joueur;
+            let index_joueur = getIndiceJoueurTab(joueur,partieLancee);
+            quitGame(joueur,partieLancee,null,null,null,true,false,false);
+        }
+    }
+
+    function isIA(partieLancee, joueur){
+        console.log("ias : "+ias);
+        if(ias[partieLancee]!==undefined) {
+            if (ias[partieLancee].length > 0) {
+                return indiceIA(partieLancee, joueur) !== -1;
+            }
+        }
+        return false;
+    }
+
+    function iaMise(partieLancee,joueur,doitMiser,mise,miseFinale){
+        let index = getIndiceJoueurTab(joueur,partieLancee);
+        let prochainJoueur;
+
+        if(!doitMiser){
+            console.log("l'ia se couche");
+            isCouche[partieLancee][index] = true;
+            prochainJoueur = choixJoueur(partieLancee, joueur);
+            let cpt=0;
+            let indice_joueur_debout=0;
+            for(let i=0;i<isCouche[partieLancee].length;i++){
+                if(!isCouche[partieLancee][i]){
+                    indice_joueur_debout=i;
+                    cpt++;
+                }
+            }
+
+            for (let i = 0; i < joueurs[partieLancee].length; i++) {
+                clients[joueurs[partieLancee][i]].emit("joueurSeCouche", {
+                    partieLancee: partieLancee,
+                    joueur: joueur,
+                    prochainJoueur: prochainJoueur
+                });
+            }
+
+            if(cpt===1) {
+
+                if (isIA(partieLancee, joueurs[partieLancee][indice_joueur_debout])) {
+                    iaRevelation(partieLancee, joueurs[partieLancee][indice_joueur_debout]);
+
+                } else {
+                    for (let i = 0; i < joueurs[partieLancee].length; i++) {
+                        clients[joueurs[partieLancee][i]].emit("revelation", {
+                            partieLancee: partieLancee,
+                            joueur: joueurs[partieLancee][indice_joueur_debout],
+                            mise: mise
+                        });
+                    }
+
+                }
+                return;
+            }
+        }else{
+            prochainJoueur = choixJoueur(partieLancee, joueur);
+            console.log("l'ia mise");
+            for (let i = 0; i < joueurs[partieLancee].length; i++) {
+                clients[joueurs[partieLancee][i]].emit("mise", {
+                    partieLancee: partieLancee,
+                    joueur: joueur,
+                    prochainJoueur: prochainJoueur,
+                    mise: 1
+                });
+            }
+        }
+        if(isIA(partieLancee,prochainJoueur)){
+            iaMise(partieLancee,prochainJoueur,false,mise,miseFinale);
+        }
+
+    }
+
+    function iaRevelation(partieLancee,joueur){
+        let indiceIa = indiceIA(partieLancee,joueur);
+        let carte = ias[partieLancee][indiceIa].cartesPile.shift();
+        ias[partieLancee][indiceIa].cartesDefausse.push(carte);
+        let demandeInfo = joueurs[partieLancee][0];
+        let i=0;
+        while(isIA(partieLancee,demandeInfo)){
+            console.log("pour le crane ==> "+demandeInfo);
+            demandeInfo = joueurs[partieLancee][i];
+            i++;
+        }
+        let index = getIndiceJoueurTab(demandeInfo,partieLancee);
+        let obj ={
+            partieEnCours:partieLancee,
+            carte:carte,
+            joueur:joueur
+        };
+
+        clients[joueurs[partieLancee][index]].emit("carteCrane",obj);
+        console.log("L'IA "+joueur+" revele une carte");
+        console.log("obj");
+        console.log(obj);
+        for(let i=0;i< joueurs[partieLancee].length;i++){
+            clients[joueurs[partieLancee][i]].emit("pileVersDefausse",{partieLancee:partieLancee, joueur:joueur, pileDeJoueur:joueur, carte:carte });
+            clients[joueurs[partieLancee][i]].emit("revelation", {
+                partieLancee: partieLancee,
+                joueur: joueur,
+                mise: 1
+            });
+        }
+
+
     }
 
     /**
-     *  Gestion des déconnexions
+     *  Gestion des déconnexions et des parties qui sont quittées
      */
 
     socket.on("quitGame",function(game){
