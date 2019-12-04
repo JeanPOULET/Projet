@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     */
 
     /*** ToDo
+     *
      */
 
     /*** ToFerBO
@@ -12,21 +13,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      */
 
      /*** ToComment
-      * actualiserTabTour
-      * getIdInt
-      * creationFenetreJeu
-      * getIdDoubleInt
-      * listenerMain
       * 
       */
 
     document.getElementById("radio-1").checked = true;
     document.getElementById("listePartie").style.display = "none";
     document.getElementById("histoPartie").style.display = "none";
-
-
-
-
     
                             /****************************************************
                              *                     VARIABLES                    *
@@ -1284,6 +1276,11 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
+    /**
+     * S'effectue quand on clique sur la partie qu'on veut afficher
+     * On va alors activer le bouton radio correspondant
+     */
+
     function creationFenetreJeu() {
         let partie = this.id;
         let reg = new RegExp(/[^\d]/g);
@@ -1523,6 +1520,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function enableListenerMain(partieEnCours){
         document.querySelector("#gameMain_p_"+partieEnCours+" #"+currentUser+"_"+partieEnCours+" > main").addEventListener("click", listenerMain);
     }
+
+    /**
+     * S'effectue quand on clique sur une carte de notre main
+     * On va alors envoyer au serveur la carte qu'on veut jouer
+     * @param e Evenement
+     */
 
     function listenerMain(e){
         if (e.target.tagName === "MAIN") {
