@@ -518,10 +518,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         return message
     }
 
- 
-
-
-    
                             /****************************************************
                              *                 FONCTIONS CHATS                  *
                              ****************************************************/
