@@ -101,11 +101,16 @@ io.on('connection', function (socket) {
         }
     });
 
+    /**
+     * Reçu quand un joueur souhaite inviter d'autre personnes
+     * Elle va envoyer à toutes les personnes invitées le nom de la personne qui les a invités
+     * @param Object invit Indice de partie actualisé, from
+     */
+
     socket.on("invitation",function(invit){
         let partieF;
         let shifted=false;
 
-        console.log(dispos);
         if(dispos.length===0){
             if(last===partie){
                 partie++;
@@ -142,6 +147,12 @@ io.on('connection', function (socket) {
         }
     });
 
+    /**
+     * Reçu quand un joueur rejoint une partie
+     * On va alors l'ajouter à toutes nos variables qui gère les parties
+     * @param Object invit Indice de partie, joueur qui rejoint
+     */
+
     socket.on("joinGame",function(invit){
         console.log("partie rejointe par"+invit.joiner);
         if(joueurs[invit.partie]=== undefined){
@@ -174,6 +185,11 @@ io.on('connection', function (socket) {
         console.log(joueurs);
     });
 
+    /**
+     * Reçu quand l'hôte d'une partie la lance, on va alors envoyer la position des crânes pour chacun et commencer le 1er tour
+     * @param partieLancee Indice de la partie
+     */
+
     socket.on("initialiserPartie",function(partieLancee){
         io.sockets.emit("suppressionInvitation",partieLancee);
         let cranes = [];
@@ -188,6 +204,13 @@ io.on('connection', function (socket) {
         launched[partieLancee]=true;
 
     });
+
+    /**
+     * Reçu quand un joueur joue une carte de sa main,
+     * on va alors envoyer à tout les joueurs de la même partie la carte à actualiser sur le plateau
+     * on va lancer une nouvelle manche
+     * @param obj Object Indice de partie, la carte à actualiser, le joueur qui a posé sa carte
+     */
 
     socket.on("carteSelectionnee",function(obj) {
         let partieLancee = obj.partieEnCours;
@@ -206,6 +229,12 @@ io.on('connection', function (socket) {
         }
 
     });
+
+    /**
+     * Reçu quand un joueur est entrain des révéler les cartes des piles
+     * Si jamais il a fini il a alors soit gagné la manche soit perdu
+     * @param obj Object Indice de partie, joueur qui révèle, le joueur à qui on a cliqué sur la pile, la carte cliquée
+     */
 
     socket.on("carteSelectionneePile",function(obj) {
         let partieLancee = obj.partieEnCours;
@@ -227,6 +256,12 @@ io.on('connection', function (socket) {
         }
         console.log(scores[partieLancee]);
     });
+
+    /**
+     * Reçu quand un joueur mise
+     * S'il s'agit de la mise finale (nombre de cartes dans les piles == mise) alors il pourra révéler les cartes
+     * @param mise Object Indice de parie, joueur qui mise, la mise
+     */
 
     socket.on("mise",function(mise){
         let partieLancee = mise.partieEnCours;
@@ -263,6 +298,12 @@ io.on('connection', function (socket) {
             }
         }
     });
+
+    /**
+     * Reçu quand un joueur se couche, on va alors désigner un prochain joueur
+     * Cependant s'il reste qu'un seul joueur debout ce sera à lui de jouer et de révéler les cartes
+     * @param obj Object Indice de partie, joueur se couchant
+     */
 
     socket.on("seCouche",function(obj){
 
@@ -328,6 +369,12 @@ io.on('connection', function (socket) {
 
     });
 
+    /**
+     * Reçu quand un joueur ayant perdu se fait retirer une carte (par lui-même ou le joueur sur lequel il a pioché un crâne)
+     * On va alors envoyer à tout les joueurs de la même partie la carte qui va être retirer du jeu
+     * @param obj Object Indice de partie, joueur qui perd sa carte, la carte en question
+     */
+
     socket.on("carteARetirer",function(obj){
         let partieLancee = obj.partieEnCours;
 
@@ -338,6 +385,11 @@ io.on('connection', function (socket) {
 
     });
 
+    /**
+     * Reçu quand un joueur n'a plus de carte, il est alors éliminé de la partie et va la quitter
+     * @param obj Object Indice de partie, joueur éliminé
+     */
+
     socket.on("joueurElimine",function(obj){
         let partieLancee = obj.partieEnCours;
         for(let i=0;i< joueurs[partieLancee].length;++i){
@@ -345,6 +397,13 @@ io.on('connection', function (socket) {
         }
 
     });
+
+    /**
+     * Reçu quand un joueur répond au serveur pour lui dire si une telle carte est un crâne ou non
+     * Cette fonction sert pour les IA qui vont reçevoir leur réponse si la carte qu'ils ont pioché est un crâne ou non
+     * Vu que l'IA pioche forcément qu'une seule carte alors on peut directement déterminer si elle a perdu ou gagné
+     *  @param obj Object Joueur qui a demandé l'information, Indice de partie
+     */
 
     socket.on("carteCrane",function(obj){
         console.log("joueur dans on.carteCrane "+obj.joueur);
@@ -360,8 +419,14 @@ io.on('connection', function (socket) {
 
     });
 
+    /**
+     * Détermine qui sera le prochain joueur
+     * @param partie
+     * @param joueurActuel
+     * @returns le prochain joueur
+     */
+
     function choixJoueur(partie,joueurActuel){
-        let indice=0;
         if(joueurActuel===null){
             return joueurs[partie][0];
         }
@@ -384,6 +449,12 @@ io.on('connection', function (socket) {
         }
     }
 
+    /**
+     * @param partieEnCours
+     * @param joueur
+     * @returns {boolean} si le joueur est encore dans la partie ou non
+     */
+
     function existInJoueurs(partieEnCours, joueur){
         for(let i =0; i < joueurs[partieEnCours].length;i++){
             if(joueurs[partieEnCours][i]===joueur){
@@ -393,6 +464,13 @@ io.on('connection', function (socket) {
         return false;
     }
 
+    /**
+     * Retourne l'indice du joueur dans le tableau des joueurs
+     * @param nomJoueur
+     * @param partieEnCours
+     * @returns {number}
+     */
+
     function getIndiceJoueurTab(nomJoueur, partieEnCours) {
         for (let i = 0; i < joueurs[partieEnCours].length; i++) {
             if (nomJoueur === joueurs[partieEnCours][i]) {
@@ -401,6 +479,11 @@ io.on('connection', function (socket) {
         }
     }
 
+    /**
+     * Permet d'envoyer à tout les joueurs de la même partie le début de la manche
+     * @param partieLancee
+     */
+
     function jouer(partieLancee){
         let rand = Math.floor(Math.random()*(joueurs[partieLancee].length-1));
 
@@ -408,6 +491,15 @@ io.on('connection', function (socket) {
             clients[joueurs[partieLancee][i]].emit("debutManche",{num_partie:partieLancee, joueur:joueurs[partieLancee][rand]});
         }
     }
+
+    /**
+     * S'effectue quand un joueur à perdu une manche
+     * On réinitialise les joueurs couchés et on réinitialise l'état du jeu pour tout les joueurs
+     * Un nouveau joueur est désigné (celui qui retire la carte) et une nouvelle manche est lancée
+     * @param partieEnCours
+     * @param joueur Joueur qui a perdu
+     * @param doitEnleverCarte Joueur qui doit enlever la carte
+     */
 
     function defaite(partieEnCours, joueur, doitEnleverCarte){
         let IA = false;
@@ -429,7 +521,7 @@ io.on('connection', function (socket) {
         for(let i=0;i<isCouche[partieEnCours].length;i++){
             isCouche[partieEnCours][i]=false;
         }
-        console.log("reset_manche joueur : "+choixJoueur(partieEnCours,null));
+
         for(let i=0; i<joueurs[partieEnCours].length;i++){
 
             clients[joueurs[partieEnCours][i]].emit("resetManche",
@@ -446,6 +538,15 @@ io.on('connection', function (socket) {
                     doitEnleverCarte:doitEnleverCarte});
         }
     }
+
+    /**
+     * S'effectue quand un joueur gagne une manche
+     * Si c'est son 2ème point alors la partie est terminée et tout le monde sera forcé de la quitter
+     * Sinon on réinitialise la partie pour tout les joueurs et on commence une nouvelle manche
+     * @param partieEnCours
+     * @param joueur Qui a gagné la manche
+     * @param points Du joueur ayant gagné la manche
+     */
 
     function victoire(partieEnCours,joueur,points){
         let iaWon=joueur;
@@ -484,6 +585,12 @@ io.on('connection', function (socket) {
         }
     }
 
+    /**
+     * @param partieLancee
+     * @param joueur
+     * @returns {number} Index de l'IA dans le tableau d'IAs
+     */
+
     function indiceIA(partieLancee,joueur){
         for(let i=0;i<ias[partieLancee].length;i++){
             if(ias[partieLancee][i].joueur === joueur){
@@ -493,8 +600,15 @@ io.on('connection', function (socket) {
         return -1;
     }
 
+    /**
+     * S'effectue quand c'est au tour d'une IA de poser une carte de sa main
+     * Si elle n'a plus de carte alors l'IA mise
+     * On boucle dessus si le prochain joueur est une IA
+     * @param partieLancee
+     * @param joueur Le nom du joueur que l'IA possède
+     */
+
     function iaJoue(partieLancee,joueur){
-        console.log("IA doit poser carte ");
         if(ias[partieLancee][indiceIA(partieLancee,joueur)].cartes.length ===0){
             iaMise(partieLancee,joueur,true,1);
             return;
@@ -515,17 +629,26 @@ io.on('connection', function (socket) {
         if(isIA(partieLancee,prochainJoueur)){
             iaJoue(partieLancee,prochainJoueur);
         }
-
     }
+
+    /**
+     * Quand la manche est terminée on va alors supprimer toutes les IA du jeu pour une partie donnée
+     * @param partieLancee
+     */
 
     function IAdelete(partieLancee){
         while(ias[partieLancee].length>0){
-            console.log("dans iaDELETE lg = "+ias[partieLancee].length);
             let joueur = ias[partieLancee].pop().joueur;
-            let index_joueur = getIndiceJoueurTab(joueur,partieLancee);
             quitGame(joueur,partieLancee,null,null,null,true,false,false);
         }
     }
+
+    /**
+     * Permet de savoir si un joueur est une IA
+     * @param partieLancee
+     * @param joueur
+     * @returns {boolean} est une IA ou non
+     */
 
     function isIA(partieLancee, joueur){
         console.log("ias : "+ias);
@@ -536,6 +659,17 @@ io.on('connection', function (socket) {
         }
         return false;
     }
+
+    /**
+     * S'effectue quand l'IA doit miser
+     * La majorité du temps elle va directement se coucher
+     * Cependant si elle doit miser en 1ère car elle n'a plus de carte elle misera toujours 1
+     * @param partieLancee
+     * @param joueur Considéré comme une IA
+     * @param doitMiser Pour savoir si l'IA doit miser ou non
+     * @param mise
+     * @param miseFinale
+     */
 
     function iaMise(partieLancee,joueur,doitMiser,mise,miseFinale){
         let index = getIndiceJoueurTab(joueur,partieLancee);
@@ -597,6 +731,13 @@ io.on('connection', function (socket) {
 
     }
 
+    /**
+     * S'effectue quand l'IA doit révéler sa propre carte
+     * Elle va demander à un joueur humain (encore sur la page du jeu) si la carte qu'elle a révélé de sa pile est un crâne ou non
+     * @param partieLancee
+     * @param joueur
+     */
+
     function iaRevelation(partieLancee,joueur){
         let indiceIa = indiceIA(partieLancee,joueur);
         let carte = ias[partieLancee][indiceIa].cartesPile.shift();
@@ -632,7 +773,8 @@ io.on('connection', function (socket) {
     }
 
     /**
-     *  Gestion des déconnexions et des parties qui sont quittées
+     * Reçu quand un joueur quitte une partie
+     * @param game Object Indice de partie, ses cartes, s'il doit miser, s'il doit jouer
      */
 
     socket.on("quitGame",function(game){
@@ -645,6 +787,22 @@ io.on('connection', function (socket) {
             }
         }
     });
+
+    /**
+     * S'effectue quand un joueur doit quitter la partie
+     * S'il n'est pas éliminé et que la partie à commencer alors ce joueur deviendra une IA
+     * S'il n'y plus aucun joueur humain ou qu'il ne reste plus de joueur on va alors supprimer la partie du serveur
+     * S'il ne reste qu'un seul joueur humain il est alors considéré comme vainqueur de la partie et la partie
+     * s'arrêtera après
+     * @param joueur
+     * @param game
+     * @param cartes
+     * @param cartesPile
+     * @param cartesDefausse
+     * @param elimine Eliminé?
+     * @param mon_tour Son tour de jouer?
+     * @param mise Son tour de mise?
+     */
 
     function quitGame(joueur,game,cartes,cartesPile,cartesDefausse,elimine,mon_tour,mise){
         console.log("quitGame ==> "+game+" par "+joueur);
@@ -727,14 +885,7 @@ io.on('connection', function (socket) {
                 clients[joueurs[game][i]].emit("joueurPart",aurevoir);
                 clients[joueurs[game][i]].emit("message",{from:null, to:null, text: joueur + " a quitté la partie", date:Date.now(),id_partie:game});
             }
-
         }
-
-        /*if( joueurs[game]!==undefined && cartes===null && ){
-            jouer(game);
-        }*/
-
-
     }
 
     // fermeture
@@ -751,6 +902,12 @@ io.on('connection', function (socket) {
             socket.broadcast.emit("liste", Object.keys(clients));
         }
     });
+
+    /**
+     * Renvoie les numéros des parties dans lesquelles le joueur est dedans
+     * @param joueur
+     * @returns {[]} tableau avec les numéros de partie
+     */
 
     function getPartiesJoueur(joueur){
         let games =[];

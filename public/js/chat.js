@@ -82,10 +82,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     //var mute on off
     var mute = 0;
 
-
-
-
-
                             /****************************************************
                              *                      SOCKETS                     *
                              ****************************************************/
@@ -385,10 +381,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             quitterGame(obj.partieLancee,obj.elimine);
         }
     });
-
-
-
-
 
                             /****************************************************
                              *              FONCTIONS DIVERSIFIERS              *
@@ -769,12 +761,8 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
     }
 
-
-
-
-
                             /****************************************************
-                             *           FONCTIONS BIZARRES MATMAT              *
+                             *                FONCTIONS DIVERSES                *
                              ****************************************************/
 
     /**
@@ -795,6 +783,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         return final_id;
     }
 
+    /**
+     * Renvoie en entier le numéro d'id d'un résultat d'évenèment
+     * @param id
+     * @returns {number}
+     */
+
     function getIdInt(id) {
         if (id === undefined || id == null) {
             return 0;
@@ -803,6 +797,12 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         id = id.replace(reg, "");
         return parseInt(id, 10);
     }
+
+    /**
+     * Utilisé quand on a un id avec plusieurs chiffres dedans et qu'on souhaite retirer le second
+     * @param id
+     * @returns {number}
+     */
 
     function getIdDoubleInt(id) {
         if (id === undefined || id == null) {
@@ -824,6 +824,13 @@ document.addEventListener("DOMContentLoaded", function(_e) {
 
         return res;
     }
+
+    /**
+     * Actualise le tableau de tour (pour savoir si c'est au tour du joueur courant)
+     * Si c'est son tour alors il pourra jouer ou miser
+     * @param num_partie
+     * @param joueur
+     */
 
     function actualiserTabTour(num_partie, joueur){
         if(miseAutorise ==null){
@@ -856,7 +863,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     }
 
     /**
-     * Initialise tous les tableaux nécessaire au déroulement du programme 
+     * Initialise tous les tableaux nécessaire au déroulement des parties
      */
     function iniTabs(num_partie) {
         if(tabPartie===null){
@@ -891,10 +898,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
 
     }
-
-
-
-
 
                             /****************************************************
                              *                      GETTEURS                    *
@@ -1005,10 +1008,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
     function getNombreCarteMain(partieEnCours){
         return document.querySelector("#"+currentUser+"_"+partieEnCours+" main").childElementCount;
     }
-
-
-
-
     
                             /****************************************************
                              *              FONCTIONS INVITATIONS               *
@@ -1070,7 +1069,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         sock.emit("invitation", null);
     }
 
-     /*
+     /**
      * Quitte la fenetre d'invitation
      */
     function annulerInvit() {
@@ -1116,7 +1115,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
-    /*
+    /**
      * Fait apparaitre l'onglet de la fenetre de jeu
      */
     function creationOnglet(partieEnCours) {
@@ -1234,10 +1233,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("btnQuitterGame_p_" + (nbPartieInvite)).addEventListener("click", quitterGame);
         document.getElementById(id).addEventListener("click", creationFenetreJeu);
     }
-
-
-
-
 
                         /****************************************************
                          *          FONCTIONS CREATION FENETRE JEU          *
@@ -1508,10 +1503,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         btnCoucher.disabled = true;
     }
 
-    
-    
-
-
                             /****************************************************
                              *                FONCTIONS LISTENERS               *
                              ****************************************************/
@@ -1578,10 +1569,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
             document.getElementById("pile_"+liste_joueurs[partieEnCours][i]+"_"+partieEnCours).removeEventListener("click",pileVersDefausse);
         }
     }
-    
-    
-
-
 
                             /****************************************************
                              *         FONCTIONS D'ACTUALISATION DU JEU         *
@@ -1696,10 +1683,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         mon_tour[partieEnCours]=false;
         sock.emit("seCouche",couche);
     }
-
-    
-    
-
 
                             /****************************************************
                              *             FONCTIONS DE SUPPRESSION             *
@@ -1857,10 +1840,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         }
     }
 
-    
-    
-
-
                             /****************************************************
                              *                 FONCTIONS QUITTER                *
                              ****************************************************/
@@ -1929,7 +1908,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
                 break;
             }
         }
-
         document.getElementById("radio"+(res)).remove();
         sock.emit("quitGame",obj);
         partieAquitter=-1;
@@ -1956,10 +1934,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         document.getElementById("listePartie").style.display = "none";
         document.getElementById("histoPartie").style.display = "none";
     }
-
-    
-    
-
 
                             /****************************************************
                              *                  EVENT LISTENERS                 *
