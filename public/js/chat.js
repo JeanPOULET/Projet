@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      * @param defaite Object Indice de partie, le perdant, celui qui retire la carte,
      */
     sock.on("perdManche",function(defaite){
-        
+
         if(defaite.doitEnleverCarte === currentUser && defaite.perdant !==currentUser) {
             mon_tour[defaite.partieLancee]=false;
             retirerCarte(defaite.partieLancee,defaite.perdant);
